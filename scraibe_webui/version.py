@@ -50,10 +50,7 @@ def _get_git_version():
     os.chdir(cwd)
     return res
 
-def get_version(build_version=False, isreleased : bool = None):
-    if isreleased:
-        ISRELEASED = True
-    
+def get_version(build_version=False):
     if ISRELEASED:
         return VERSION
 

@@ -1,4 +1,3 @@
-import pkg_resources
 import os
 from setuptools import setup, find_packages
 
@@ -9,7 +8,7 @@ file_dir = os.path.dirname(os.path.realpath(__file__))
 absdir = lambda p: os.path.join(file_dir, p)
 
 ############### versioning ###############
-verfile = os.path.abspath(os.path.join(module_name, "version.py"))
+verfile = os.path.abspath(os.path.join(module_name.replace("-","_"), "version.py"))
 version = {"__file__": verfile}
 
 with open(verfile, "r") as fp:
@@ -18,22 +17,26 @@ with open(verfile, "r") as fp:
 
 ############### setup ###############
 
-build_version = "SCRAIBE_BUILD" in os.environ
+build_version = "SCRAIBE_WEBUI_BUILD" in os.environ
 
 version["ISRELEASED"] = True if "ISRELEASED" in os.environ else False
 
+###############  load requirements ############### 
+
+with open(os.path.join(os.path.dirname(__file__), "requirements.txt")) as f:
+        requirements = [line.strip() for line in f if line.strip() and not line.startswith('#')]
+
 if __name__ == "__main__":
 
+    print(version["ISRELEASED"])
+    
     setup(
         name=module_name,
         version=version["get_version"](build_version),
         packages=find_packages(),
         python_requires=">=3.8",
         readme="README.md",
-        install_requires = [str(r) for r in pkg_resources.parse_requirements(
-                open(os.path.join(os.path.dirname(__file__), "requirements.txt"))
-            )
-        ],
+        install_requires = requirements,
         url= github_url,
 
         license='GPL-3',

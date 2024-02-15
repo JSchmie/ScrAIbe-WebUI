@@ -1,0 +1,6 @@
+recursive-include scraibe_webui *.py
+recursive-include scraibe_webui *.yaml
+recursive-include scraibe_webui *.html
+recursive-include scraibe_webui *svg
+global-exclude *.pyc
+global-exclude __pycache__

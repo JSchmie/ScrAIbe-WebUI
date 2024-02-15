@@ -10,7 +10,7 @@ Attributes:
 
 Example:
     To run the script with custom server configuration and keyword arguments:
-    $ python app_starter.py --server-config path/to/config.yml --server-kwargs key1=val1 key2=val2
+    $ python app_starter.py --server-config path/to/config.yaml --server-kwargs key1=val1 key2=val2
 """
 
 import multiprocessing
@@ -54,7 +54,7 @@ class ParseKwargs(Action):
 parser = ArgumentParser()
 
 parser.add_argument("--server-config", type=str, default= None,
-                        help="Path to the configy.yml file.")
+                        help="Path to the configy.yaml file.")
     
 parser.add_argument('--server-kwargs', nargs='*', action=ParseKwargs, default={},
                     help='Keyword arguments for the Gradio app.')

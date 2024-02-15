@@ -180,7 +180,7 @@ class AppConfig(ConfigLoader):
         """Sets the global variables from a configuration dictionary.
 
         Args:
-            config (dict): A dictionary containing the parameters for the model. Modify the default parameters in the config.yml file.
+            config (dict): A dictionary containing the parameters for the model. Modify the default parameters in the config.yaml file.
 
         Returns:
             None

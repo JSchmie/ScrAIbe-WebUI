@@ -9,11 +9,11 @@ options to specify the number of speakers and the language of the audio. It also
 enables efficient management of resources by loading and unloading AI models 
 based on usage.
 
-The configuration is managed via a 'config.yml' file, which allows customization
+The configuration is managed via a 'config.yaml' file, which allows customization
 of various aspects of the application, including the Gradio interface, queue
 management, and model parameters.
 
-Configuration Sections in 'config.yml':
+Configuration Sections in 'config.yaml':
 - launch: Settings for launching the interface, such as server port, authentication, SSL configuration.
 - queue: Configuration for managing request handling and concurrency.
 - layout: Customization options for the interface layout, like headers, footers, and logos.
@@ -50,8 +50,8 @@ def app(config : str = None, **kwargs):
     and/or keyword arguments. The function manages AI models, handling their loading 
     into RAM and unloading after a session or specified timeout.
 
-    The `kwargs` are used to override or supplement values from the `config.yml` file.
-    They should follow the structure of `config.yml`, which includes sections like 
+    The `kwargs` are used to override or supplement values from the `config.yaml` file.
+    They should follow the structure of `config.yaml`, which includes sections like 
     'launch', 'queue', 'layout', 'model', and 'advanced'.
 
     Args:
@@ -59,7 +59,7 @@ def app(config : str = None, **kwargs):
                       if not provided.
         **kwargs: Keyword arguments corresponding to the configuration sections. Each 
                   argument should be a dictionary reflecting the structure of its 
-                  respective section in `config.yml`.
+                  respective section in `config.yaml`.
 
     Returns:
         None

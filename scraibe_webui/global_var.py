@@ -34,4 +34,4 @@ MODEL_PROCESS: Optional[multiprocessing.Process] = None  # model process to hand
 LAST_USED: float = time.time()
 TIMEOUT: Optional[int] = None  # seconds
 
-DEFAULT_APP_CONIFG_PATH: str = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.yml")
+DEFAULT_APP_CONIFG_PATH: str = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.yaml")

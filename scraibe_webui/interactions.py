@@ -4,9 +4,9 @@ UI like pressing a button or uploading a file.
 """
 
 import gradio as gr 
-import scraibe.app.global_var as gv
+import global_var as gv
 from scraibe import Transcript
-from .multi import start_model_worker
+from multi import start_model_worker
 
 def select_task(choice):
         # tell the app that it is still in use
@@ -33,43 +33,22 @@ def select_task(choice):
 def select_origin(choice):
         
     # tell the app that it is still in use
-    if choice == "Upload Audio":
+    if choice == "Audio":
         
         return (gr.update(visible = True),
                 gr.update(visible = False, value = None),
-                gr.update(visible = False, value = None),
-                gr.update(visible = False, value = None),
                 gr.update(visible = False, value = None))
     
-    elif choice == "Record Audio":
+    elif choice == "Video":
         
         return (gr.update(visible = False, value = None),
                 gr.update(visible = True),
-                gr.update(visible = False, value = None),
-                gr.update(visible = False, value = None),
-                gr.update(visible = False, value = None))
-
-    elif choice == "Upload Video":
-        
-        return (gr.update(visible = False, value = None),
-                gr.update(visible = False, value = None),
-                gr.update(visible = True),
-                gr.update(visible = False, value = None),
                 gr.update(visible = False, value = None))
     
-    elif choice == "Record Video":
-        
-        return (gr.update(visible = False, value = None),
-                gr.update(visible = False, value = None),
-                gr.update(visible = False, value = None),
-                gr.update(visible = True),
-                gr.update(visible = False, value = None))
         
     elif choice == "File or Files":
         
         return (gr.update(visible = False, value = None),
-                gr.update(visible = False, value = None),
-                gr.update(visible = False, value = None),
                 gr.update(visible = False, value = None),
                 gr.update(visible = True))
         

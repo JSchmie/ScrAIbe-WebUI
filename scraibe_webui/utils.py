@@ -16,7 +16,7 @@ import warnings
 import yaml
 from typing import Any, Dict, Optional
 
-import scraibe.app.global_var as gv
+import global_var as gv
 
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 

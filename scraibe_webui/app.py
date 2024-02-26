@@ -36,10 +36,10 @@ Usage:
 
 from threading import Thread
 
-import scraibe.app.global_var as gv
-from .interface import gradio_Interface
-from .multi import *
-from .utils import *
+import global_var as gv
+from interface import gradio_Interface
+from multi import *
+from utils import *
 
 
 def app(config : str = None, **kwargs):
@@ -69,7 +69,6 @@ def app(config : str = None, **kwargs):
     
     config = AppConfig.load_config(config, **kwargs)
     
-    
     gv.MODEL_PROCESS = start_model_worker(gv.MODEL_PARAMS,
                                         gv.REQUEST_QUEUE,
                                         gv.LAST_ACTIVE_TIME,
@@ -93,7 +92,9 @@ def app(config : str = None, **kwargs):
     print("Starting Gradio Web Interface")
     
     # Launch the Gradio interface
-    gradio_Interface(layout).queue(**config.queue).launch(**config.launch)
+    interface = gradio_Interface(layout)
+    interface.queue()
+    interface.launch()
 
     # Wait for the timer thread to finish
     timer.join()

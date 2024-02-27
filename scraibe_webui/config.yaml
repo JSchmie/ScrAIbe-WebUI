@@ -13,7 +13,6 @@ launch:
   auth_message: null
   prevent_thread_lock : false
   show_error : false
-  show_tips : false
   height: 500
   width: 100%,
   favicon_path : null
@@ -32,7 +31,6 @@ launch:
 queue:
   # The following are the default values for the queue configuration
   # for more informations look at https://www.gradio.app/docs/interface
-  concurrency_count : 1
   status_update_rate : 'auto'
   api_open : null
   max_size : null

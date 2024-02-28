@@ -21,7 +21,7 @@ launch:
   ssl_keyfile_password : null
   ssl_verify : false
   show_api : false
-  allowed_paths : null
+  allowed_paths :
   blocked_paths : null
   root_path : null
   app_kwargs : null

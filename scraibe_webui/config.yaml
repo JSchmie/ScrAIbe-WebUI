@@ -40,9 +40,15 @@ layout:
   header:  scraibe/app/header.html
   footer: null
   logo: scraibe/app/logo.svg
-model:
+  type : synchronous # synchronous or asynchronous variant of the Interface (one does transcriptions does require Email setup)
+models:
   whisper_model : null
   dia_model: null
   use_auth_token: null
+  device: null # set your device
+  num_threads: null # If CPU is used set number of useable threads
 advanced:
   timeout: 300 #seconds e.g. 5 minutes
+
+  mail : null # mail which works as sender email
+

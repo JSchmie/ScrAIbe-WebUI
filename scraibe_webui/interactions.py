@@ -64,9 +64,9 @@ def run_scraibe(task,
                 progress = gr.Progress(track_tqdm=False)):
     
     # get *args which are not None 
-    if gv.MODEL_PROCESS is None or not gv.MODEL_PROCESS.is_alive():
+    if gv.MODELS_PROCESS.is_alive():
         #progress(0.0, desc='Loading model...')
-        gv.MODEL_PROCESS = start_model_worker(gv.MODEL_PARAMS,
+        gv.MODELS_PROCESS = start_model_worker(gv.MODELS_PARAMS,
                                       gv.REQUEST_QUEUE,
                                       gv.LAST_ACTIVE_TIME,
                                       gv.RESPONSE_QUEUE,

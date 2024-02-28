@@ -69,7 +69,7 @@ def app(config : str = None, **kwargs):
     
     config = AppConfig.load_config(config, **kwargs)
     
-    gv.MODEL_PROCESS = start_model_worker(gv.MODEL_PARAMS,
+    gv.MODELS_PROCESS = start_model_worker(gv.MODELS_PARAMS,
                                         gv.REQUEST_QUEUE,
                                         gv.LAST_ACTIVE_TIME,
                                         gv.RESPONSE_QUEUE,
@@ -98,4 +98,4 @@ def app(config : str = None, **kwargs):
 
     # Wait for the timer thread to finish
     timer.join()
-    gv.MODEL_PROCESS.join()
+    gv.MODELS_PROCESS.join()

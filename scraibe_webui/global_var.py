@@ -9,8 +9,8 @@ Global variables:
     LAST_ACTIVE_TIME (multiprocessing.Value): A value to store the time of the last activity.
     LOADED_EVENT (multiprocessing.Event): An event to indicate when the model is loaded.
     RUNNING_EVENT (multiprocessing.Event): An event to indicate when the model is running.
-    MODEL_PARAMS (Optional[dict]): A dictionary to store the model parameters.
-    MODEL_PROCESS (Optional[multiprocessing.Process]): A process to handle the model globally.
+    MODELS_PARAMS (Optional[dict]): A dictionary to store the model parameters.
+    MODELS_PROCESS (Optional[multiprocessing.Process]): A process to handle the model globally.
     LAST_USED (float): A float to track the time of the last user activity.
     TIMEOUT (Optional[int]): An integer to store the timeout in seconds.
     DEFAULT_APP_CONIFG_PATH (str): A string to store the default path to the app configuration file.
@@ -27,8 +27,8 @@ LAST_ACTIVE_TIME: multiprocessing.Value = multiprocessing.Value('d', time.time()
 LOADED_EVENT: multiprocessing.Event = multiprocessing.Event()  # model loaded event
 RUNNING_EVENT: multiprocessing.Event = multiprocessing.Event()  # model running event
 
-MODEL_PARAMS: Optional[dict] = None  # model parameters
-MODEL_PROCESS: Optional[multiprocessing.Process] = None  # model process to handle globally
+MODELS_PARAMS: Optional[dict] = None  # model parameters
+MODELS_PROCESS: Optional[multiprocessing.Process] = None  # model process to handle globally
 
 # Global variable to track user activity
 LAST_USED: float = time.time()

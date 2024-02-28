@@ -93,8 +93,8 @@ def app(config : str = None, **kwargs):
     
     # Launch the Gradio interface
     interface = gradio_Interface(layout)
-    interface.queue()
-    interface.launch()
+    interface.queue(**config.queue)
+    interface.launch(**config.launch)
 
     # Wait for the timer thread to finish
     timer.join()

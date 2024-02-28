@@ -17,6 +17,9 @@ import yaml
 from typing import Any, Dict, Optional
 
 import global_var as gv
+from torch import set_num_threads
+from torch import device as torch_device
+from torch.cuda import is_available
 
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 
@@ -28,7 +31,7 @@ class ConfigLoader:
     Attributes:
         config (Dict[str, Any]): The current configuration settings.
         launch (Dict[str, Any]): The launch configuration settings.
-        model (Dict[str, Any]): The model configuration settings.
+        models (Dict[str, Any]): The models configuration settings.
         advanced (Dict[str, Any]): The advanced configuration settings.
         queue (Dict[str, Any]): The queue configuration settings.
         layout (Dict[str, Any]): The layout configuration settings.
@@ -153,7 +156,7 @@ class AppConfig(ConfigLoader):
     Attributes:
         config (dict): The current configuration settings.
         launch (dict): The launch configuration settings.
-        model (dict): The model configuration settings.
+        models (dict): The models configuration settings.
         advanced (dict): The advanced configuration settings.
         queue (dict): The queue configuration settings.
         layout (dict): The layout configuration settings.
@@ -166,12 +169,14 @@ class AppConfig(ConfigLoader):
         """
         self.config = config
         
-        self.set_global_vars_from_config()
-
+        self.set_models_options()
+        
         self.set_layout_options()
         
+        self.set_global_vars_from_config()
+        
         self.launch = self.config.get("launch")
-        self.model = self.config.get("model")
+        self.models = self.config.get("models")
         self.advanced = self.config.get("advanced")
         self.queue = self.config.get("queue")
         self.layout = self.config.get("layout")
@@ -180,14 +185,15 @@ class AppConfig(ConfigLoader):
         """Sets the global variables from a configuration dictionary.
 
         Args:
-            config (dict): A dictionary containing the parameters for the model. Modify the default parameters in the config.yaml file.
+            config (dict): A dictionary containing the parameters for the models. Modify the default parameters in the config.yaml file.
 
         Returns:
             None
         """
     
-        gv.MODEL_PARAMS = self.config.get('model')
+        gv.MODELS_PARAMS = self.config.get('models')
         gv.TIMEOUT = self.config.get("advanced").get('timeout')
+            
     
     def set_launch_options(self) -> None:
         """DEPRECATED:  Sets the launch options from a configuration dictionary.
@@ -206,6 +212,22 @@ class AppConfig(ConfigLoader):
         else:
             self.config['launch']['auth'] = None
     
+    def set_models_options(self) -> None:
+        """Sets the model options from a configuration dictionary.	
+            Here provides the option to set the device for the models.
+        """ 
+                
+        device = self.config.get("models").get('device')
+        if device is None:
+            device = torch_device('cuda' if is_available() else 'cpu')
+        elif device != None:
+            device  = torch_device(device)
+            
+        if device == 'cpu' and self.config.get("models").get('num_threads') is not None:
+            set_num_threads(self.config.get("models").get('num_threads')) # this is a global setting
+
+        self.config['models']['device'] = device
+    
     def set_layout_options(self) -> None:
         """Sets the layout options from a configuration dictionary.
 
@@ -220,6 +242,9 @@ class AppConfig(ConfigLoader):
         self.config['layout']['logo'] = self.check_and_set_path(self.config['layout'], 'logo')
         
         self.add_to_allowed_paths(self.config['layout']['logo'])
+        
+        if self.config['layout']['type'] == 'asynchronous':
+            raise NotImplementedError("Asynchronous layout is not supported yet.")
     
     def get_layout(self) -> Dict[str, str]:
         """Gets the layout options from a configuration dictionary.
@@ -282,9 +307,6 @@ class AppConfig(ConfigLoader):
             None
         """
         allowed_paths = self.config['launch']['allowed_paths']
-        
-       
-        
             
         # If allowed_paths is None, create a new list 
         if allowed_paths is None:

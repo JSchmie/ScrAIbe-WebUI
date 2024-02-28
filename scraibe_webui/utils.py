@@ -167,7 +167,7 @@ class AppConfig(ConfigLoader):
         self.config = config
         
         self.set_global_vars_from_config()
-        self.set_launch_options()
+
         self.set_layout_options()
         
         self.launch = self.config.get("launch")
@@ -190,7 +190,7 @@ class AppConfig(ConfigLoader):
         gv.TIMEOUT = self.config.get("advanced").get('timeout')
     
     def set_launch_options(self) -> None:
-        """Sets the launch options from a configuration dictionary.
+        """DEPRECATED:  Sets the launch options from a configuration dictionary.
 
         Args:
             None
@@ -218,6 +218,8 @@ class AppConfig(ConfigLoader):
         self.config['layout']['header'] = self.check_and_set_path(self.config['layout'], 'header')
         self.config['layout']['footer'] = self.check_and_set_path(self.config['layout'], 'footer')
         self.config['layout']['logo'] = self.check_and_set_path(self.config['layout'], 'logo')
+        
+        self.add_to_allowed_paths(self.config['layout']['logo'])
     
     def get_layout(self) -> Dict[str, str]:
         """Gets the layout options from a configuration dictionary.
@@ -269,6 +271,58 @@ class AppConfig(ConfigLoader):
             footer = None
         return {'header' : header ,
                 'footer' : footer} 
+        
+    def add_to_allowed_paths(self, path: str) -> None:
+        """Adds a path to the list of allowed paths.
+
+        Args:
+            path (str): The path to add.
+
+        Returns:
+            None
+        """
+        allowed_paths = self.config['launch']['allowed_paths']
+        
+       
+        
+            
+        # If allowed_paths is None, create a new list 
+        if allowed_paths is None:
+            allowed_paths = []
+        elif path in allowed_paths:
+            return
+    
+         # Check if path exists otherwise try with CURRENT_PATH
+         
+        if not os.path.exists(path):
+            filename = os.path.basename(path)
+            path = os.path.join(CURRENT_PATH, filename)
+            
+            if path in allowed_paths:
+                return    
+        
+        if path not in allowed_paths:
+            allowed_paths.append(path)
+            self.config['launch']['allowed_paths'] = allowed_paths
+        
+    def remove_from_allowed_paths(self, path: str) -> None:
+        """Removes a path from the list of allowed paths.
+
+        Args:
+            path (str): The path to remove.
+
+        Returns:
+            None
+        """
+        
+        allowed_paths = self.config['launch']['allowed_paths']
+        
+        if allowed_paths is None:
+            return
+        
+        if path in allowed_paths:
+            allowed_paths.remove(path)
+            self.config['launch']['allowed_paths'] = allowed_paths
     
     @staticmethod
     def check_and_set_path(config_item: dict, key: str) -> Optional[str]:
@@ -282,13 +336,12 @@ class AppConfig(ConfigLoader):
         Returns:
             str: The path to the file if it exists, None otherwise.
         """
-        _current_path = os.path.dirname(os.path.realpath(__file__))  # Define your CURRENT_PATH
 
         file_path = config_item.get(key)
         if file_path is None:
             return None
         if not os.path.exists(file_path):
-            new_path = os.path.join(_current_path, file_path)
+            new_path = os.path.join(CURRENT_PATH, file_path)
             if not os.path.exists(new_path):
                 warnings.warn(f"{key.capitalize()} file not found: {config_item[key]} \n" \
                               "fall back to default.")
@@ -296,3 +349,5 @@ class AppConfig(ConfigLoader):
                 config_item[key] = new_path
             
         return config_item[key]
+
+    

@@ -134,7 +134,7 @@ def gradio_Interface(layout = None,):
             
             submit.click(fn = run_scraibe, 
                             inputs=[task, num_speakers, translate, language, audio, video, file_in],
-                            outputs=[out_txt, out_json, annoation, annotate])
+                            outputs=[out_txt, out_json, annoation, annotate], concurrency_limit = None)
             
             annotate.click(fn = annotate_output, inputs=[annoation, out_json],
                             outputs=[out_txt, out_json])

@@ -56,5 +56,5 @@ advanced:
     smtp_port : 0
     sender_password : null
     context_kwargs : null
-    default_subject: null
+    default_subject: "SCRAIBE"
 

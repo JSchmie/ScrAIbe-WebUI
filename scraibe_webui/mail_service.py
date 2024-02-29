@@ -10,6 +10,15 @@ class MAIL_SETUP:
                  smtp_port : int = 0,
                  sender_password : str = None,
                  context_kwargs : dict = {}):
+        """ Class to setup Mail Server.
+        
+        Args:
+            sender_email (str): The email address of the sender.
+            smtp_server (str): The SMTP server.
+            smtp_port (int, optional): The SMTP port. Defaults to 0.
+            sender_password (str, optional): The password of the sender. Defaults to None.
+            context_kwargs (dict, optional): The context keyword arguments. Defaults to {}.
+        """
         
         self.sender_email = sender_email
         self.password = sender_password
@@ -42,21 +51,6 @@ class MAIL_SETUP:
         
         return _message
     
-    def test_tls_connection(self) -> bool:
-            """Test if TLS connection is possible.
-
-            Returns:
-                bool: True if TLS connection is successful, False otherwise.
-            """
-            
-            try: 
-                with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
-                    server.starttls(context=self.context)
-                return True
-            except: 
-                Warning("TLS connection failed. Try without TLS.")
-                return False
-    
     def test_login(self) -> bool:
         """Test if login is possible.
         
@@ -80,20 +74,16 @@ class MAIL_SETUP:
             smtplib.SMTP: The mail server.
         """
         
-        if self.password is None:
+        if self.password is not None:
             
-            tls = self.test_tls_connection()
-            login = None
+            login = self.test_login()
             
-            if tls:
-                login = self.test_login()
         else:
-            tls = False
             login = False
         
         server = smtplib.SMTP(self.smtp_server, self.smtp_port)
         
-        if tls and login:
+        if login:
             server.starttls(context=self.context)
             server.login(self.sender_email, self.password)
         else:

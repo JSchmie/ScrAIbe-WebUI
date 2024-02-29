@@ -49,6 +49,12 @@ models:
   num_threads: null # If CPU is used set number of useable threads
 advanced:
   timeout: 300 #seconds e.g. 5 minutes
-
-  mail : null # mail which works as sender email
+  
+  mail:
+    sender_email : null 
+    smtp_server : null
+    smtp_port : 0
+    sender_password : null
+    context_kwargs : null
+    default_subject: null
 

@@ -1,5 +1,5 @@
 """
-utils.py
+configloader.py
 
 This module contains two classes, ConfigLoader and AppConfig, which are used to manage application-specific configuration settings.
 

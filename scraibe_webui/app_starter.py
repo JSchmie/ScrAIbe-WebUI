@@ -65,6 +65,6 @@ if __name__ == '__main__':
     
     multiprocessing.set_start_method('spawn')
 
-    from scraibe.app.app import app
+    from app import app
     
     app(config = args.server_config, **args.server_kwargs)

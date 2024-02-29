@@ -15,8 +15,8 @@ Variables:
 
 import gradio as gr
 
-from .interactions import *
-from .stg import *
+from interactions import *
+from stg import *
 
 theme = gr.themes.Soft(
     primary_hue="green",
@@ -77,8 +77,8 @@ def gradio_Interface(layout = None,):
                                     info = "Number of speakers in the audio file. If you don't know,\
                                         leave it at 0.", visible= True)
                     
-                    translate = gr.Checkbox(label="Translation", choices=[True, False], value = False,
-                                    info="Select 'Yes' to have the output translated into English.",
+                    translate = gr.Checkbox(label="Translation", value = False,
+                                    info="Select if you want the output to be translated to English.",
                                     visible= True)
                     
                     language = gr.Dropdown(LANGUAGES,
@@ -86,16 +86,13 @@ def gradio_Interface(layout = None,):
                                     info="Language of the audio file. If you don't know,\
                                         leave it at None.", visible= True)
                     
-                    input = gr.Radio(["Upload Audio", "Record Audio", "Upload Video","Record Video" 
+                    input = gr.Radio(["Audio", "Video" 
                                         ,"File or Files"], label="Input Type", value="Upload Audio")
                     
-                    audio1 = gr.Audio(source="upload", type="filepath", label="Upload Audio",
+                    audio = gr.Audio(type = "filepath", label="Upload Audio",
                                         interactive= True, visible= True)
-                    audio2 = gr.Audio(source="microphone", label="Record Audio", type="filepath",
-                                        interactive= True, visible= False)
-                    video1 = gr.Video(source="upload", type="filepath", label="Upload Video",
-                                        interactive= True, visible= False)
-                    video2 = gr.Video(source="webcam", label="Record Video", type="filepath",include_audio= True,
+
+                    video = gr.Video(label="Record or Upload Video",include_audio= True,
                                         interactive= True, visible= False)
                     file_in = gr.Files(label="Upload File or Files", interactive= True, visible= False)
                     
@@ -107,7 +104,7 @@ def gradio_Interface(layout = None,):
                                             visible= True, show_copy_button=True)
                     
                     out_json = gr.JSON(label="JSON Output",
-                                        visible= False, show_copy_button=True)
+                                        visible= False)
                     
                     annoation = gr.Textbox(label="Name your speaker's",
                                         info= "Please provide a list of the speakers arranged \
@@ -123,7 +120,7 @@ def gradio_Interface(layout = None,):
                  
             # Define usage of components
             input.change(fn=select_origin, inputs=[input],
-                            outputs=[audio1, audio2, video1, video2, file_in])
+                            outputs=[audio,video, file_in])
             
             task.change(fn=select_task, inputs=[task],
                         outputs=[num_speakers, translate, language])
@@ -136,9 +133,8 @@ def gradio_Interface(layout = None,):
                             inputs=[language], outputs=[language])
             
             submit.click(fn = run_scraibe, 
-                            inputs=[task, num_speakers, translate, language, audio1,
-                                    audio2, video1, video2, file_in],
-                            outputs=[out_txt, out_json, annoation, annotate])
+                            inputs=[task, num_speakers, translate, language, audio, video, file_in],
+                            outputs=[out_txt, out_json, annoation, annotate], concurrency_limit = None)
             
             annotate.click(fn = annotate_output, inputs=[annoation, out_json],
                             outputs=[out_txt, out_json])

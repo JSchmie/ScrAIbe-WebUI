@@ -30,7 +30,7 @@ import torch
 
 from gradio import Warning
 from scraibe.autotranscript import Scraibe
-from .stg import GradioTranscriptionInterface 
+from stg import GradioTranscriptionInterface 
 
 def clear_queue(queue):
     while not queue.empty():
@@ -63,7 +63,6 @@ def model_worker(model_params : Union[Scraibe, dict],
     """
     
     loaded_event.set()
-    
     if model_params is None:
         _model = Scraibe()
     elif type(model_params) is Scraibe:

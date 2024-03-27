@@ -86,7 +86,8 @@ class AppConfigLoader(ConfigLoader):
         self.check_and_set_path('logo')
         
         self.add_to_allowed_paths(self.config['layout']['logo'])
-    
+        
+        
     def get_layout(self) -> Dict[str, str]:
         """Gets the layout options from a configuration dictionary.
 
@@ -98,7 +99,7 @@ class AppConfigLoader(ConfigLoader):
         """
         _header = self.config['layout']['header']
         
-        if _header == "misc/header.html":
+        if _header == self.default_config['layout']['header']:
             _header = os.path.join(ROOT_PATH, _header)
             
             if os.path.exists(_header):
@@ -116,10 +117,9 @@ class AppConfigLoader(ConfigLoader):
               
         if header is not None: 
             _logo = self.config['layout']['logo']
-            
-            if _logo == "scraibe_webui/misc/logo.svg":
+            if _logo == self.default_config['layout']['logo']:
                 _logo = os.path.join(ROOT_PATH, _logo)
-                
+                print(_logo)
                 if os.path.exists(_logo):
                     header = header.replace("/file=logo.svg", f"/file={_logo}")
                 else:
@@ -128,10 +128,11 @@ class AppConfigLoader(ConfigLoader):
                 header = header.replace("/file=logo.svg", f"/file={_logo}")
             else:
                 warnings.warn(f"Logo file not found: {self.config['layout']['logo']}")
-            
+        print(header)  
         _footer = self.config['layout']['footer']
         
         if _footer is not None:
+            # TODO: ADD a footer file as default
             if os.path.exists(_footer):
                 footer = open(_footer).read()
             else:    
@@ -160,7 +161,13 @@ class AppConfigLoader(ConfigLoader):
             return
     
          # Check if path exists otherwise try with CURRENT_PATH
-         
+        if os.path.exists(path):
+            if not os.path.isabs(path):
+                path = os.path.abspath(path)
+                
+                if path in allowed_paths:
+                    return
+                
         if not os.path.exists(path):
             filename = os.path.basename(path)
             path = os.path.join(ROOT_PATH, filename)

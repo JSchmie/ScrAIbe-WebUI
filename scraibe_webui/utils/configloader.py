@@ -195,6 +195,6 @@ class ConfigLoader(metaclass = ABCMeta):
         Returns:
             Dict[str, Any]: The default configuration.
         """
-        with open(os.path.join(ROOT_PATH, "misc/config.yaml") , 'r') as file:
+        with open(os.path.join(ROOT_PATH, "scraibe_webui/misc/config.yaml") , 'r') as file:
             config = yaml.safe_load(file)
         return config

@@ -1,0 +1,59 @@
+interface_type: simple # sync, aync or simple variant of the Interface (one does transcriptions does require Email setup)
+launch:
+  # The following are the default values for the launch configuration
+  # for more informations look at https://www.gradio.app/docs/interface 
+  server_port: 7860
+  server_name: 0.0.0.0
+  inline: false
+  inbrowser: false
+  share : false
+  debug : false
+  max_threads: 40
+  quiet: false
+  auth: null # tuple of username and password
+  auth_message: null
+  prevent_thread_lock : false
+  show_error : false
+  height: 500
+  width: 100%,
+  favicon_path : null
+  ssl_keyfile : null
+  ssl_certfile : null
+  ssl_keyfile_password : null
+  ssl_verify : false
+  show_api : false
+  allowed_paths :
+  blocked_paths : null
+  root_path : null
+  app_kwargs : null
+  state_session_capacity : 10000
+  share_server_address : null
+  share_server_protocol : null
+queue:
+  # The following are the default values for the queue configuration
+  # for more informations look at https://www.gradio.app/docs/interface
+  status_update_rate : 'auto'
+  api_open : null
+  max_size : null
+  default_concurrency_limit : not_set
+layout:
+  header:  scraibe_webui/misc/header.html
+  footer: null
+  logo:  scraibe_webui/misc/logo.svg
+  # themes: null # dict of themes from hugging face placeholder
+models:
+  whisper_model : null
+  dia_model: null
+  use_auth_token: null
+  device: null # set your device
+  num_threads: null # If CPU is used set number of useable threads
+advanced:
+  timeout: 300 #seconds e.g. 5 minutes
+  mail:
+    sender_email : null 
+    smtp_server : null
+    smtp_port : 0
+    sender_password : null
+    context_kwargs : null
+    default_subject: "SCRAIBE"
+

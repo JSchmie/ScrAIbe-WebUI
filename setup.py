@@ -27,14 +27,11 @@ with open(os.path.join(os.path.dirname(__file__), "requirements.txt")) as f:
         requirements = [line.strip() for line in f if line.strip() and not line.startswith('#')]
 
 if __name__ == "__main__":
-
-    print(version["ISRELEASED"])
-    
     setup(
         name=module_name,
         version=version["get_version"](build_version),
         packages=find_packages(),
-        python_requires=">=3.8",
+        python_requires=">=3.9",
         readme="README.md",
         install_requires = requirements,
         url= github_url,
@@ -45,7 +42,7 @@ if __name__ == "__main__":
         description='WebUI for the fully automated transcription Toolkit ScrAIbe.',
         classifiers=[
             'Development Status :: 3 - Alpha',
-            'Environment :: GPU :: NVIDIA CUDA :: 11.2',
+            'Environment :: GPU :: NVIDIA CUDA :: 12.1',
             'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
             'Programming Language :: Python :: 3.9',
             'Programming Language :: Python :: 3.10',
@@ -54,5 +51,7 @@ if __name__ == "__main__":
         keywords = ['webui','transcription', 'speech recognition', 'whisper', 'pyannote', 'audio', 'ScrAIbe', 'scraibe',
                     'speech-to-text', 'speech-to-text transcription', 'speech-to-text recognition',
                     'voice-to-speech'],
-        package_data={'scraibe-webui' : ["*.html", "*.svg","*.yml"]},     
+        package_data={'scraibe-webui' : ["*.html", "*.svg","*.yml", '*.css']},     
+        entry_points={'console_scripts':
+            ['scraibe-webui = scraibe_webui.cli:cli']}
     )

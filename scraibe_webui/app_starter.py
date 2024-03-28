@@ -44,12 +44,19 @@ class ParseKwargs(Action):
         """
         setattr(namespace, self.dest, dict())
         for value in values:
-            key, value = value.split('=')
+            if '=' in value:
+                key, value = value.split('=')
             try:
                 value = eval(value)
             except:
                 pass
-            getattr(namespace, self.dest)[key] = value
+            if isinstance(value, dict):
+                key, value = value.popitem()
+                try: 
+                    value = eval(value)
+                except:
+                    pass
+            getattr(namespace, self.dest)[key] = value    
 
 parser = ArgumentParser()
 

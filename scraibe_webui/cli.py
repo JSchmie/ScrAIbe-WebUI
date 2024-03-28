@@ -36,7 +36,7 @@ def cli():
     
     arg_dict = vars(args)
     
-    execute_path = os.path.join(ROOT_PATH, "/scraibe_webui/app_starter.py")
+    execute_path = os.path.join(ROOT_PATH, "scraibe_webui/app_starter.py")
     
     config = arg_dict.pop("config")
     server_kwargs = arg_dict.pop("server_kwargs")

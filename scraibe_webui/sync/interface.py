@@ -85,7 +85,7 @@ def gradio_sync_Interface(layout : dict) -> gr.Blocks:
                                         leave it at None.", visible= True)
                     
                     input = gr.Radio(["Audio", "Video" 
-                                        ,"File or Files"], label="Input Type", value="Upload Audio")
+                                        ,"File or Files"], label="Input Type", value="Audio")
                     
                     audio = gr.Audio(type = "filepath", label="Upload Audio",
                                         interactive= True, visible= True)

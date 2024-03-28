@@ -119,7 +119,6 @@ class AppConfigLoader(ConfigLoader):
             _logo = self.config['layout']['logo']
             if _logo == self.default_config['layout']['logo']:
                 _logo = os.path.join(ROOT_PATH, _logo)
-                print(_logo)
                 if os.path.exists(_logo):
                     header = header.replace("/file=logo.svg", f"/file={_logo}")
                 else:
@@ -128,7 +127,6 @@ class AppConfigLoader(ConfigLoader):
                 header = header.replace("/file=logo.svg", f"/file={_logo}")
             else:
                 warnings.warn(f"Logo file not found: {self.config['layout']['logo']}")
-        print(header)  
         _footer = self.config['layout']['footer']
         
         if _footer is not None:

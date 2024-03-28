@@ -1,0 +1,7 @@
+interface_type: simple_de # use german interface
+models:
+  whisper_model : base
+  use_auth_token: null
+layout:
+  header: ./header_de.html
+

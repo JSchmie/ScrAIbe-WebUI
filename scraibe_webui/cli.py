@@ -21,7 +21,7 @@ def cli():
 
     group = parser.add_mutually_exclusive_group()
     
-    parser.add_argument("-c","--config", nargs="+", type=str, default=None,
+    parser.add_argument("-c","--config", type=str, default= None,
                         help="Path to the customized config.yaml file.")
     
     parser.add_argument('--server-kwargs', nargs='*', action=ParseKwargs, default={},
@@ -39,6 +39,7 @@ def cli():
     execute_path = os.path.join(ROOT_PATH, "scraibe_webui/app_starter.py")
     
     config = arg_dict.pop("config")
+    
     server_kwargs = arg_dict.pop("server_kwargs")
     
     if not config and not server_kwargs:

@@ -20,6 +20,18 @@ from ..utils.interactions import select_origin, select_task, annotate_output
 from ..utils.lang import LANGUAGES
 from ..utils.themes import theme
 
+js_enforce_light = """
+function refresh() {
+    const url = new URL(window.location);
+
+    if (url.searchParams.get('__theme') !== 'light') {
+        url.searchParams.set('__theme', 'light');
+        window.location.href = url.href;
+    }
+}
+"""
+
+
 def gradio_Interface(layout : dict) -> gr.Blocks:
     """
     Creates a gradio interface for audio transcription.
@@ -35,7 +47,7 @@ def gradio_Interface(layout : dict) -> gr.Blocks:
     Returns:
         gr.Blocks: A gradio Blocks object representing the interface.
     """
-    with gr.Blocks(theme=theme,title='ScrAIbe: Automatic Audio Transcription') as demo:
+    with gr.Blocks(theme=theme,title='ScrAIbe: Automatic Audio Transcription', js= js_enforce_light) as demo:
             
             # Define components
             if layout.get('header') is not None:            

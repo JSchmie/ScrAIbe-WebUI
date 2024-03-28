@@ -41,12 +41,12 @@ def cli():
     config = arg_dict.pop("config")
     server_kwargs = arg_dict.pop("server_kwargs")
     
-    if not config:
-        subprocess.run([sys.executable, execute_path, f"--server-kwargs={server_kwargs}"])
-    elif not server_kwargs:
-        subprocess.run([sys.executable, execute_path, f"--server-config={config}"])
-    elif not config and not server_kwargs:
+    if not config and not server_kwargs:
         subprocess.run([sys.executable, execute_path])
+    if not config and server_kwargs:
+        subprocess.run([sys.executable, execute_path, f"--server-kwargs={server_kwargs}"])
+    elif not server_kwargs and config:
+        subprocess.run([sys.executable, execute_path, f"--server-config={config}"])
     else:
         subprocess.run([sys.executable, execute_path, f"--server-config={config}", f"--server-kwargs={server_kwargs}"])
 

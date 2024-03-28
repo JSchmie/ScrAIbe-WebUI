@@ -15,8 +15,7 @@ import gradio as gr
 from tqdm import tqdm
 from typing import Any, Dict, Union, Tuple, List
 
-
-
+from scraibe import Scraibe
 
 class GradioTranscriptionInterface:
     """
@@ -225,5 +224,22 @@ class GradioTranscriptionInterface:
             return self.diarisation
         else:
             raise ValueError("Invalid task string.")
+        
+    @classmethod
+    def load_from_dict(cls, config: Dict[str, Any]) -> 'GradioTranscriptionInterface':
+        """ Load the GradioTranscriptionInterface from a dictionary configuration.
+        
+        Args:
+            config (dict): A dictionary containing the configuration parameters.
+            
+        Returns:
+            GradioTranscriptionInterface: The GradioTranscriptionInterface object.
+        
+        """
+        model = Scraibe(**config)
+        
+        return cls(model)
+
+        
         
                

@@ -4,54 +4,9 @@ UI like pressing a button or uploading a file.
 """
 
 import gradio as gr 
-import global_var as gv
-from scraibe import Transcript
-from multi import start_model_worker
+import scraibe_webui.sync.global_var as gv
+from .multi import start_model_worker
 
-def select_task(choice):
-        # tell the app that it is still in use
-    if choice == 'Auto Transcribe':
-        
-        return (gr.update(visible = True),
-                gr.update(visible = True),
-                gr.update(visible = True))
-                
-        
-    elif choice == 'Transcribe':
-        
-        return (gr.update(visible = False),
-                gr.update(visible = True),
-                gr.update(visible = True))
-
-        
-    elif choice == 'Diarisation':
-        
-        return (gr.update(visible = True),
-                gr.update(visible = False),
-                gr.update(visible = False))
-        
-def select_origin(choice):
-        
-    # tell the app that it is still in use
-    if choice == "Audio":
-        
-        return (gr.update(visible = True),
-                gr.update(visible = False, value = None),
-                gr.update(visible = False, value = None))
-    
-    elif choice == "Video":
-        
-        return (gr.update(visible = False, value = None),
-                gr.update(visible = True),
-                gr.update(visible = False, value = None))
-    
-        
-    elif choice == "File or Files":
-        
-        return (gr.update(visible = False, value = None),
-                gr.update(visible = False, value = None),
-                gr.update(visible = True))
-        
 def run_scraibe(task,
                 num_speakers,
                 translate,
@@ -60,10 +15,8 @@ def run_scraibe(task,
                 audio2,
                 video1,
                 video2,
-                file_in,
-                progress = gr.Progress(track_tqdm=False)):
+                file_in):
     
-    # get *args which are not None 
     if gv.MODELS_PROCESS.is_alive():
         #progress(0.0, desc='Loading model...')
         gv.MODELS_PROCESS = start_model_worker(gv.MODELS_PARAMS,
@@ -122,11 +75,3 @@ def run_scraibe(task,
                 gr.update(visible = False),
                 gr.update(visible = False))
     
-def annotate_output(annoation : str, out_json : dict):
-    # get *args which are not None
-    
-    trans = Transcript.from_json(out_json)
-    trans = trans.annotate(*annoation.split(","))
-
-    return gr.update(value = str(trans)),gr.update(value = trans.get_json())
-

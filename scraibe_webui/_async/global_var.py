@@ -15,11 +15,12 @@ Global variables:
     TIMEOUT (Optional[int]): An integer to store the timeout in seconds.
     DEFAULT_APP_CONIFG_PATH (str): A string to store the default path to the app configuration file.
 """
-
-import multiprocessing
 import os
 import time
+import multiprocessing
+from queue import Queue
 from typing import Optional
+from threading import Thread, Event
 
 REQUEST_QUEUE: multiprocessing.Queue = multiprocessing.Queue()  # audio file path as string 
 RESPONSE_QUEUE: multiprocessing.Queue = multiprocessing.Queue()  # transcription as string
@@ -35,3 +36,9 @@ LAST_USED: float = time.time()
 TIMEOUT: Optional[int] = None  # seconds
 
 DEFAULT_APP_CONIFG_PATH: str = os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.yaml")
+
+MAIL_THREAD : Thread = None
+MAIL_SETTINGS : dict = {}
+MAIL_STOP_EVENT : Event = Event()
+MAIL_TRANSCRIPT_QUEUE: Queue = multiprocessing.Queue()   # mail transcript queue stores the transcript to be sent
+MAIL_MISC_QUEUE : Queue = Queue()  # stores the misc information like mail subject, recipient, etc.

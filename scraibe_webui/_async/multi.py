@@ -26,11 +26,12 @@ import time
 import gc
 from typing import Union, Any
 import multiprocessing
+from threading import Thread
 import torch
 
-from gradio import Warning
 from scraibe.autotranscript import Scraibe
-from stg import GradioTranscriptionInterface 
+from scraibe_webui.utils.stg import GradioTranscriptionInterface 
+from .mail import MailService
 
 def clear_queue(queue):
     while not queue.empty():
@@ -42,7 +43,7 @@ def clear_queue(queue):
 def model_worker(model_params : Union[Scraibe, dict],
                  request_queue: multiprocessing.Queue,
                  last_active_time: multiprocessing.Value,
-                 response_queue: multiprocessing.Queue,
+                 mail_transcript_queue: multiprocessing.Queue,
                  loaded_event: multiprocessing.Event,
                  running_event: multiprocessing.Event,
                  *args: Any, **kwargs: Any) -> None:
@@ -63,6 +64,7 @@ def model_worker(model_params : Union[Scraibe, dict],
     """
     
     loaded_event.set()
+    running_event.set() # avoid cut of if timeout is set to low values
     if model_params is None:
         _model = Scraibe()
     elif type(model_params) is Scraibe:
@@ -73,20 +75,20 @@ def model_worker(model_params : Union[Scraibe, dict],
         raise TypeError("model must be of type Scraibe, or dict")
 
     model = GradioTranscriptionInterface(_model)
+    running_event.clear()
     
     while True:
         
         req = request_queue.get()
 
         if req == "STOP":
-            
             break
         elif type(req) is dict:
             runner = model.get_task_from_str(req.pop("task"))
             running_event.set()
             transcription = runner(**req)
+            mail_transcript_queue.put(transcription)          
             running_event.clear()
-            response_queue.put(transcription)
             last_active_time.value = time.time()
         else:
             raise TypeError("request must be of type dict")
@@ -95,13 +97,13 @@ def model_worker(model_params : Union[Scraibe, dict],
     torch.cuda.empty_cache()
     gc.collect()
     clear_queue(request_queue)
-    clear_queue(response_queue)
     loaded_event.clear()
+    
 
 def start_model_worker(model_params: Union[Scraibe, dict],
                        request_queue: multiprocessing.Queue,
                        last_active_time: multiprocessing.Value,
-                       response_queue: multiprocessing.Queue,
+                       mail_transcript_queue : multiprocessing.Queue,
                        loaded_event: multiprocessing.Event,
                        running_event: multiprocessing.Event,
                        *args: Any, **kwargs: Any) -> multiprocessing.Process:
@@ -122,11 +124,18 @@ def start_model_worker(model_params: Union[Scraibe, dict],
         multiprocessing.Process: The model worker process.
     """
     context = multiprocessing.get_context('spawn')
-    model_process = context.Process(target=model_worker, args=(model_params, request_queue, last_active_time, response_queue,loaded_event, running_event, *args), kwargs=kwargs)
+    model_process = context.Process(target=model_worker, args=(model_params,
+                                                               request_queue,
+                                                               last_active_time,
+                                                               mail_transcript_queue,
+                                                               loaded_event,
+                                                               running_event,
+                                                               *args), kwargs=kwargs)
     model_process.start()
     return model_process
 
 def timer_thread(request_queue: multiprocessing.Queue,
+                 mail_transcript_queue: multiprocessing.Queue,
                  last_active_time: multiprocessing.Value,
                  loaded_event: multiprocessing.Event,
                  running_event: multiprocessing.Event,
@@ -145,6 +154,60 @@ def timer_thread(request_queue: multiprocessing.Queue,
         time.sleep(timeout)
         
         if time.time() - last_active_time.value > timeout and loaded_event.is_set() and not running_event.is_set():
-            print(f"No activity for the last {timeout} seconds. Stopping the model worker.", flush=True)
             request_queue.put("STOP")
-            Warning("Model worker stopped due to inactivity.")
+            mail_transcript_queue.put("STOP")
+
+def mail_worker(mail_setup : dict,
+                mail_transcript_queue: multiprocessing.Queue,
+                mail_misc_queue: multiprocessing.Queue,
+                *args: Any, **kwargs: Any) -> None:
+    """
+    Manages the mail worker process.
+
+    The mail worker process is responsible for sending emails.
+
+    Args:
+        mail_queue (multiprocessing.Queue): The queue for outgoing emails.
+        mail_options (dict): The options for sending emails.
+        *args: Additional arguments.
+        **kwargs: Additional keyword arguments.
+    """
+    
+    mailserver = MailService.from_config(mail_setup)
+    while True:
+        
+        message = mail_transcript_queue.get()
+
+        if message == "STOP":
+            break
+        else:
+            mail_misc = mail_misc_queue.get()
+            
+            mailserver.send_mail(**mail_misc, message=message)
+
+    mailserver.close_mailserver()
+    clear_queue(mail_transcript_queue)
+
+    
+def start_mail_thread(mail_setup : dict,
+                mail_transcript_queue: multiprocessing.Queue,
+                mail_misc_queue: multiprocessing.Queue,
+                ) -> None:
+    """
+    Manages the mail worker process.
+
+    The mail worker process is responsible for sending emails.
+
+    Args:
+        mail_queue (multiprocessing.Queue): The queue for outgoing emails.
+        mail_options (dict): The options for sending emails.
+        *args: Additional arguments.
+        **kwargs: Additional keyword arguments.
+    """
+    
+    mail_thread =Thread(target=mail_worker, args=(mail_setup, mail_transcript_queue, mail_misc_queue), daemon = True)
+    mail_thread.start()
+    return mail_thread
+    
+    
+    

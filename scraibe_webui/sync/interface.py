@@ -15,8 +15,8 @@ Variables:
 
 import gradio as gr
 
-from interactions import *
-from stg import *
+from .interactions import run_scraibe
+from ..utils.interactions import select_origin, select_task, annotate_output
 
 theme = gr.themes.Soft(
     primary_hue="green",
@@ -41,9 +41,7 @@ LANGUAGES = [
 ]
 
 
-
-
-def gradio_Interface(layout = None,):
+def gradio_sync_Interface(layout : dict) -> gr.Blocks:
     """
     Creates a gradio interface for audio transcription.
 
@@ -87,7 +85,7 @@ def gradio_Interface(layout = None,):
                                         leave it at None.", visible= True)
                     
                     input = gr.Radio(["Audio", "Video" 
-                                        ,"File or Files"], label="Input Type", value="Upload Audio")
+                                        ,"File or Files"], label="Input Type", value="Audio")
                     
                     audio = gr.Audio(type = "filepath", label="Upload Audio",
                                         interactive= True, visible= True)

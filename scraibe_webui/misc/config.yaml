@@ -1,3 +1,4 @@
+interface_type: simple # sync, aync or simple variant of the Interface (one does transcriptions does require Email setup)
 launch:
   # The following are the default values for the launch configuration
   # for more informations look at https://www.gradio.app/docs/interface 
@@ -35,12 +36,11 @@ queue:
   api_open : null
   max_size : null
   default_concurrency_limit : not_set
-  
 layout:
-  header:  scraibe/app/header.html
+  header:  scraibe_webui/misc/header.html
   footer: null
-  logo: scraibe/app/logo.svg
-  type : synchronous # synchronous or asynchronous variant of the Interface (one does transcriptions does require Email setup)
+  logo:  scraibe_webui/misc/logo.svg
+  # themes: null # dict of themes from hugging face placeholder
 models:
   whisper_model : null
   dia_model: null
@@ -49,6 +49,11 @@ models:
   num_threads: null # If CPU is used set number of useable threads
 advanced:
   timeout: 300 #seconds e.g. 5 minutes
-
-  mail : null # mail which works as sender email
+  mail:
+    sender_email : null 
+    smtp_server : null
+    smtp_port : 0
+    sender_password : null
+    context_kwargs : null
+    default_subject: "SCRAIBE"
 

@@ -87,7 +87,6 @@ class AppConfigLoader(ConfigLoader):
         
         self.add_to_allowed_paths(self.config['layout']['logo'])
         
-        
     def get_layout(self) -> Dict[str, str]:
         """Gets the layout options from a configuration dictionary.
 
@@ -137,7 +136,10 @@ class AppConfigLoader(ConfigLoader):
                 warnings.warn(f"Footer file not found: {self.config['layout']['footer']}")
         else:
             footer = None
-       
+        
+        print("allowed path", self.config['launch']['allowed_paths'])
+        print(_logo)
+        
         return {'header' : header ,
                 'footer' : footer} 
         
@@ -160,9 +162,10 @@ class AppConfigLoader(ConfigLoader):
     
          # Check if path exists otherwise try with CURRENT_PATH
         if os.path.exists(path):
+            
             if not os.path.isabs(path):
-                path = os.path.abspath(path)
                 
+                path = os.path.join(ROOT_PATH, path)
                 if path in allowed_paths:
                     return
                 

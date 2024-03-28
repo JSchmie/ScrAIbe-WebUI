@@ -15,8 +15,8 @@ Variables:
 
 import gradio as gr
 
-from .interactions import run_scraibe
-from ..utils.interactions import select_origin, select_task, annotate_output
+from .interactions import run_scraibe, select_origin, select_task
+from ..utils.interactions import annotate_output
 from ..utils.lang import LANGUAGES
 from ..utils.themes import theme
 
@@ -57,7 +57,9 @@ def gradio_Interface(layout : dict) -> gr.Blocks:
                 
                 with gr.Column():
                 
-                    task = gr.Radio(["Automatische Transkription mit Sprecher*innen-Erkennung", "Transkription ohne Sprecher*innen-Erkennung", "Sprecher*innen-Erkennung"], label="Task",
+                    task = gr.Radio(["Automatische Transkription mit Sprecher*innen-Erkennung", 
+                                     "Transkription ohne Sprecher*innen-Erkennung", 
+                                     "Sprecher*innen-Erkennung"], label="Task",
                                     value= 'Automatische Transkription mit Sprecher*innen-Erkennung')
                     
                     num_speakers = gr.Number(value=0, label= "Anzahl der Sprecher*innen", 
@@ -81,7 +83,7 @@ def gradio_Interface(layout : dict) -> gr.Blocks:
                                         interactive= True, visible= False)
                     file_in = gr.Files(label="Datei oder Dateien", interactive= True, visible= False)
                     
-                    submit = gr.Button()
+                    submit = gr.Button(value="Transkription starten")
                 
                 with gr.Column():
                     

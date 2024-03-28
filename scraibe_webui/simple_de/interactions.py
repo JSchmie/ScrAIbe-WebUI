@@ -20,8 +20,6 @@ def run_scraibe(task,
         progress(0, desc='Starting task...')
         source = audio1 or audio2 or video1 or video2 or file_in
         
-        print(gv.PIPE)
-        
         if isinstance(source, list):
             source = [s.name for s in source]
             if len(source) == 1:
@@ -65,3 +63,48 @@ def run_scraibe(task,
                     update(value = out, visible = True),
                     update(visible = False),
                     update(visible = False))
+
+def select_task(choice):
+        # tell the app that it is still in use
+    if choice == '"Automatische Transkription mit Sprecher*innen-Erkennung"':
+        
+        return (update(visible = True),
+                update(visible = True),
+                update(visible = True))
+                
+        
+    elif choice == 'Transkription ohne Sprecher*innen-Erkennung':
+        
+        return (update(visible = False),
+                update(visible = True),
+                update(visible = True))
+
+        
+    elif choice == 'Sprecher*innen-Erkennung':
+        
+        return (update(visible = True),
+                update(visible = False),
+                update(visible = False))
+        
+def select_origin(choice):
+        
+    # tell the app that it is still in use
+    if choice == "Audio Datei (.mp3, .wav, etc.)":
+        
+        return (update(visible = True),
+                update(visible = False, value = None),
+                update(visible = False, value = None))
+    
+    elif choice == "Video Datei (.mp4, .mov, etc.)":
+        
+        return (update(visible = False, value = None),
+                update(visible = True),
+                update(visible = False, value = None))
+    
+        
+    elif choice == "Datei oder Dateien":
+        
+        return (update(visible = False, value = None),
+                update(visible = False, value = None),
+                update(visible = True))
+        

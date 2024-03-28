@@ -2,6 +2,7 @@
 from .utils.configloader import ConfigLoader
 
 
+
 def app(config : str = None, **kwargs):
        # Load and override configuration from the YAML file with kwargs
     
@@ -20,6 +21,11 @@ def app(config : str = None, **kwargs):
         from .simple.app import simple_app
         
         simple_app(config, **kwargs)
+    
+    elif interface_type == "simple_de":
+        from .simple_de.app import simple_de_app
+        
+        simple_de_app(config, **kwargs)
         
     elif interface_type == "sync":
         from .sync.app import sync_app

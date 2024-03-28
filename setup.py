@@ -51,7 +51,7 @@ if __name__ == "__main__":
         keywords = ['webui','transcription', 'speech recognition', 'whisper', 'pyannote', 'audio', 'ScrAIbe', 'scraibe',
                     'speech-to-text', 'speech-to-text transcription', 'speech-to-text recognition',
                     'voice-to-speech'],
-        package_data={'scraibe-webui' : ["*.html", "*.svg","*.yml", '*.css']},     
+        package_data={'scraibe_webui' : ["misc/*","*.html", "*.svg","*.yaml", '*.css']},     
         entry_points={'console_scripts':
             ['scraibe-webui = scraibe_webui.cli:cli']}
     )

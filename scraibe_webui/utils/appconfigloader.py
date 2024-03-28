@@ -136,10 +136,7 @@ class AppConfigLoader(ConfigLoader):
                 warnings.warn(f"Footer file not found: {self.config['layout']['footer']}")
         else:
             footer = None
-        
-        print("allowed path", self.config['launch']['allowed_paths'])
-        print(_logo)
-        
+            
         return {'header' : header ,
                 'footer' : footer} 
         

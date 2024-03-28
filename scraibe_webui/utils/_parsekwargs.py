@@ -29,11 +29,20 @@ class ParseKwargs(Action):
         Raises:
             ValueError: If any string in values does not contain the '=' character, indicating an invalid format.
         """
+        
         setattr(namespace, self.dest, dict())
         for value in values:
-            key, value = value.split('=')
+            if '=' in value:
+                key, value = value.split('=')
             try:
                 value = eval(value)
             except:
                 pass
-            getattr(namespace, self.dest)[key] = value
+            if isinstance(value, dict):
+                key, value = value.popitem()
+                try: 
+                    value = eval(value)
+                except:
+                    pass
+            getattr(namespace, self.dest)[key] = value    
+  

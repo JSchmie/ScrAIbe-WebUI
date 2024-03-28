@@ -20,8 +20,6 @@ def run_scraibe(task,
         progress(0, desc='Starting task...')
         source = audio1 or audio2 or video1 or video2 or file_in
         
-        print(gv.PIPE)
-        
         if isinstance(source, list):
             source = [s.name for s in source]
             if len(source) == 1:

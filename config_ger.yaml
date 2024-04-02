@@ -2,6 +2,7 @@ interface_type: simple_de # use german interface
 models:
   whisper_model : base
   use_auth_token: null
+  dia_model: models/pyannote/config.yaml
 layout:
   header: ./header_de.html
 

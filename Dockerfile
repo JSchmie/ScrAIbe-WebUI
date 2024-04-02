@@ -20,8 +20,9 @@ COPY requirements.txt /app/requirements.txt
 COPY README.md /app/README.md
 COPY scraibe_webui /app/scraibe_webui
 COPY setup.py /app/setup.py
-# COPY custom_config.yml /custom_config.yml
+COPY models /app/models
 COPY config_ger.yaml /config_ger.yaml
+COPY header_de.html /app/header_de.html
 
 #Installing all necessary Dependencies and Running the Application with a personalised Hugging-Face-Token
 RUN apt update && apt-get install -y libsm6 libxrender1 libfontconfig1 git

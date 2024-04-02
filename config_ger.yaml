@@ -4,4 +4,5 @@ models:
   use_auth_token: null
 layout:
   header: ./header_de.html
+  footer: ./footer_de.html
 

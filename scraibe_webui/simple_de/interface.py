@@ -59,7 +59,7 @@ def gradio_Interface(layout : dict) -> gr.Blocks:
                 
                     task = gr.Radio(["Automatische Transkription mit Sprecher*innen-Erkennung", 
                                      "Transkription ohne Sprecher*innen-Erkennung", 
-                                     "Sprecher*innen-Erkennung"], label="Task",
+                                     "Sprecher*innen-Erkennung ohne Transkription"], label="Aufgabe",
                                     value= 'Automatische Transkription mit Sprecher*innen-Erkennung')
                     
                     num_speakers = gr.Number(value=0, label= "Anzahl der Sprecher*innen", 
@@ -96,12 +96,12 @@ def gradio_Interface(layout : dict) -> gr.Blocks:
                     annotation = gr.Textbox(label="Namensgebung der Sprecher*innen",
                                         info= "Bitte geben Sie eine Liste der Sprecher*innen an,"\
                                             " die in exakt dieser Reihenfolge beginnen zu sprechen."\
-                                            " Verwenden Sie Komma ',' als Trennzeichen."\
+                                            " Verwenden Sie ein Komma ( , ) als Trennzeichen."\
                                             "  Beachten Sie, dass der erste Name SPEAKER_00,"\
                                             " der zweite SPEAKER_01 usw. zugeordnet wird.",
                                         visible= False, interactive= True)
                     
-                    annotate = gr.Button(value="Annotieren der Sprecher*innen", visible= False, interactive= True)
+                    annotate = gr.Button(value="Annotieren der Sprecher*innen", visible= False, interactive= True, )
             
             if layout.get('footer') is not None:            
                 gr.HTML(layout.get('footer'), visible= True, show_label=False)

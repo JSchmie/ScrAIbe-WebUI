@@ -54,7 +54,7 @@ def run_scraibe(task,
                     update(visible = False),
                     update(visible = False))
             
-        elif task == 'Sprecher*innen-Erkennung':
+        elif task == 'Sprecher*innen-Erkennung ohne Transkription':
             
             out = gv.PIPE.diarisation(source = source,
                                 num_speakers = num_speakers)

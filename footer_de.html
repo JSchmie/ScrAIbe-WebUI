@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Footer Beispiel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Resetting margins and paddings */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Ensures footer stays at the bottom */
+        }
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10%;
+            background-image: linear-gradient(#F9FAFB, #50AF31); /* Vertical gradient */
+            font-size: 16px;
+            color: #333;
+            width: 100%; /* Ensure footer is full width */
+            box-sizing: border-box; /* Padding is included in the width */
+        }
+        .footer div, .footer a {
+            margin: 0 5px;
+        }
+        .footer div {
+            text-align: left;
+        }
+        .footer a {
+            color: #333;
+            transition: color 0.3s ease;
+        }
+        .footer a:hover {
+            color: #50AF31;
+        }
+        .github-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .github-icon a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: none;
+            text-decoration: none !important; /* Removes underline */
+            color: white;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .github-icon i {
+            font-size: 24px;
+        }
+        .github-icon a:hover, .github-icon a:focus {
+            background-color: #50AF31;
+            transform: scale(1.1);
+            text-decoration: none; /* Removes underline */
+        }
+        .github-icon a, .github-icon a:hover, .github-icon a:active, .github-icon a:visited {
+            text-decoration: none;
+        }
+        .build-version {
+            margin-top: 8px; /* Adjust spacing between the icon and the text as needed */
+            color: white; /* Adjust text color as needed */
+            font-size: 12px; /* Adjust font size as needed */
+        }
+    </style>
+</head>
+<body>
+
+<div> <!-- Content of the page goes here -->
+    <!-- Your page content -->
+</div>
+
+<footer class="footer">
+    <div>
+        <strong>Impressum</strong><br>
+        Firmenname: [Firmenname]<br>
+        Adresse: [Adresse], [Stadt]
+    </div>
+    <div>
+        <strong>Kontakt</strong><br>
+        KIDA Beratungsstelle <br>
+        E-Mail: <a href="mailto:SKILLS@listserv.dfn.de">SKILLS@listserv.dfn.de</a><br>
+        <a href="https://www.kida-bmel.de/kida/ki-beratung">About us</a>
+    </div>
+    <div class="github-section">
+        <div class="github-icon">
+            <a href="https://github.com/JSchmie/ScrAIbe-WebUI" aria-label="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+        </div>
+        <div class="build-version">Build-Version: 0.1.0</div>
+    </div>
+    
+</footer>
+
+</body>
+</html>

@@ -62,7 +62,10 @@ def get_version(build_version=False):
         date = dt.date.strftime(dt.datetime.now(), "%Y%m%d%H%M%S")
         return VERSION + ".dev" + date
     else:
-        return VERSION + ".dev0+" + GIT_REVISION[:7]
+        if len(GIT_REVISION) > 0:
+            return VERSION + ".dev0+" + GIT_REVISION[:7]
+        else:
+            return VERSION + ".dev0"
 
 
 

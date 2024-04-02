@@ -1,8 +1,3 @@
 /build
 scraibe_webui.egg-info
-scraibe_webui/__pycache__
-scraibe_webui/utils/__pycache__
-scraibe_webui/simple/__pycache__
-scraibe_webui/simple_de/__pycache__
-scraibe_webui/_async/__pycache__
-scraibe_webui/sync/__pycache__
+**/__pycache__

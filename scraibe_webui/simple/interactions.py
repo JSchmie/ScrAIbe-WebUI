@@ -9,16 +9,14 @@ def run_scraibe(task,
                num_speakers,
                translate,
                language,
-               audio1,
-               audio2,
-               video1,
-               video2,
+               audio,
+               video,
                file_in,
                progress = Progress(track_tqdm= True)):
     
         # get *args which are not None
         progress(0, desc='Starting task...')
-        source = audio1 or audio2 or video1 or video2 or file_in
+        source = audio or video or file_in
         
         if isinstance(source, list):
             source = [s.name for s in source]

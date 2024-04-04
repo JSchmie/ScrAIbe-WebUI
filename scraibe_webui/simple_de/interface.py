@@ -83,7 +83,7 @@ def gradio_Interface(layout : dict) -> gr.Blocks:
                                         interactive= True, visible= False)
                     file_in = gr.Files(label="Datei oder Dateien", interactive= True, visible= False)
                     
-                    submit = gr.Button(value="Transkription starten")
+                    submit = gr.Button(value="Transkription starten",variant="primary")
                 
                 with gr.Column():
                     

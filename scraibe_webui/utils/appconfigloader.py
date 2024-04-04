@@ -137,9 +137,6 @@ class AppConfigLoader(ConfigLoader):
         else:
             footer = None
         
-        print("allowed path", self.config['launch']['allowed_paths'])
-        print(_logo)
-        
         return {'header' : header ,
                 'footer' : footer} 
         

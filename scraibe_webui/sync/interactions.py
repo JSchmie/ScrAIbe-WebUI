@@ -11,10 +11,8 @@ def run_scraibe(task,
                 num_speakers,
                 translate,
                 language,
-                audio1,
-                audio2,
-                video1,
-                video2,
+                audio,
+                video,
                 file_in):
     
     if gv.MODELS_PROCESS.is_alive():
@@ -27,7 +25,7 @@ def run_scraibe(task,
                                       gv.RUNNING_EVENT)
     
     # progress(0.1, desc='Starting task...')
-    source = audio1 or audio2 or video1 or video2 or file_in
+    source = audio or video or file_in
     
     if isinstance(source, list):
         source = [s.name for s in source]

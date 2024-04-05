@@ -22,12 +22,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 10%;
-            background-image: #F9FAFB; /* Vertical gradient */
+            padding: 20px; /* Adjusted for demonstration */
+            background-color: #F9FAFB; /* Fixed background color */
             font-size: 16px;
             color: #333;
             width: 100%; /* Ensure footer is full width */
             box-sizing: border-box; /* Padding is included in the width */
+        }
+        .footer > div:first-child {
+            margin-left: -20px;
+            padding-left: 0; /* Reducing or eliminating left padding if it's causing the shift */
         }
         .footer div, .footer a {
             margin: 0 5px;
@@ -77,6 +81,7 @@
             color: white; /* Adjust text color as needed */
             font-size: 12px; /* Adjust font size as needed */
         }
+
     </style>
 </head>
 <body>

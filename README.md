@@ -88,6 +88,22 @@ The nvidia-ctk command modifies the /etc/docker/daemon.json file on the host. Th
 sudo systemctl restart docker
 ```
 
+## Start Gradio with Docker
+
+To start the application, just us the `easy_start.sh` script in this repository.  
+Navigate to the path of the cloned repository and make it executable and run it with: 
+```bash
+chmod +x easy_start.sh
+sudo ./easy_start.sh
+```
+The script will search for already created and/or started Gradio applications and run them, or create a new one.  
+As the script is working with docker inside, it has to be started as sudo.
+
+If you want to start the container without the script, use 
+```bash
+sudo docker run -d -p 7860:7860 --name scraibe_de --gpus 'all' hadr0n/scraibe:0.1.1.dev-base-de --server-kwargs inbrowser=True
+```
+
 ## Alernative install it via CONDA
 
 For more informations go to: https://conda.io/projects/conda/en/latest/user-guide/install/index.html

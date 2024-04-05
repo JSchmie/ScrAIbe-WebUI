@@ -108,10 +108,59 @@ sudo docker run -d -p 7860:7860 --name scraibe_de --gpus 'all' hadr0n/scraibe:0.
 
 For more informations go to: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
 
-1. Download Anaconda installer : https://www.anaconda.com/download/
-
-'''bash
-
+```bash
 wet https://repo.anaconda.com/archive/Anaconda3-2024.02-1-Linux-x86_64.sh
-'''
+bash Anaconda3-2020.11-Linux-x86_64.sh -b -p ~/anaconda3
+rm Anaconda3-2020.11-Linux-x86_64.sh
+echo 'export PATH="~/anaconda3/bin:$PATH"' >> ~/.bashrc 
 
+# Reload default profile
+conda init
+
+source ~/.bashrc
+```
+
+### setup enviroment:
+
+```bash
+conda create -y --name scraibe \
+    && conda activate scraibe \
+    && conda install -y pip \
+    && conda install -y nvidia/label/cuda-12.1.0::cuda-toolkit \  
+```
+
+Install ScrAIbe-WebUI from your local git folder:
+```bash
+pip install .
+```
+
+**Note:** Ensure that `setup.py` is in your current working dictionary
+
+To **start** the webui just run you need a huggingface token and gained access to the pyannote models: 
+
+- https://huggingface.co/pyannote/speaker-diarization-3.1
+- https://huggingface.co/pyannote/segmentation-3.0
+
+add your token to the `costume_ger.yaml`:
+
+```yaml
+interface_type: simple_de # use german interface
+models:
+  whisper_model : base # select the whisper model
+  use_auth_token: YOUR_HF_TOKEN # Put your HF_TOKEN here 
+layout:
+  header: ./header_de.html
+  footer: ./footer_de.html
+```
+
+run the *webui* using the **cli** entry point `scraibe-webui`
+
+```bash
+scraibe-webui --start-server -c ./config_ger.yaml
+```
+
+**Note:** If `scraibe-webui` does not find your `config_ger.yaml` please use the absoute path to your config file. 
+
+```bash
+scraibe-webui --start-server -c $(pwd)/config_ger.yaml
+```

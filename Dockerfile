@@ -23,6 +23,7 @@ COPY setup.py /app/setup.py
 COPY models /app/models
 COPY config_ger.yaml /config_ger.yaml
 COPY header_de.html /app/header_de.html
+COPY footer_de.html /app/footer_de.html
 
 #Installing all necessary Dependencies and Running the Application with a personalised Hugging-Face-Token
 RUN apt update && apt-get install -y libsm6 libxrender1 libfontconfig1 git

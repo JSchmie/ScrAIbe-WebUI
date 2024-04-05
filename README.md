@@ -3,13 +3,13 @@
 
 The Gradio App is a user-friendly interface for ScrAIbe. It enables you to run the model without any coding knowledge. Therefore, you can run the app in your browser and upload your audio file, or you can make the Framework avail on your network and run it on your local machine.
 
-## Prequesits: 
+## Prequesits using Docker: 
 
-## Install Docker: 
+### Install Docker: 
 
 For more informations go to: https://docs.docker.com/engine/install/ubuntu/
 
-### Add Docker's official GPG key:
+#### Add Docker's official GPG key:
 ```bash
 sudo apt-get update
 sudo apt-get install ca-certificates curl
@@ -17,7 +17,7 @@ sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 ```
-# Add the repository to Apt sources:
+#### Add the repository to Apt sources:
 
 ```bash
 echo \
@@ -27,7 +27,7 @@ echo \
 sudo apt-get update
 ```
 
-### Install the Docker packages.
+#### Install the Docker packages.
 
 To install the latest version, run:
 
@@ -41,7 +41,7 @@ To install the latest version, run:
 sudo docker run hello-world
 ```
 
-## Install Nvidia Container Toolkit
+### Install Nvidia Container Toolkit
 
 For more informations go to: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
 
@@ -69,7 +69,7 @@ sudo apt-get install -y nvidia-container-toolkit
 ```
 
 
-## Configure Docker to use Nvidia Container Toolkit 
+### Configure Docker to use Nvidia Container Toolkit 
 
 Ensure:
 - You installed a supported container engine (Docker, Containerd, CRI-O, Podman).
@@ -88,7 +88,7 @@ The nvidia-ctk command modifies the /etc/docker/daemon.json file on the host. Th
 sudo systemctl restart docker
 ```
 
-## Start Gradio with Docker
+## Start ScrAIbe-WebUI with Docker
 
 To start the application, just us the `easy_start.sh` script in this repository.  
 Navigate to the path of the cloned repository and make it executable and run it with: 
@@ -106,6 +106,8 @@ sudo docker run -d -p 7860:7860 --name scraibe_de --gpus 'all' hadr0n/scraibe:0.
 
 ## Alernative install it via CONDA
 
+### Install conda
+
 For more informations go to: https://conda.io/projects/conda/en/latest/user-guide/install/index.html
 
 ```bash
@@ -120,7 +122,7 @@ conda init
 source ~/.bashrc
 ```
 
-### setup enviroment:
+### Setup enviroment:
 
 ```bash
 conda create -y --name scraibe \
@@ -128,6 +130,8 @@ conda create -y --name scraibe \
     && conda install -y pip \
     && conda install -y nvidia/label/cuda-12.1.0::cuda-toolkit \  
 ```
+
+### Install and run ScrAIbe-WebUI
 
 Install ScrAIbe-WebUI from your local git folder:
 ```bash

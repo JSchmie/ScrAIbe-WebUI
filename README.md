@@ -168,3 +168,20 @@ scraibe-webui --start-server -c ./config_ger.yaml
 ```bash
 scraibe-webui --start-server -c $(pwd)/config_ger.yaml
 ```
+
+### Use a local model:
+
+If you have acess to a local model of pyannote modify your `config_ger.yaml` like this:
+
+
+```yaml
+interface_type: simple_de # use german interface
+models:
+  whisper_model : base # select the whisper model
+  dia_model: models/pyannote/config_pannote.yaml # path to your model config file
+layout:
+  header: ./header_de.html
+  footer: ./footer_de.html
+```
+
+Now you can go back to the entry point from above.

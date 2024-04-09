@@ -64,7 +64,8 @@ def run_scraibe(task,
 
 def select_task(choice):
         # tell the app that it is still in use
-    if choice == '"Automatische Transkription mit Sprecher*innen-Erkennung"':
+
+    if choice == 'Automatische Transkription mit Sprecher*innen-Erkennung':
         
         return (update(visible = True),
                 update(visible = True),
@@ -78,7 +79,7 @@ def select_task(choice):
                 update(visible = True))
 
         
-    elif choice == 'Sprecher*innen-Erkennung':
+    elif choice == 'Sprecher*innen-Erkennung ohne Transkription':
         
         return (update(visible = True),
                 update(visible = False),

@@ -113,13 +113,6 @@ def gradio_Interface(layout : dict) -> gr.Blocks:
             task.change(fn=select_task, inputs=[task],
                         outputs=[num_speakers, translate, language])
             
-            translate.change(fn= lambda x : gr.update(value = x),
-                                inputs=[translate], outputs=[translate])
-            num_speakers.change(fn= lambda x : gr.update(value = x),
-                                inputs=[num_speakers], outputs=[num_speakers])
-            language.change(fn= lambda x : gr.update(value = x), 
-                            inputs=[language], outputs=[language])
-            
             submit.click(fn = run_scraibe, 
                             inputs= [task, num_speakers, translate, language, audio, video, file_in],
                             outputs=[out_txt, out_json, annotation, annotate], concurrency_limit = None)

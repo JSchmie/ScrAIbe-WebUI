@@ -64,7 +64,7 @@ def gradio_Interface(layout : dict) -> gr.Blocks:
                     
                     num_speakers = gr.Number(value=0, label= "Anzahl der Sprecher*innen", 
                                     info = "Anzahl der Sprecher*innen in der Audiodatei. Wenn Sie es nicht wissen oder sich unsicher sind,\
-                                        lassen Sie es bei 0.", visible= True)
+                                        lassen Sie es bei 0.", minimum=0, visible= True)
                     
                     translate = gr.Checkbox(label="Übersetzung in die Englische Sprache", value = False,
                                     info="Setzen Sie hier den Haken, wenn Sie eine Übersetzung in die Englische Sprache wünschen.",

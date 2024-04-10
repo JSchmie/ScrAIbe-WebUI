@@ -71,9 +71,9 @@ def gradio_sync_Interface(layout : dict) -> gr.Blocks:
                     task = gr.Radio(["Auto Transcribe", "Transcribe", "Diarisation"], label="Task",
                                     value= 'Auto Transcribe')
                     
-                    num_speakers = gr.Number(value=0, label= "Number of speakers (optional)", 
+                    num_speakers = gr.Number(value=0, label= "Number of speakers (optional)",
                                     info = "Number of speakers in the audio file. If you don't know,\
-                                        leave it at 0.", visible= True)
+                                        leave it at 0.", minimum=0, visible= True)
                     
                     translate = gr.Checkbox(label="Translation", value = False,
                                     info="Select if you want the output to be translated to English.",
@@ -122,13 +122,6 @@ def gradio_sync_Interface(layout : dict) -> gr.Blocks:
             
             task.change(fn=select_task, inputs=[task],
                         outputs=[num_speakers, translate, language])
-            
-            translate.change(fn= lambda x : gr.update(value = x),
-                                inputs=[translate], outputs=[translate])
-            num_speakers.change(fn= lambda x : gr.update(value = x),
-                                inputs=[num_speakers], outputs=[num_speakers])
-            language.change(fn= lambda x : gr.update(value = x), 
-                            inputs=[language], outputs=[language])
             
             submit.click(fn = run_scraibe, 
                             inputs=[task, num_speakers, translate, language, audio, video, file_in],

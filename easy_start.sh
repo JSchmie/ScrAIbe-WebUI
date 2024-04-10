@@ -20,8 +20,7 @@ if [ ! "$(docker ps -a -q -f name=$cname)" ]; then
     if [ $port_stat == 0 ]; then
         echo "No free port available! Checked ports: $ports."
     else
-        docker run -d -p $port:7860 --name $cname --gpus 'all' hadr0n/scraibe:0.1.1.dev-base-de --server-kwargs inbrowser=True
-        xdg-open "http://0.0.0.0:$port"
+        docker run -i -p $port:7860 --name $cname --gpus 'all' hadr0n/scraibe:0.1.1.dev-base-de
     fi
 else
     # container only found in inactive list (no -a here) -> start container
@@ -36,14 +35,12 @@ else
         done
         echo "Found container"
         docker start $cname
-        xdg-open "http://0.0.0.0:$port"
     # container found and already running -> echo ports
     else
         blocked_port=$(docker ps --format '{{.Ports}}' -f name=$cname)
         echo "Container already running on port $blocked_port"
         # find first occurence of ":" followed by 2 to 4 numbers -> find oprt number in container output
         port_nr="$(echo $blocked_port | grep -oP ':\K([[:digit:]]{2,4})' | head -1)"
-        xdg-open "http://0.0.0.0:$port_nr"
 
     fi
 fi  

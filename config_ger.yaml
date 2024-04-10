@@ -6,4 +6,5 @@ models:
 layout:
   header: ./header_de.html
   footer: ./footer_de.html
-
+launch:
+  inbrowser: True

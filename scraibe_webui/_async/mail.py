@@ -34,7 +34,8 @@ class MailService:
         
     def setup_message(self, subject : str,
                       receiver_email : str,
-                      message : str):
+                      message : str,
+                      received_text_file: str):
         """Setup the mail message.
         
         Args:
@@ -45,13 +46,41 @@ class MailService:
         Returns:
             MIMEMultipart: The mail message.
         """
+        text_file = received_text_file
+
+
+
+        html = f"""\ 
+       <html>
+        <body>
+         <p>Thank you for using ScrAIbe.<br>
+       Here is your transcripted audio file:<br>
+          <br><br><h1> {message} </h1><br>
+         </p>
+       </body>
+      </html>"""
+
+        with open(text_file, "w") as file:
+           file.write(message)
         
-        _message = MIMEMultipart()
+
+
+        _message = MIMEMultipart("alternative")
         _message["From"] = self.sender_email
         _message["To"] = receiver_email
         
         _message["Subject"] = self.default_subject + " - " + subject
+
+        with open(text_file, "r") as file:
+            attachment = MIMEText(file.read())
+            attachment.add_header('Content_Disposition', 'attachment', filename=text_file)
+            _message.attach(attachment)
+
+
+
         _message.attach(MIMEText(str(message), "plain"))
+
+        _message.attach(MIMEText(html, 'html'))
         
         return _message
     
@@ -104,7 +133,8 @@ class MailService:
         
     def send_mail(self, receiver_email : str,
                   subject : str,
-                  message : str) -> None:
+                  message : str,
+                  received_text_file: str) -> None:
         """Send a mail.
         
         Args:
@@ -113,7 +143,7 @@ class MailService:
             message (str): The message of the mail.
         """
         
-        _message = self.setup_message(subject, receiver_email, message)
+        _message = self.setup_message(subject, receiver_email, message, received_text_file)
         
         if self.mailserver is None:
             # Reconnect to the mail server if it is not connected.

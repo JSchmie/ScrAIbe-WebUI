@@ -35,7 +35,8 @@ class MailService:
     def setup_message(self, subject : str,
                       receiver_email : str,
                       message : str,
-                      received_text_file: str):
+                      received_text_file: str,
+                      only_txt: bool=False):
         """Setup the mail message.
         
         Args:
@@ -62,25 +63,27 @@ class MailService:
 
         with open(text_file, "w") as file:
            file.write(message)
+
+
         
-
-
+         
+         
         _message = MIMEMultipart("alternative")
         _message["From"] = self.sender_email
         _message["To"] = receiver_email
         
         _message["Subject"] = self.default_subject + " - " + subject
 
+        
         with open(text_file, "r") as file:
             attachment = MIMEText(file.read())
             attachment.add_header('Content_Disposition', 'attachment', filename=text_file)
             _message.attach(attachment)
 
 
-
-        _message.attach(MIMEText(str(message), "plain"))
-
-        _message.attach(MIMEText(html, 'html'))
+        if only_txt == False:
+           _message.attach(MIMEText(str(message), "plain"))
+           _message.attach(MIMEText(html, 'html'))
         
         return _message
     
@@ -134,7 +137,8 @@ class MailService:
     def send_mail(self, receiver_email : str,
                   subject : str,
                   message : str,
-                  received_text_file: str) -> None:
+                  received_text_file: str,
+                  only_txt: bool=False) -> None:
         """Send a mail.
         
         Args:
@@ -143,7 +147,7 @@ class MailService:
             message (str): The message of the mail.
         """
         
-        _message = self.setup_message(subject, receiver_email, message, received_text_file)
+        _message = self.setup_message(subject, receiver_email, message, only_txt)
         
         if self.mailserver is None:
             # Reconnect to the mail server if it is not connected.

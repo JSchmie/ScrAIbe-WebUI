@@ -40,10 +40,11 @@ ScrAIbe-WebUI offers multiple installation methods, including Docker, pip, and b
 
 ## Advanced Setup 🛠
 
-For advanced configuration and usage, please refer to our Advanced Setup Tutorial.
-Contributing
+For advanced configuration and usage, please refer to our [Advanced Setup Tutorial](./docs/Customize.md).
+
 
 ## Contributions
+
 We welcome contributions! Please see our Contributing Guidelines for more information.
 
 

@@ -2,6 +2,7 @@ import smtplib
 import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from interactions import run_scraibe
 
 class MailService:
     def __init__(self,
@@ -141,19 +142,128 @@ class MailService:
                   only_txt: bool=False) -> None:
         """Send a mail.
         
-        Args:
+        Args:   
             receiver_email (str): The email address of the receiver.
             subject (str): The subject of the mail.
             message (str): The message of the mail.
         """
         
-        _message = self.setup_message(subject, receiver_email, message, only_txt)
+        _message = self.setup_message(subject, receiver_email, message, received_text_file, only_txt)
         
         if self.mailserver is None:
             # Reconnect to the mail server if it is not connected.
             self.mailserver = self.setup_mailserver()
         
         self.mailserver.sendmail(self.sender_email, receiver_email, _message.as_string())
+
+
+    def setup_default_positive_message(self,
+                                       receiver_email: str):
+        subject = 'Your transcripted audio file was successfully send!'
+        message= 'E-Mail succesfully sent, your audio file now gets transcribed. Thank you for using ScrAIbe' 
+
+
+
+        html = f"""\ 
+       <html>
+        <body>
+         <p>Thank you for using ScrAIbe.<br>
+       <br>
+          <br><br><h1> {message} </h1><br>
+         </p>
+       </body>
+      </html>"""
+
+        
+
+        
+         
+         
+        _message = MIMEMultipart("alternative")
+        _message["From"] = self.sender_email
+        _message["To"] = receiver_email
+        
+        _message["Subject"] = self.default_subject + " - " + subject
+        _message.attach(MIMEText(str(message), "plain"))
+        _message.attach(MIMEText(html, 'html'))
+
+        
+        
+        return _message
+            
+
+    def setup_default_negative_message(self,
+                                       receiver_email: str):
+        subject = 'ScrAIbe failed'
+        message= 'E-Mail has not been sent, your audio file needs to be sent again. If the problem persists, please contact us.' 
+
+
+
+        html = f"""\ 
+       <html>
+        <body>
+         <p>Thank you for using ScrAIbe.<br>
+       <br>
+          <br><br><h1> {message} </h1><br>
+         </p>
+       </body>
+      </html>"""
+
+        
+
+        
+         
+         
+        _message = MIMEMultipart("alternative")
+        _message["From"] = self.sender_email
+        _message["To"] = receiver_email
+        
+        _message["Subject"] = self.default_subject + " - " + subject
+        _message.attach(MIMEText(str(message), "plain"))
+        _message.attach(MIMEText(html, 'html'))
+
+        
+        
+        return _message
+
+
+    def scraibe_done(self, receiver_email : str,
+                        ) -> None:
+        done_message = self.setup_default_positive_message(receiver_email)
+        
+        if self.mailserver is None:
+            # Reconnect to the mail server if it is not connected.
+            self.mailserver = self.setup_mailserver()
+
+        
+
+        
+        
+        self.mailserver.sendmail(self.sender_email, receiver_email, done_message.as_string())
+
+
+    def scraibe_failed(self, receiver_email : str,
+                        ) -> None:
+        failed_message = self.setup_default_negative_message(receiver_email)
+        
+        if self.mailserver is None:
+            # Reconnect to the mail server if it is not connected.
+            self.mailserver = self.setup_mailserver()
+
+        
+
+        
+        
+        self.mailserver.sendmail(self.sender_email, receiver_email, failed_message.as_string())    
+            
+
+        
+
+        
+
+
+        
+              
     
     @classmethod
     def from_config(cls, config : dict):
@@ -172,6 +282,11 @@ class MailService:
                    sender_password = config['sender_password'],
                    context_kwargs = config['context_kwargs'],
                    default_subject = config['default_subject'])
+    
+    
+    
+
+
     
     def __repr__(self) -> str:
         """Representation of the object.

@@ -51,6 +51,8 @@ class ParseKwargs(Action):
             except:
                 pass
             if isinstance(value, dict):
+                if len(value) == 0:
+                    continue
                 key, value = value.popitem()
                 try: 
                     value = eval(value)

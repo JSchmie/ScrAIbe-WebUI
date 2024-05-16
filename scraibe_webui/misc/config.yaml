@@ -43,6 +43,7 @@ layout:
   # themes: null # dict of themes from hugging face placeholder
 models:
   whisper_model : null
+  whisper_type: null
   dia_model: null
   use_auth_token: null
   device: null # set your device

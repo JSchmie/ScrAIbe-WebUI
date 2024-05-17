@@ -157,103 +157,83 @@ class MailService:
         self.mailserver.sendmail(self.sender_email, receiver_email, _message.as_string())
 
 
-    def setup_default_positive_message(self,
-                                       receiver_email: str):
-        subject = 'Your transcripted audio file was successfully send!'
-        message= 'E-Mail succesfully sent, your audio file now gets transcribed. Thank you for using ScrAIbe' 
-
-
-
-        html = f"""\ 
+    def setup_default_message(self,
+                                       receiver_email: str,
+                                       positive_negativ: True,
+                                       Exception: Exception):
+        """ Sets up a default Message which can be positive or negative based on the input
+         Args:
+             receiver_email(str): The email address of the receiver
+             positive_negativ (bool):  Decider for a positive or negativ default message, True for positive Message, False for negative Message
+             Exception(class): Exception"""
+        subject1 = 'ScrAIbe failed'
+        subject2 = 'Your transcripted audio file was successfully send!'
+        message1 = 'ScrAIbe got succesfully initiated, your audio file is now being processed.'
+        message2 = 'E-Mail has not been sent, your audio file needs to be sent again. If the problem persists, please contact us.'
+        html1 = f"""\ 
        <html>
         <body>
          <p>Thank you for using ScrAIbe.<br>
        <br>
-          <br><br><h1> {message} </h1><br>
+          <br><br><h1> {message1} </h1><br>
          </p>
        </body>
       </html>"""
-
         
-
-        
-         
-         
+        html2 = f"""\ 
+       <html>
+        <body>
+         <p>Thank you for using ScrAIbe.<br>
+       <br>
+          <br><br><h1> {message2}{Exception}  </h1><br>
+         </p>
+       </body>
+      </html>"""
+       
         _message = MIMEMultipart("alternative")
         _message["From"] = self.sender_email
         _message["To"] = receiver_email
-        
-        _message["Subject"] = self.default_subject + " - " + subject
-        _message.attach(MIMEText(str(message), "plain"))
-        _message.attach(MIMEText(html, 'html'))
-
-        
-        
+        if positive_negativ == True:
+         _message["Subject"] = self.default_subject + " - " + subject1
+         _message.attach(MIMEText(str(message1), "plain"))
+         _message.attach(MIMEText(html1, 'html'))
+        else:
+         _message["Subject"] = self.default_subject + " - " + subject2
+         _message.attach(MIMEText(str(message2), "plain"))
+         _message.attach(MIMEText(html2, 'html'))   
         return _message
             
 
-    def setup_default_negative_message(self,
-                                       receiver_email: str):
-        subject = 'ScrAIbe failed'
-        message= 'E-Mail has not been sent, your audio file needs to be sent again. If the problem persists, please contact us.' 
-
-
-
-        html = f"""\ 
-       <html>
-        <body>
-         <p>Thank you for using ScrAIbe.<br>
-       <br>
-          <br><br><h1> {message} </h1><br>
-         </p>
-       </body>
-      </html>"""
-
-        
-
-        
-         
-         
-        _message = MIMEMultipart("alternative")
-        _message["From"] = self.sender_email
-        _message["To"] = receiver_email
-        
-        _message["Subject"] = self.default_subject + " - " + subject
-        _message.attach(MIMEText(str(message), "plain"))
-        _message.attach(MIMEText(html, 'html'))
-
-        
-        
-        return _message
-
-
     def scraibe_done(self, receiver_email : str,
-                        ) -> None:
-        done_message = self.setup_default_positive_message(receiver_email)
-        
+                     positive_negativ=True,
+                        ) -> None:      
+        """ Sends a Mail for a successfull initiation of ScrAIbe.
+
+         Args: 
+            receiver_email (str): The email address of the receiver.
+            positive_negativ(bool): Decider for a positive or negativ default message, True for positive Message, False for negative Message """
+        done_message = self.setup_default_message(receiver_email, positive_negativ)    
         if self.mailserver is None:
             # Reconnect to the mail server if it is not connected.
             self.mailserver = self.setup_mailserver()
-
-        
-
-        
-        
         self.mailserver.sendmail(self.sender_email, receiver_email, done_message.as_string())
 
 
     def scraibe_failed(self, receiver_email : str,
-                        ) -> None:
-        failed_message = self.setup_default_negative_message(receiver_email)
-        
+                       Exception: Exception,
+                       positive_negativ=False,
+                       ) -> None:       
+        """ Sends a Mail for a failed initiation of ScrAIbe.
+
+         Args: 
+            receiver_email (str): The email address of the receiver.
+            positive_negativ (bool): Decider for a positive or negativ default message, True for positive Message, False for negative Message
+            Exception(class): Exception """
+        failed_message = self.setup_default_message(receiver_email, positive_negativ, Exception)       
         if self.mailserver is None:
             # Reconnect to the mail server if it is not connected.
             self.mailserver = self.setup_mailserver()
-
-        
-
-        
-        
+      
         self.mailserver.sendmail(self.sender_email, receiver_email, failed_message.as_string())    
             
 

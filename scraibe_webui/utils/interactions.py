@@ -183,6 +183,11 @@ def run_scraibe_async(task : str,
                 keep_model_alive : bool,
                 scraibe_params : dict,):
     
+    source = audio or video or file_in
+    
+    
+    
+    
     #TODO: Implement the function to send the transcript via email
     return update(value = show_notification(mail, subject),visible = True)
 

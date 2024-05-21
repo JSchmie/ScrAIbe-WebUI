@@ -110,7 +110,7 @@ def gradio_Interface(layout : dict, scraibe_params : dict ) -> gr.Blocks:
                         mail = gr.Textbox(type= 'email', label="Email address for transcription delivery", placeholder= "Enter your email",
                             visible= True)
             
-                        subject = gr.Textbox(value="My Test Transcript", label="Subject for transcription delivery",
+                        subject = gr.Textbox(value="My awesome Transcript", label="Subject for transcription delivery",
                                         visible= True)
                         
                         output = gr.Textbox(visible= False)

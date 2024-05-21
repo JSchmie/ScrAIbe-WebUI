@@ -21,7 +21,7 @@ class BoundedThread(Thread):
             del self._target, self._args, self._kwargs
 
 
-class BackgroundProcess:
+class BackgroundThread:
     """
     Handle background process for transcribing audio and sending the result to the client using Email
     """

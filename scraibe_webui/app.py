@@ -1,20 +1,8 @@
 
-from .utils.configloader import ConfigLoader
-
-
-def app(config : str = None, **kwargs):
-       # Load and override configuration from the YAML file with kwargs
-    
-    interface_type = kwargs.get('interface_type', None)
-
-    if not interface_type:
-        _config = ConfigLoader.load_config(config, **kwargs)
-        
-        interface_type = _config.get('interface_type')
-        
-        if not interface_type:
-            raise ValueError("interface_type is not defined in the configuration file."\
-                " Please enshure default config.yaml is present or provide a valid configuration file.")
+from .utils.appconfigloader import AppConfigLoader
+from .utils.wrapper import ScraibeWrapper
+from ui import gradio_Interface
+from scraibe_webui.global_var import gv
 
 
 def new_app(config : str = None, **kwargs):
@@ -42,7 +30,7 @@ def new_app(config : str = None, **kwargs):
 
     # Load and override configuration from the YAML file with kwargs
     
-    config = SimpleLoader.load_config(config, **kwargs)
+    config = AppConfigLoader.load_config(config, **kwargs)
 
     # Set the layout for the Gradio interface
     layout = config.get_layout()
@@ -50,7 +38,7 @@ def new_app(config : str = None, **kwargs):
     print("Starting Gradio Web Interface")
     
     # Stup PIPE:
-    gv.PIPE = GradioTranscriptionInterface.load_from_dict(config.models)
+    gv.PIPE = ScraibeWrapper.load_from_dict(config.models)
     
     # Launch the Gradio interface
     

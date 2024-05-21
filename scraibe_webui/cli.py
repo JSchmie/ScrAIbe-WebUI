@@ -41,7 +41,7 @@ def cli():
     config = arg_dict.pop("config")
     
     server_kwargs = arg_dict.pop("server_kwargs")
-    
+    # TODO : Change this to the new interface type
     if not config and not server_kwargs:
         subprocess.run([sys.executable, execute_path])
     if not config and server_kwargs:

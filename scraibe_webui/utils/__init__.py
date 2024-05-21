@@ -5,4 +5,3 @@ from .wrapper import *
 from .lang import *
 from .themes import *
 from ._parsekwargs import *
-from ._path import *

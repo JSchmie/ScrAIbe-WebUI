@@ -283,5 +283,14 @@ if __name__ == '__main__':
     mail_service = MailService(sender_email = "scraibe@dbfz.de",
                                  smtp_server = "smtp.leipzig.dbfz.de")
     
-    mail_service.send_mail(receiver_email = reciever,message= uplaod_html_content, subject= "Error Notification", received_text_file= "test.txt")
+    # final product
+    
+    with open(ROOT_PATH +'scraibe_webui/misc/final_product_notification_template.html', 'r') as file:
+        final_html_template = file.read()
+
+    # Format the HTML template with the dynamic content
+    final_html_content = final_html_template.format(contact_email=contact_email)
+    
+    mail_service.send_mail(receiver_email = reciever,message= uplaod_html_content, subject= "Uplaod", received_text_file= "test.txt")
     mail_service.send_mail(receiver_email = reciever,message= error_html_template, subject= "Error Notification", received_text_file= "test.txt")
+    mail_service.send_mail(receiver_email = reciever,message= final_html_content, subject= "Hurray your Transcript", received_text_file= "test.txt")

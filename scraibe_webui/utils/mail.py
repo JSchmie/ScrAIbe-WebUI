@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import smtplib
 import ssl
 from email.mime.text import MIMEText
@@ -277,6 +276,3 @@ class MailService:
         """
         
         return f"MailService(sender_email = {self.sender_email}, smtp_server = {self.smtp_server}, smtp_port = {self.smtp_port}, default_subject = {self.default_subject})"
-=======
-### Placeholder file for the mail class
->>>>>>> simplify_package

@@ -1,0 +1,52 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    background-color: #ffffff;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+.container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+h1 {
+    font-size: 1.5em;
+    margin-top: 0;
+}
+p {
+    margin: 10px 0;
+    font-size: 1em;
+}
+.error-message, .success-message {
+    padding: 10px 0;
+    margin-bottom: 15px;
+    font-size: 1em;
+}
+.error-message {
+    color: #721c24;
+}
+.success-message {
+    color: #155724;
+}
+.contact {
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #555;
+}
+.contact a {
+    color: #0056b3;
+    text-decoration: none;
+}
+.contact a:hover {
+    text-decoration: underline;
+}
+.disclaimer {
+    margin-top: 20px;
+    font-size: 0.8em;
+    color: #777;
+}

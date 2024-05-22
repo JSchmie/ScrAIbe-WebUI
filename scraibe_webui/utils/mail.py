@@ -1,83 +1,80 @@
-import smtplib
 import ssl
+import smtplib
+from typing import Union
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 
 
 class MailService:
     def __init__(self,
-                 sender_email : str,
-                 smtp_server : str, 
-                 smtp_port : int = 0,
-                 sender_password : str = None,
-                 context_kwargs : dict = {},
-                 default_subject : str = "SCRAIBE"):
-        """ Class to setup Mail Server.
-        
+                 sender_email: str,
+                 smtp_server: str, 
+                 smtp_port: int = 0,
+                 sender_password: str = None,
+                 context_kwargs: dict = {},
+                 default_subject: str = "SCRAIBE",
+                 success_template: str = None,
+                 error_template: str = None,
+                 final_template: str = None,
+                 css_template_path: str = None):
+        """Class to setup Mail Server.
+
         Args:
             sender_email (str): The email address of the sender.
             smtp_server (str): The SMTP server.
             smtp_port (int, optional): The SMTP port. Defaults to 0.
             sender_password (str, optional): The password of the sender. Defaults to None.
             context_kwargs (dict, optional): The context keyword arguments. Defaults to {}.
+            default_subject (str, optional): The default subject for emails. Defaults to "SCRAIBE".
+            success_template (str, optional): The HTML template for success upload notification. Defaults to None.
+            error_template (str, optional): The HTML template for error notification. Defaults to None.
+            final_template (str, optional): The HTML template for final product notification. Defaults to None.
+            css_template_path (str, optional): The path to the CSS template. Defaults to None.
         """
         
         self.sender_email = sender_email
         self.password = sender_password
-        
         self.default_subject = default_subject
-        
         self.context = ssl.create_default_context(**context_kwargs)
         self.smtp_server = smtp_server
         self.smtp_port = smtp_port
-        
+        self.success_template = success_template
+        self.error_template = error_template
+        self.final_template = final_template
+        self.css_template_path = css_template_path
         self.mailserver = self.setup_mailserver()
         
-    def setup_message(self, subject : str,
-                      receiver_email : str,
-                      message : str,
-                      received_text_file: str,
-                      only_txt: bool=False) -> MIMEMultipart:
-        """Setup the mail message.
-        
-        Args:
-            subject (str): The subject of the mail.
-            receiver_email (str): The email address of the receiver.
-            message (str): The message of the mail.
-            
+    def setup_mailserver(self) -> smtplib.SMTP:
+        """Setup the mail server.
+
         Returns:
-            MIMEMultipart: The mail message.
+            smtplib.SMTP: The mail server.
         """
-        text_file = received_text_file
-
-        with open(text_file, "w") as file:
-           file.write(message)
-
-        _message = MIMEMultipart("alternative")
-        _message["From"] = self.sender_email
-        _message["To"] = receiver_email
         
-        _message["Subject"] = self.default_subject + " - " + subject
-
+        if self.password is not None:
+            login = self.test_login()
+        else:
+            login = False
         
-        with open(text_file, "r") as file:
-            attachment = MIMEText(file.read())
-            attachment.add_header('Content_Disposition', 'attachment', filename=text_file)
-            _message.attach(attachment)
-
-
-        if only_txt == False:
-
-           _message.attach(MIMEText(message, 'html'))
+        server = smtplib.SMTP(self.smtp_server, self.smtp_port)
         
-        return _message
+        if login:
+            server.starttls(context=self.context)
+            server.login(self.sender_email, self.password)
+        else:
+            Warning("TLS and/or login failed. Try without TLS and/or login.")
+        
+        return server
     
     def test_login(self) -> bool:
         """Test if login is possible.
-        
+
         Returns:
             bool: True if login is successful, False otherwise.
         """
+        
         
         try:
             with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
@@ -88,179 +85,133 @@ class MailService:
             Warning("SMTP AUTH extension not supported by server. Try without login.")
             return False
     
-    def setup_mailserver(self) -> smtplib.SMTP:
-        """Setup the mail server.	
-        
+    def setup_message(self, subject: str, receiver_email: str, message: str, text_type: str, attachments: list = []) -> MIMEMultipart:
+        """Setup the mail message with optional attachments.
+
+        Args:
+            subject (str): The subject of the mail.
+            receiver_email (str): The email address of the receiver.
+            message (str): The message of the mail.
+            attachments (list, optional): List of file paths to attach. Defaults to [].
+            text_type (str): The text type of the message.
+
         Returns:
-            smtplib.SMTP: The mail server.
+            MIMEMultipart: The mail message.
         """
-        
-        if self.password is not None:
+        _message = MIMEMultipart("alternative")
+        _message["From"] = self.sender_email
+        _message["To"] = receiver_email
+        _message["Subject"] = self.default_subject + " - " + subject
+
+        # _message.attach(MIMEText(message, text_type))
+        _message.attach(MIMEText(message, 'html'))
+
+        for file_path in attachments:
             
-            login = self.test_login()
-            
-        else:
-            login = False
-        
-        server = smtplib.SMTP(self.smtp_server, self.smtp_port)
-        
-        if login:
-            server.starttls(context=self.context)
-            server.login(self.sender_email, self.password)
-        else:
-          Warning("TLS and/or login failed. Try without TLS and/or login.")
-        
-        return server   
+            with open(file_path, "rb") as file:
+                part = MIMEBase("application", "octet-stream")
+                part.set_payload(file.read())
+                encoders.encode_base64(part)
+                part.add_header("Content-Disposition", f"attachment; filename= {file_path.split('/')[-1]}")
+                _message.attach(part)
+
+        return _message
     
-    def close_mailserver(self) -> None:
-        """Close the mail server."""
-        
-        self.mailserver.quit()
-        
-        self.mailserver = None
-        
-    def send_mail(self, receiver_email : str,
-                  subject : str,
-                  message : str,
-                  received_text_file: str,
-                  only_txt: bool=False) -> None:
-        """Send a mail.
-        
+    def send_mail(self, receiver_email: str, subject: str, message: str, attachments: list = [], text_type: str ='html') -> None:
+        """Send a mail with optional attachments.
+
         Args:   
             receiver_email (str): The email address of the receiver.
             subject (str): The subject of the mail.
             message (str): The message of the mail.
+            attachments (list, optional): List of file paths to attach. Defaults to [].
+            text_type (str, optional): The text type of the message. Defaults to 'html'.
         """
         
-        _message = self.setup_message(subject, receiver_email, message, received_text_file, only_txt)
+        _message = self.setup_message(subject, receiver_email, message, text_type, attachments)
         
         if self.mailserver is None:
             # Reconnect to the mail server if it is not connected.
             self.mailserver = self.setup_mailserver()
         
         self.mailserver.sendmail(self.sender_email, receiver_email, _message.as_string())
+    
+    def send_success_upload_notification(self, receiver_email: str, queue_position: int, contact_email: str) -> None:
+        """Send a success upload notification email.
 
-
-    def setup_default_message(self,
-                            receiver_email: str,
-                            positive_negativ: True,
-                            Exception: Exception):
-        """ Sets up a default Message which can be positive or negative based on the input
-         Args:
-             receiver_email(str): The email address of the receiver
-             positive_negativ (bool):  Decider for a positive or negativ default message, True for positive Message, False for negative Message
-             Exception(class): Exception
+        Args:
+            receiver_email (str): The email address of the receiver.
+            queue_position (int): The position in the processing queue.
+            contact_email (str): Contact email address for support.
         """
-        
-        subject1 = 'ScrAIbe failed'
-        subject2 = 'Your transcripted audio file was successfully send!'
-        message1 = 'ScrAIbe got succesfully initiated, your audio file is now being processed.'
-        message2 = 'E-Mail has not been sent, your audio file needs to be sent again. If the problem persists, please contact us.'
-        html1 = f"""
-                <html>
-                    <body>
-                    <p>Thank you for using ScrAIbe.<br>
-                <br>
-                    <br><br><h1> {message1} </h1><br>
-                    </p>
-                </body>
-                </html>"""
-        
-        html2 = f"""
-                <html>
-                    <body>
-                    <p>Thank you for using ScrAIbe.<br>
-                <br>
-                    <br><br><h1> {message2}{Exception}  </h1><br>
-                    </p>
-                </body>
-                </html>"""
-       
-        _message = MIMEMultipart("alternative")
-        _message["From"] = self.sender_email
-        _message["To"] = receiver_email
-        if positive_negativ == True:
-         _message["Subject"] = self.default_subject + " - " + subject1
-         _message.attach(MIMEText(str(message1), "plain"))
-         _message.attach(MIMEText(html1, 'html'))
-        else:
-         _message["Subject"] = self.default_subject + " - " + subject2
-         _message.attach(MIMEText(str(message2), "plain"))
-         _message.attach(MIMEText(html2, 'html'))   
-        return _message
+        message = self.success_template.format(css_path=self.css_template_path, queue_position=queue_position, contact_email=contact_email)
+        self.send_mail(receiver_email, "Upload Successful", message)
+
+    def send_error_notification(self, receiver_email: str, exception_message, ) -> None:
+        """Send an error notification email.
+
+        Args:
+            receiver_email (str): The email address of the receiver.
+            exception_message (str): The exception message to include in the email.
+            contact_email (str): Contact email address for support.
+        """
+    
+        message = self.error_template.format(css_path=self.css_template_path, exception=exception_message, contact_email=contact_email)
+        self.send_mail(receiver_email, "Error Notification", message)
+    
+    def send_transcript(self, receiver_email: str, contact_email: str, transcript_path: Union[str,list] = []) -> None:
+        """Send a final product notification email with transcript attachment.
+
+        Args:
+            receiver_email (str): The email address of the receiver.
+            contact_email (str): Contact email address for support.
+            transcript_path (Union[str, list], optional): Path to the transcript file or list of paths to attach.
+        """
+        if isinstance(transcript_path, str):
+            transcript_path = [transcript_path]
             
-    def sucessfully_submitted(self, receiver_email : str,queue_position : int) -> None:
-        """ Sends a Mail for a successfull submission of a file to the queue.
-
-         Args: 
-            receiver_email (str): The email address of the receiver.
-            queue_position (int): The position of the file in the queue """
-        pass
-    def scraibe_done(self, receiver_email : str,
-                     positive_negativ=True,
-                        ) -> None:      
-        """ Sends a Mail for a successfull initiation of ScrAIbe.
-
-         Args: 
-            receiver_email (str): The email address of the receiver.
-            positive_negativ(bool): Decider for a positive or negativ default message, True for positive Message, False for negative Message """
-        done_message = self.setup_default_message(receiver_email, positive_negativ)    
-        if self.mailserver is None:
-            # Reconnect to the mail server if it is not connected.
-            self.mailserver = self.setup_mailserver()
-        self.mailserver.sendmail(self.sender_email, receiver_email, done_message.as_string())
-
-
-    def scraibe_failed(self, receiver_email : str,
-                       exception: Exception,
-                       positive_negativ=False,
-                       ) -> None:       
-        """ Sends a Mail for a failed initiation of ScrAIbe.
-
-         Args: 
-            receiver_email (str): The email address of the receiver.
-            positive_negativ (bool): Decider for a positive or negativ default message, True for positive Message, False for negative Message
-            Exception(class): Exception """
-        failed_message = self.setup_default_message(receiver_email, positive_negativ, exception)       
-        if self.mailserver is None:
-            # Reconnect to the mail server if it is not connected.
-            self.mailserver = self.setup_mailserver()
-      
-        self.mailserver.sendmail(self.sender_email, receiver_email, failed_message.as_string())    
+        message = self.final_template.format(css_path=self.css_template_path, contact_email=contact_email)
+        self.send_mail(receiver_email, "Transcript Ready", message, transcript_path)
     
     @classmethod
-    def from_config(cls, config : dict):
-        """Create a MAIL_SETUP object from a configuration dictionary.
-        
+    def from_config(cls, config: dict):
+        """Create a MailService object from a configuration dictionary.
+
         Args:
             config (dict): The configuration dictionary.
-            
+
         Returns:
-            MAIL_SETUP: The MAIL_SETUP object.
+            MailService: The MailService object.
         """
         
-        return cls(sender_email = config['sender_email'],
-                   smtp_server = config['smtp_server'],
-                   smtp_port = config['smtp_port'],
-                   sender_password = config['sender_password'],
-                   context_kwargs = config['context_kwargs'],
-                   default_subject = config['default_subject'])
+        return cls(sender_email=config['sender_email'],
+                   smtp_server=config['smtp_server'],
+                   smtp_port=config['smtp_port'],
+                   sender_password=config['sender_password'],
+                   context_kwargs=config['context_kwargs'],
+                   default_subject=config['default_subject'],
+                   success_template=config.get('success_template'),
+                   error_template=config.get('error_template'),
+                   final_template=config.get('final_template'))
 
     def __repr__(self) -> str:
         """Representation of the object.
-        
+
         Returns:
             str: The representation of the object.
         """
         
-        return f"MailService(sender_email = {self.sender_email}, smtp_server = {self.smtp_server}, smtp_port = {self.smtp_port}, default_subject = {self.default_subject})"
-
+        return f"MailService(sender_email={self.sender_email}, smtp_server={self.smtp_server}, smtp_port={self.smtp_port}, default_subject={self.default_subject})"
 
 if __name__ == '__main__':
+    
     from os.path import dirname, realpath
     
     ROOT_PATH = dirname(realpath(__file__)).split('scraibe_webui')[0]
-    reciever = 'Jacob.Schmieder@dbfz.de'
+    reciever = 'jacob.schmieder@jsphere.de'
+    
+    css_path = ROOT_PATH + 'scraibe_webui/misc/mail_style.css'
+    
     # Example usage
     with open(ROOT_PATH +'scraibe_webui/misc/success_upload_notification_template.html', 'r') as file:
         upload_html_template = file.read()
@@ -268,20 +219,18 @@ if __name__ == '__main__':
 
     # Define the dynamic content
     queue_position = 5  # Example queue position
-    contact_email = "support@example.com"
+    contact_email = "example@support.com"
 
     # Format the HTML template with the dynamic content
-    uplaod_html_content = upload_html_template.format(queue_position=queue_position, contact_email=contact_email)
+    uplaod_html_content = upload_html_template.format(css_path=css_path,queue_position=queue_position, contact_email=contact_email)
 
 
     ## Error Notification
     with open(ROOT_PATH +'scraibe_webui/misc/error_notification_template.html', 'r') as file:
         error_html_template = file.read()
     
-    error_html_template = error_html_template.format(contact_email=contact_email, exception = 'My Test Exception')
+    error_html_template = error_html_template.format(css_path=css_path,contact_email=contact_email, exception = 'My Test Exception')
     
-    mail_service = MailService(sender_email = "scraibe@dbfz.de",
-                                 smtp_server = "smtp.leipzig.dbfz.de")
     
     # final product
     
@@ -289,8 +238,25 @@ if __name__ == '__main__':
         final_html_template = file.read()
 
     # Format the HTML template with the dynamic content
-    final_html_content = final_html_template.format(contact_email=contact_email)
+    final_html_content = final_html_template.format(css_path=css_path,contact_email=contact_email)
     
-    mail_service.send_mail(receiver_email = reciever,message= uplaod_html_content, subject= "Uplaod", received_text_file= "test.txt")
-    mail_service.send_mail(receiver_email = reciever,message= error_html_template, subject= "Error Notification", received_text_file= "test.txt")
-    mail_service.send_mail(receiver_email = reciever,message= final_html_content, subject= "Hurray your Transcript", received_text_file= "test.txt")
+    # Create example "Hello World" text files TODO: make them Temporary files
+    
+    file1_path = "hello1.txt"
+    file2_path = "hello2.txt"
+    with open(file1_path, "w") as f:
+        f.write("Hello World from file 1!")
+    with open(file2_path, "w") as f:
+        f.write("Hello World from file 2!")
+    attachments = [file1_path, file2_path]
+    
+    mail_service = MailService(sender_email = "scraibe@dbfz.de",
+                                 smtp_server = "smtp.leipzig.dbfz.de",
+                                 success_template=upload_html_template,
+                                 error_template=error_html_template,
+                                 final_template=final_html_template)
+    
+    
+    mail_service.send_success_upload_notification(receiver_email=reciever, queue_position=queue_position, contact_email=contact_email)
+    mail_service.send_error_notification(receiver_email=reciever, exception_message='My Test Exception')
+    mail_service.send_transcript(receiver_email=reciever, contact_email=contact_email, transcript_path= attachments)

@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 from abc import abstractmethod
 
 from .configloader import ConfigLoader
-from ._path import ROOT_PATH
+from ..global_var import ROOT_PATH
 from torch import set_num_threads
 from torch import device as torch_device
 from torch.cuda import is_available

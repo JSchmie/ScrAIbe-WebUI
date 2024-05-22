@@ -15,8 +15,7 @@ import os
 import yaml
 from abc import ABCMeta
 from typing import Any, Dict, Optional
-from ._path import ROOT_PATH
-
+from ..global_var import ROOT_PATH
 
 class ConfigLoader(metaclass = ABCMeta):
     """A class that extends ConfigLoader to manage application-specific configuration settings.

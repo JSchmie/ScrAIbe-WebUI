@@ -2,7 +2,7 @@ import smtplib
 import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from interactions import run_scraibe
+
 
 class MailService:
     def __init__(self,
@@ -37,7 +37,7 @@ class MailService:
                       receiver_email : str,
                       message : str,
                       received_text_file: str,
-                      only_txt: bool=False):
+                      only_txt: bool=False) -> MIMEMultipart:
         """Setup the mail message.
         
         Args:
@@ -50,25 +50,9 @@ class MailService:
         """
         text_file = received_text_file
 
-
-
-        html = f"""\ 
-       <html>
-        <body>
-         <p>Thank you for using ScrAIbe.<br>
-       Here is your transcripted audio file:<br>
-          <br><br><h1> {message} </h1><br>
-         </p>
-       </body>
-      </html>"""
-
         with open(text_file, "w") as file:
            file.write(message)
 
-
-        
-         
-         
         _message = MIMEMultipart("alternative")
         _message["From"] = self.sender_email
         _message["To"] = receiver_email
@@ -83,8 +67,8 @@ class MailService:
 
 
         if only_txt == False:
-           _message.attach(MIMEText(str(message), "plain"))
-           _message.attach(MIMEText(html, 'html'))
+
+           _message.attach(MIMEText(message, 'html'))
         
         return _message
     
@@ -158,37 +142,39 @@ class MailService:
 
 
     def setup_default_message(self,
-                                       receiver_email: str,
-                                       positive_negativ: True,
-                                       Exception: Exception):
+                            receiver_email: str,
+                            positive_negativ: True,
+                            Exception: Exception):
         """ Sets up a default Message which can be positive or negative based on the input
          Args:
              receiver_email(str): The email address of the receiver
              positive_negativ (bool):  Decider for a positive or negativ default message, True for positive Message, False for negative Message
-             Exception(class): Exception"""
+             Exception(class): Exception
+        """
+        
         subject1 = 'ScrAIbe failed'
         subject2 = 'Your transcripted audio file was successfully send!'
         message1 = 'ScrAIbe got succesfully initiated, your audio file is now being processed.'
         message2 = 'E-Mail has not been sent, your audio file needs to be sent again. If the problem persists, please contact us.'
-        html1 = f"""\ 
-       <html>
-        <body>
-         <p>Thank you for using ScrAIbe.<br>
-       <br>
-          <br><br><h1> {message1} </h1><br>
-         </p>
-       </body>
-      </html>"""
+        html1 = f"""
+                <html>
+                    <body>
+                    <p>Thank you for using ScrAIbe.<br>
+                <br>
+                    <br><br><h1> {message1} </h1><br>
+                    </p>
+                </body>
+                </html>"""
         
-        html2 = f"""\ 
-       <html>
-        <body>
-         <p>Thank you for using ScrAIbe.<br>
-       <br>
-          <br><br><h1> {message2}{Exception}  </h1><br>
-         </p>
-       </body>
-      </html>"""
+        html2 = f"""
+                <html>
+                    <body>
+                    <p>Thank you for using ScrAIbe.<br>
+                <br>
+                    <br><br><h1> {message2}{Exception}  </h1><br>
+                    </p>
+                </body>
+                </html>"""
        
         _message = MIMEMultipart("alternative")
         _message["From"] = self.sender_email
@@ -203,7 +189,13 @@ class MailService:
          _message.attach(MIMEText(html2, 'html'))   
         return _message
             
+    def sucessfully_submitted(self, receiver_email : str,queue_position : int) -> None:
+        """ Sends a Mail for a successfull submission of a file to the queue.
 
+         Args: 
+            receiver_email (str): The email address of the receiver.
+            queue_position (int): The position of the file in the queue """
+        pass
     def scraibe_done(self, receiver_email : str,
                      positive_negativ=True,
                         ) -> None:      
@@ -220,7 +212,7 @@ class MailService:
 
 
     def scraibe_failed(self, receiver_email : str,
-                       Exception: Exception,
+                       exception: Exception,
                        positive_negativ=False,
                        ) -> None:       
         """ Sends a Mail for a failed initiation of ScrAIbe.
@@ -229,21 +221,12 @@ class MailService:
             receiver_email (str): The email address of the receiver.
             positive_negativ (bool): Decider for a positive or negativ default message, True for positive Message, False for negative Message
             Exception(class): Exception """
-        failed_message = self.setup_default_message(receiver_email, positive_negativ, Exception)       
+        failed_message = self.setup_default_message(receiver_email, positive_negativ, exception)       
         if self.mailserver is None:
             # Reconnect to the mail server if it is not connected.
             self.mailserver = self.setup_mailserver()
       
         self.mailserver.sendmail(self.sender_email, receiver_email, failed_message.as_string())    
-            
-
-        
-
-        
-
-
-        
-              
     
     @classmethod
     def from_config(cls, config : dict):
@@ -262,12 +245,7 @@ class MailService:
                    sender_password = config['sender_password'],
                    context_kwargs = config['context_kwargs'],
                    default_subject = config['default_subject'])
-    
-    
-    
 
-
-    
     def __repr__(self) -> str:
         """Representation of the object.
         
@@ -276,3 +254,34 @@ class MailService:
         """
         
         return f"MailService(sender_email = {self.sender_email}, smtp_server = {self.smtp_server}, smtp_port = {self.smtp_port}, default_subject = {self.default_subject})"
+
+
+if __name__ == '__main__':
+    from os.path import dirname, realpath
+    
+    ROOT_PATH = dirname(realpath(__file__)).split('scraibe_webui')[0]
+    reciever = 'Jacob.Schmieder@dbfz.de'
+    # Example usage
+    with open(ROOT_PATH +'scraibe_webui/misc/success_upload_notification_template.html', 'r') as file:
+        upload_html_template = file.read()
+
+
+    # Define the dynamic content
+    queue_position = 5  # Example queue position
+    contact_email = "support@example.com"
+
+    # Format the HTML template with the dynamic content
+    uplaod_html_content = upload_html_template.format(queue_position=queue_position, contact_email=contact_email)
+
+
+    ## Error Notification
+    with open(ROOT_PATH +'scraibe_webui/misc/error_notification_template.html', 'r') as file:
+        error_html_template = file.read()
+    
+    error_html_template = error_html_template.format(contact_email=contact_email, exception = 'My Test Exception')
+    
+    mail_service = MailService(sender_email = "scraibe@dbfz.de",
+                                 smtp_server = "smtp.leipzig.dbfz.de")
+    
+    mail_service.send_mail(receiver_email = reciever,message= uplaod_html_content, subject= "Error Notification", received_text_file= "test.txt")
+    mail_service.send_mail(receiver_email = reciever,message= error_html_template, subject= "Error Notification", received_text_file= "test.txt")

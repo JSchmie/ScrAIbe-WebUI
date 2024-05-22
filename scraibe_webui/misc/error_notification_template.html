@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Notification</title>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+            background-color: #ffffff;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }}
+        .container {{
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }}
+        h1 {{
+            color: #d9534f;
+            font-size: 1.5em;
+            margin-top: 0;
+        }}
+        p {{
+            margin: 10px 0;
+            font-size: 1em;
+        }}
+        .error-message {{
+            color: #721c24;
+            padding: 10px 0;
+            margin-bottom: 15px;
+            font-size: 1em;
+        }}
+        .contact {{
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #555;
+        }}
+        .contact a {{
+            color: #0056b3;
+            text-decoration: none;
+        }}
+        .contact a:hover {{
+            text-decoration: underline;
+        }}
+        .disclaimer {{
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #777;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Error Notification</h1>
+        <p>An error occurred while processing your audio file. This means that something went wrong during the processing of your file, and it could not be completed successfully.</p>
+        <p class="error-message">Error details: {exception}</p>
+        <p>Please check the file and try again. If the problem persists, our support team is here to help.</p>
+        <div class="contact">
+            <p>You can contact our support team at <a href="mailto:{contact_email}">{contact_email}</a>. They are available to assist with any questions or issues you may have.</p>
+        </div>
+        <div class="disclaimer">
+            <p>Please note that our support team does not have the ability to fix processing errors directly or access the files you have uploaded. They can provide guidance and help troubleshoot any issues you may encounter.</p>
+        </div>
+    </div>
+</body>
+</html>

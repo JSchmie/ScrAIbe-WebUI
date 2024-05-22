@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Successful</title>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+            background-color: #ffffff;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }}
+        .container {{
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }}
+        h1 {{
+            color: #28a745;
+            font-size: 1.2em;
+            margin-top: 0;
+        }}
+        p {{
+            margin: 0 0 10px;
+            font-size: 0.9em;
+        }}
+        .success-message {{
+            color: #155724;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }}
+        .queue-info {{
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #e2e3e5;
+            border: 1px solid #d6d8db;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }}
+        .contact {{
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #555;
+        }}
+        .contact a {{
+            color: #0056b3;
+            text-decoration: none;
+        }}
+        .contact a:hover {{
+            text-decoration: underline;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Successful</h1>
+        <p>Your file has been successfully uploaded and is now in our processing queue.</p>
+        <div class="success-message">
+            <strong>Queue Position:</strong> {queue_position}
+        </div>
+        <p>Your file will be processed in the near future. We appreciate your patience.</p>
+        <div class="contact">
+            <p>If you have any questions or need further assistance, please contact our support team at <a href="mailto:{contact_email}">{contact_email}</a>.</p>
+        </div>
+    </div>
+</body>
+</html>

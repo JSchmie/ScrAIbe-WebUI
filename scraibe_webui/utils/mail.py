@@ -210,7 +210,7 @@ if __name__ == '__main__':
     from os.path import dirname, realpath
     
     ROOT_PATH = dirname(realpath(__file__)).split('scraibe_webui')[0]
-    reciever = 'jacob.schmieder@jsphere.de'
+    reciever = 'test@example.com'
     
     css_path = ROOT_PATH + 'scraibe_webui/misc/mail_style.css'
     
@@ -252,8 +252,8 @@ if __name__ == '__main__':
         f.write("Hello World from file 2!")
     attachments = [file1_path, file2_path]
     
-    mail_service = MailService(sender_email = "scraibe@dbfz.de",
-                                 smtp_server = "smtp.leipzig.dbfz.de",
+    mail_service = MailService(sender_email = "scraibe@example.de",
+                                 smtp_server = "my.smtp.server",
                                  success_template=upload_html_template,
                                  error_template=error_html_template,
                                  final_template=final_html_template)

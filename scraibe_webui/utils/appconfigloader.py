@@ -35,25 +35,12 @@ class AppConfigLoader(ConfigLoader):
         
         self.set_layout_options()
         
-        self.set_global_vars_from_config()
-        
         self.launch = self.config.get("launch")
         self.models = self.config.get("models")
         self.advanced = self.config.get("advanced")
         self.queue = self.config.get("queue")
         self.layout = self.config.get("layout")
-    
-    @abstractmethod
-    def set_global_vars_from_config(self) -> None:
-        """Sets the global variables from a configuration dictionary.
-
-        Args:
-            config (dict): A dictionary containing the parameters for the models. Modify the default parameters in the config.yaml file.
-
-        Returns:
-            None
-        """
-        ...
+        self.mail = self.config.get("mail")
     
     def set_models_options(self) -> None:
         """Sets the model options from a configuration dictionary.	
@@ -195,6 +182,35 @@ class AppConfigLoader(ConfigLoader):
         if path in allowed_paths:
             allowed_paths.remove(path)
             self.config['launch']['allowed_paths'] = allowed_paths
+    
+    def load_mail_templates(self) -> Dict[str, str]:
+        """Load the mail templates from the configuration file.
+        
+        Args:
+            None
+            
+        Returns:
+            None
+        """
+        
+        self.check_and_set_path("error_template")
+        self.check_and_set_path("upload_notification_template")
+        self.check_and_set_path("success_template")
+        self.check_and_set_path("mail_css_path")
+        
+        with open(self.mail.get("error_template"), "r", encoding= 'utf-8') as f:
+            error_template = f.read()
+        
+        with open(self.mail.get("upload_notification_template"), "r", encoding= 'utf-8') as f:
+            upload_template = f.read()
+        
+        with open(self.mail.get("success_template"), "r", encoding= 'utf-8') as f:
+            success_template = f.read()
+        
+        self.mail['error_template'] = error_template
+        self.mail['upload_notification_template'] = upload_template
+        self.mail['success_template'] = success_template
+        
     
     def check_and_set_path(self, key: list[str]) -> Optional[str]:
         # TODO: I think this is Bullshit and should be removed or refactored

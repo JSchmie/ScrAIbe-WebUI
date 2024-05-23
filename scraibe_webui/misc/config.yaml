@@ -47,13 +47,24 @@ models:
   use_auth_token: null
   device: null # set your device
   num_threads: null # If CPU is used set number of useable threads
+mail:
+  sender_email : null 
+  smtp_server : null
+  smtp_port : 0
+  sender_password : null
+  context_kwargs : null
+  default_subject: "SCRAIBE"
+  error_template: scraibe_webui/misc/error_notification_template.html
+  error_format_option:
+    exeption: null # mandatroy will be set to the related exepttion in the Code
+    contact_mail: support@mail.com # set this to your mail if you are using a costume error_template you can add an any amount of format options here.
+  success_template: scraibe_webui/misc/success_template.html
+  success_format_option: 
+    placeholder: null
+  upload_notification_template: scraibe_webui/misc/upload_notification_template.html
+  upload_notification_format_option:
+    queue_number: null
+    contact_mail: support@mail.com
+  mail_css_path: scraibe_webui/misc/mail_style.css
 advanced:
-  timeout: 300 #seconds e.g. 5 minutes
-  mail:
-    sender_email : null 
-    smtp_server : null
-    smtp_port : 0
-    sender_password : null
-    context_kwargs : null
-    default_subject: "SCRAIBE"
-
+  timeout: 300 #seconds e.g. 5 minutes currently not working

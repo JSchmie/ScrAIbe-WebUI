@@ -1,4 +1,4 @@
 gradio>=4.25.0
 gradio-client>=0.15.0
 
-scraibe==0.2.0
+scraibe @ git+https://github.com/JSchmie/ScrAIbe.git@develop

@@ -18,7 +18,7 @@ class MailService:
                  success_template: str = None,
                  error_template: str = None,
                  final_template: str = None,
-                 css_template_path: str = None):
+                 css_template_path: str = None,) -> None:
         """Class to setup Mail Server.
 
         Args:
@@ -32,6 +32,8 @@ class MailService:
             error_template (str, optional): The HTML template for error notification. Defaults to None.
             final_template (str, optional): The HTML template for final product notification. Defaults to None.
             css_template_path (str, optional): The path to the CSS template. Defaults to None.
+            args: Additional arguments. Herte only used to aviod to many arguments.
+            kwargs: Additional keyword arguments. Herte only used to aviod to many arguments.
         """
         
         self.sender_email = sender_email
@@ -136,41 +138,41 @@ class MailService:
         
         self.mailserver.sendmail(self.sender_email, receiver_email, _message.as_string())
     
-    def send_success_upload_notification(self, receiver_email: str, queue_position: int, contact_email: str) -> None:
+    def send_success_upload_notification(self, receiver_email: str, **format_options) -> None:
         """Send a success upload notification email.
 
         Args:
             receiver_email (str): The email address of the receiver.
             queue_position (int): The position in the processing queue.
-            contact_email (str): Contact email address for support.
+            format_options (dict): The format options for the email. default is the queue_position.
         """
-        message = self.success_template.format(css_path=self.css_template_path, queue_position=queue_position, contact_email=contact_email)
+        message = self.success_template.format(css_path=self.css_template_path, **format_options)
         self.send_mail(receiver_email, "Upload Successful", message)
 
-    def send_error_notification(self, receiver_email: str, exception_message, ) -> None:
+    def send_error_notification(self, receiver_email: str, exception_message, **format_options ) -> None:
         """Send an error notification email.
 
         Args:
             receiver_email (str): The email address of the receiver.
             exception_message (str): The exception message to include in the email.
-            contact_email (str): Contact email address for support.
+            format_options (dict): The format options for the email.
         """
     
-        message = self.error_template.format(css_path=self.css_template_path, exception=exception_message, contact_email=contact_email)
+        message = self.error_template.format(css_path=self.css_template_path, exception=exception_message, **format_options)
         self.send_mail(receiver_email, "Error Notification", message)
     
-    def send_transcript(self, receiver_email: str, contact_email: str, transcript_path: Union[str,list] = []) -> None:
+    def send_transcript(self, receiver_email: str, transcript_path: Union[str,list] = [], **format_options ) -> None:
         """Send a final product notification email with transcript attachment.
 
         Args:
             receiver_email (str): The email address of the receiver.
-            contact_email (str): Contact email address for support.
             transcript_path (Union[str, list], optional): Path to the transcript file or list of paths to attach.
+            format_options (dict): The format options for the transcript. can be used to format the final template.
         """
         if isinstance(transcript_path, str):
             transcript_path = [transcript_path]
             
-        message = self.final_template.format(css_path=self.css_template_path, contact_email=contact_email)
+        message = self.final_template.format(css_path=self.css_template_path, **format_options)
         self.send_mail(receiver_email, "Transcript Ready", message, transcript_path)
     
     @classmethod
@@ -213,7 +215,7 @@ if __name__ == '__main__':
     css_path = ROOT_PATH + 'scraibe_webui/misc/mail_style.css'
     
     # Example usage
-    with open(ROOT_PATH +'scraibe_webui/misc/success_upload_notification_template.html', 'r') as file:
+    with open(ROOT_PATH +'scraibe_webui/misc/upload_notification_template.html', 'r') as file:
         upload_html_template = file.read()
 
 
@@ -234,7 +236,7 @@ if __name__ == '__main__':
     
     # final product
     
-    with open(ROOT_PATH +'scraibe_webui/misc/final_product_notification_template.html', 'r') as file:
+    with open(ROOT_PATH +'scraibe_webui/misc/success_template.html', 'r') as file:
         final_html_template = file.read()
 
     # Format the HTML template with the dynamic content

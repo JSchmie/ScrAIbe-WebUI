@@ -71,4 +71,5 @@ mail:
     contact_email: support@mail.com
   mail_css_path: scraibe_webui/misc/mail_style.css
 advanced:
-  keep_model_alive: false
+  keep_model_alive: false # for sync interfac only keeps the model alvide during a session 
+  concurrent_workers_async: 1 # number of concurrent working threads in the async interface

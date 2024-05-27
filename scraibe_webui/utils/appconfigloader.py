@@ -4,9 +4,11 @@ from typing import Any, Dict, Optional
 
 from .configloader import ConfigLoader
 from ..global_var import ROOT_PATH
+import scraibe_webui.global_var as gv
 from torch import set_num_threads
 from torch import device as torch_device
 from torch.cuda import is_available
+
 
 class AppConfigLoader(ConfigLoader):
     """A class that extends ConfigLoader to manage application-specific configuration settings.
@@ -45,6 +47,7 @@ class AppConfigLoader(ConfigLoader):
         self.mail = self.config.get("mail")
         
         self.load_mail_templates()
+        self.set_advanced_options()
         
     def set_models_options(self) -> None:
         """Sets the model options from a configuration dictionary.	
@@ -245,3 +248,24 @@ class AppConfigLoader(ConfigLoader):
                 self.restore_defaults_for_keys(key)
             else:
                 self.update_nested_key(self.config, key, new_path)
+
+    def set_advanced_options(self) -> None:
+        """Sets the advanced options from a configuration dictionary.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
+        interface_type = self.interface_type
+        
+        advanced = self.advanced
+        
+        if interface_type == "async": 
+            gv.MAX_CONCURRENT_MODELS = advanced.get("concurrent_workers_async")
+            
+            if advanced.get("keep_model_alive") is True:
+                warnings.warn("The option 'keep_model_alive' is not supported in the async interface. Set to False.")
+                advanced["keep_model_alive"] = False
+                

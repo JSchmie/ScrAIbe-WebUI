@@ -10,7 +10,7 @@ import subprocess
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 from .utils._parsekwargs import ParseKwargs
-from .utils._path import ROOT_PATH
+from .global_var import ROOT_PATH
 
 def cli():
     """

@@ -1,7 +1,6 @@
 import os
 import warnings
 from typing import Any, Dict, Optional
-from abc import abstractmethod
 
 from .configloader import ConfigLoader
 from ..global_var import ROOT_PATH
@@ -34,29 +33,34 @@ class AppConfigLoader(ConfigLoader):
         self.set_models_options()
         
         self.set_layout_options()
+
+        self.get_layout()
         
+        self.interface_type = self.config.get("interface_type")
         self.launch = self.config.get("launch")
-        self.models = self.config.get("models")
+        self.scraibe_params = self.config.get("scraibe_params")
         self.advanced = self.config.get("advanced")
         self.queue = self.config.get("queue")
         self.layout = self.config.get("layout")
         self.mail = self.config.get("mail")
-    
+        
+        self.load_mail_templates()
+        
     def set_models_options(self) -> None:
         """Sets the model options from a configuration dictionary.	
             Here provides the option to set the device for the models.
         """ 
                 
-        device = self.config.get("models").get('device')
+        device = self.config.get("scraibe_params").get('device')
         if device is None:
             device = torch_device('cuda' if is_available() else 'cpu')
         elif device is not None:
             device  = torch_device(device)
             
-        if device == 'cpu' and self.config.get("models").get('num_threads') is not None:
-            set_num_threads(self.config.get("models").get('num_threads')) # this is a global setting
+        if device == 'cpu' and self.config.get("scraibe_params").get('num_threads') is not None:
+            set_num_threads(self.config.get("scraibe_params").get('num_threads')) # this is a global setting
 
-        self.config['models']['device'] = device
+        self.config['scraibe_params']['device'] = device
     
     def set_layout_options(self) -> None:
         """Sets the layout options from a configuration dictionary.
@@ -123,9 +127,10 @@ class AppConfigLoader(ConfigLoader):
                 warnings.warn(f"Footer file not found: {self.config['layout']['footer']}")
         else:
             footer = None
+            
+        self.config['layout']['header'] = header
+        self.config['layout']['footer'] = footer
         
-        return {'header' : header ,
-                'footer' : footer} 
         
     def add_to_allowed_paths(self, path: str) -> None:
         """Adds a path to the list of allowed paths.
@@ -233,6 +238,7 @@ class AppConfigLoader(ConfigLoader):
         if not os.path.exists(_path):
             # Check if the file exists in the ROOT_PATH
             new_path = os.path.join(ROOT_PATH, _path)
+
             if not os.path.exists(new_path):
                 warnings.warn(f"{key.capitalize()} file not found: {_path} \n" \
                               "fall back to default.")

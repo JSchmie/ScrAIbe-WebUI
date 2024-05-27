@@ -31,7 +31,7 @@ include = [{ path = "scraibe_webui/misc/*.yaml", format = ["sdist", "wheel"] },
         { path = "scraibe_webui/misc/*.svg", format = ["sdist", "wheel"] },
             ]
 exclude =[
-        "__pycache__",
+        "**/__pycache__",
         "*.pyc",
         "test"
         ]

@@ -4,10 +4,13 @@ These functions will be used by all interfaces that use the web app.
 
 from typing import Union
 from pandas import DataFrame
-from gradio import Progress, update, Info, Warning
+from gradio import Progress, update, Info, Warning, Error
 from scraibe import Transcript
 from .wrapper import ScraibeWrapper
+from .mail import MailService
+from .background import BackgroundThread
 import scraibe_webui.global_var as gv
+
 
 def select_task(choice):
         # tell the app that it is still in use
@@ -79,16 +82,17 @@ def get_pipe(keep_model_alive : bool, scraibe_params : dict) -> ScraibeWrapper:
     Returns:
         model (Scraibe): The loaded Scraibe model.
     """
-    _loader =  ScraibeWrapper.load_from_dict
+    _loader =  ScraibeWrapper.load_from_dict(scraibe_params)
     
-    if keep_model_alive:
-        pipe = _loader(**scraibe_params)
+    if not keep_model_alive:
+        
+        pipe = _loader
     else:
         pipe = gv.PIPE
 
         if pipe is None:
             Warning("Loading the model for the first time. This may take a few seconds.")
-            pipe = _loader(**scraibe_params)
+            pipe = _loader
             gv.PIPE = pipe
 
     return pipe
@@ -103,7 +107,7 @@ def run_scraibe(task : str,
                keep_model_alive : bool,
                scraibe_params : dict,
                progress = Progress(track_tqdm= True)):
-        
+    
         # load model or use the existing one
 
         _pipe = get_pipe(keep_model_alive, scraibe_params)
@@ -156,14 +160,14 @@ def run_scraibe(task : str,
             
             return (update(value = None, visible = False), # out_txt
                     update(value = out, visible = True), # out_json
-                    update(visible = True), # accordion for json
+                    update(visible = True, open = True), # accordion for json
                     update(visible = False), # annotation
                     update(visible = False)) # annotate button
 
 
-def show_notification(mail : str, subject : str) -> str:
+def show_notification(mail : str) -> str:
     # This function returns HTML for the notification with email and subject details if provided.
-    email_message = f" They will be processed and sent to your email ({mail}) with the subject '{subject}' soon."
+    email_message = f" They will be processed and sent to your email {mail} soon."
     return f"""
     <div style="background-color: #4CAF50; color: white; padding: 20px; border-radius: 5px; margin-top: 20px;">
         Your files have been successfully added to the queue.{email_message}
@@ -179,22 +183,43 @@ def run_scraibe_async(task : str,
                 video : str,
                 file_in : Union[str, list],
                 mail : str,
-                subject : str,
-                keep_model_alive : bool,
-                scraibe_params : dict,):
+                mail_service_params : dict,
+                scraibe_kwargs : dict,
+                threads_per_model : int,
+                error_format_options = {},
+                transcript_format_options = {},
+                upload_format_options = {}):
     
     source = audio or video or file_in
     
+    if not mail:
+        raise Error("Please provide an email address.")
+    if not source:
+        raise Error("Please provide a valid source file.")
     
+    job = BackgroundThread(mail_service_params, scraibe_kwargs, threads_per_model)
     
+    job.run(audio = source,
+            reciever = mail,
+            task = task,
+            num_speakers = num_speakers,
+            translate = translate,
+            language = language,
+            error_format_options = error_format_options,
+            transcript_format_options = transcript_format_options)
     
-    #TODO: Implement the function to send the transcript via email
-    return update(value = show_notification(mail, subject),visible = True)
-
+    if "queue_position" in upload_format_options.keys():
+        gv.NUMBER_OF_QUEUE += 1
+        upload_format_options["queue_position"] = gv.NUMBER_OF_QUEUE
+    
+    MailService.from_config(mail_service_params).send_upload_notification(mail, **upload_format_options)
+    
+    return update(value = show_notification(mail),visible = True)
 
 def apply_settings(model: str,
-                   keep_model_alive : bool,
-                   scraibe_params : dict) -> None:
+                   scraibe_params : dict,
+                   keep_model_alive_checkbox : bool,
+                   keep_model_alive : bool,) -> None:
     """
     Load the selected model into memory.
     
@@ -204,10 +229,13 @@ def apply_settings(model: str,
     Returns:
         None
     """
-    Info(f"Loading model {model}...\n" \
-         "Depending on the model size, this may take a few seconds.")
-    gv.PIPE.update_transcriber_model(model)
+    scraibe_params["whisper_model"] = model
     
-    Info(f"Model {model} loaded successfully.")
+    keep_model_alive = keep_model_alive_checkbox
+    print(f"Model is set to {scraibe_params['whisper_model']} will be kept alive: {keep_model_alive}. ") 
     
-    return update(value = model)
+    Info(f"Model is set to {scraibe_params['whisper_model']} will be kept alive: {keep_model_alive}. " \
+         "If you change the model, the new model will be loaded on the next task.")
+    return  scraibe_params, keep_model_alive
+
+    

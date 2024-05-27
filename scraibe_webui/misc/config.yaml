@@ -1,4 +1,4 @@
-interface_type: simple # sync, aync or simple variant of the Interface (one does transcriptions does require Email setup)
+interface_type: simple # aync or simple variant of the Interface (one does transcriptions does require Email setup)
 launch:
   # The following are the default values for the launch configuration
   # for more informations look at https://www.gradio.app/docs/interface 
@@ -40,34 +40,35 @@ layout:
   header:  scraibe_webui/misc/header.html
   footer: null
   logo:  scraibe_webui/misc/logo.svg
+  show_settings: true
   # themes: null # dict of themes from hugging face placeholder
-models:
+scraibe_params:
   whisper_model : null
   dia_model: null
   use_auth_token: null
   device: null # set your device
-  num_threads: null # If CPU is used set number of useable threads
+  num_threads: 0 # If CPU is used set number of useable threads
 mail:
   sender_email : null 
   smtp_server : null
   smtp_port : 0
   sender_password : null
-  context_kwargs : null
+  context_kwargs : {}
   default_subject: "SCRAIBE"
   error_template: scraibe_webui/misc/error_notification_template.html
   error_subject: An error occured during processing.
-  error_format_option:
-    exeption: null # mandatroy will be set to the related exepttion in the Code
-    contact_mail: support@mail.com # set this to your mail if you are using a costume error_template you can add an any amount of format options here.
+  error_format_options:
+    #exeption is mandatroy for your html  will be set to the related exepttion in the Code
+   contact_email: support@mail.com # set this to your mail if you are using a costume error_template you can add an any amount of format options here.
   success_template: scraibe_webui/misc/success_template.html
   success_subject: "Your transcript is ready."
-  success_format_option: 
-    placeholder: null
+  success_format_options: 
+    contact_email: support@mail.com
   upload_notification_template: scraibe_webui/misc/upload_notification_template.html
   upload_subject: "Upload Successful"
-  upload_notification_format_option:
-    queue_number: null
-    contact_mail: support@mail.com
+  upload_notification_format_options:
+    queue_position: null
+    contact_email: support@mail.com
   mail_css_path: scraibe_webui/misc/mail_style.css
 advanced:
-  timeout: 300 #seconds e.g. 5 minutes currently not working
+  keep_model_alive: false

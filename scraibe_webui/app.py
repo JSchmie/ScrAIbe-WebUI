@@ -1,11 +1,9 @@
 
 from .utils.appconfigloader import AppConfigLoader
-from .utils.wrapper import ScraibeWrapper
-from ui import gradio_Interface
-from scraibe_webui.global_var import gv
+from .ui import gradio_Interface
 
 
-def new_app(config : str = None, **kwargs):
+def app(config : str = None, **kwargs):
     """
     Launches the Gradio interface for audio transcription.
 
@@ -31,18 +29,14 @@ def new_app(config : str = None, **kwargs):
     # Load and override configuration from the YAML file with kwargs
     
     config = AppConfigLoader.load_config(config, **kwargs)
-
+    
     # Set the layout for the Gradio interface
-    layout = config.get_layout()
 
     print("Starting Gradio Web Interface")
     
-    # Stup PIPE:
-    gv.PIPE = ScraibeWrapper.load_from_dict(config.models)
-    
     # Launch the Gradio interface
     
-    interface = gradio_Interface(layout)
+    interface = gradio_Interface(config)
     interface.queue(**config.queue)
     interface.launch(**config.launch)
   

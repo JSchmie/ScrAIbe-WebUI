@@ -37,9 +37,13 @@ exclude =[
         ]
 [tool.poetry.dependencies]
 python = "^3.9"
+gradio = "^4.25.0"
+gradio-client = "^0.15.0"
+scraibe = "^0.2.0"
+pandas = "^2.2.1"
 tqdm = "^4.66.4"
 numpy = "^1.26.4"
-scraibe = "^0.2.0"
+
 
 [tool.poetry.group.dev.dependencies]
 scraibe = { git = "https://github.com/JSchmie/ScrAIbe.git", branch = "develop" }

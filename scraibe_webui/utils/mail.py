@@ -22,21 +22,30 @@ class MailService:
                  success_template: str = None,
                  success_subject: str = "Your transcript is ready.",
                  css_template_path: str = None,) -> None:
-        """Class to setup Mail Server.
+        
+        """
+        Initializes the Mail Server class.
+
+        This class is used to set up a mail server for sending notifications. It includes options for specifying 
+        the sender's email and password, the SMTP server and port, and various email templates and subjects.
 
         Args:
             sender_email (str): The email address of the sender.
-            smtp_server (str): The SMTP server.
-            smtp_port (int, optional): The SMTP port. Defaults to 0.
-            sender_password (str, optional): The password of the sender. Defaults to None.
-            context_kwargs (dict, optional): The context keyword arguments. Defaults to {}.
-            default_subject (str, optional): The default subject for emails. Defaults to "SCRAIBE".
-            upload_notification_template (str, optional): The HTML template for success upload notification. Defaults to None.
-            error_template (str, optional): The HTML template for error notification. Defaults to None.
-            success_template (str, optional): The HTML template for final product notification. Defaults to None.
-            css_template_path (str, optional): The path to the CSS template. Defaults to None.
-            args: Additional arguments. Herte only used to aviod to many arguments.
-            kwargs: Additional keyword arguments. Herte only used to aviod to many arguments.
+            smtp_server (str): The SMTP server to use for sending emails.
+            smtp_port (int, optional): The port to use for the SMTP server. Defaults to 0.
+            sender_password (str, optional): The password for the sender's email account. Defaults to None.
+            context_kwargs (dict, optional): Keyword arguments to pass to ssl.create_default_context. Defaults to {}.
+            default_subject (str, optional): The default subject line for emails. Defaults to "SCRAIBE".
+            upload_notification_template (str, optional): The HTML template to use for upload notifications. Defaults to None.
+            upload_subject (str, optional): The subject line for upload notifications. Defaults to "Upload Successful".
+            error_template (str, optional): The HTML template to use for error notifications. Defaults to None.
+            error_subject (str, optional): The subject line for error notifications. Defaults to "An error occured during processing.".
+            success_template (str, optional): The HTML template to use for success notifications. Defaults to None.
+            success_subject (str, optional): The subject line for success notifications. Defaults to "Your transcript is ready.".
+            css_template_path (str, optional): The path to a CSS file to use for styling the email templates. Defaults to None.
+
+        Returns:
+            None
         """
         
         self.sender_email = sender_email
@@ -87,7 +96,6 @@ class MailService:
             bool: True if login is successful, False otherwise.
         """
         
-        
         try:
             with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
                 server.starttls(context=self.context)
@@ -97,19 +105,21 @@ class MailService:
             Warning("SMTP AUTH extension not supported by server. Try without login.")
             return False
     
-    def setup_message(self, subject: str, receiver_email: str, message: str, attachments: list = []) -> MIMEMultipart:
+    def setup_message(self, subject: str, receiver_email: str, message: str, attachments: list = None) -> MIMEMultipart:
         """Setup the mail message with optional attachments.
 
         Args:
             subject (str): The subject of the mail.
             receiver_email (str): The email address of the receiver.
             message (str): The message of the mail.
-            attachments (list, optional): List of file paths to attach. Defaults to [].
-            text_type (str): The text type of the message.
+            attachments (list, optional): List of file paths to attach. Defaults to None.
 
         Returns:
             MIMEMultipart: The mail message.
         """
+        if attachments is None:
+            attachments = []
+            
         _message = MIMEMultipart("alternative")
         _message["From"] = self.sender_email
         _message["To"] = receiver_email
@@ -128,15 +138,14 @@ class MailService:
             
         return _message
     
-    def send_mail(self, receiver_email: str, subject: str, message: str, attachments: list = []) -> None:
+    def send_mail(self, receiver_email: str, subject: str, message: str, attachments: list = None) -> None:
         """Send a mail with optional attachments.
 
         Args:   
             receiver_email (str): The email address of the receiver.
             subject (str): The subject of the mail.
             message (str): The message of the mail.
-            attachments (list, optional): List of file paths to attach. Defaults to [].
-            text_type (str, optional): The text type of the message. Defaults to 'html'.
+            attachments (list, optional): List of file paths to attach. Defaults to None will later be changed to [].
         """
         
         _message = self.setup_message(subject, receiver_email, message, attachments)
@@ -174,7 +183,7 @@ class MailService:
         message = self.error_template.format(css_path=self.css_template_path, exception=exception_message, **format_options)
         self.send_mail(receiver_email, self.error_subject, message)
     
-    def send_transcript(self, receiver_email: str, transcript_path: Union[str,list] = [], **format_options ) -> None:
+    def send_transcript(self, receiver_email: str, transcript_path: Union[str,list] = None, **format_options ) -> None:
         """Send a final product notification email with transcript attachment.
 
         Args:
@@ -182,8 +191,9 @@ class MailService:
             transcript_path (Union[str, list], optional): Path to the transcript file or list of paths to attach.
             format_options (dict): The format options for the transcript. can be used to format the final template.
         """
-       
-        if isinstance(transcript_path, str):
+        if transcript_path is None:
+            transcript_path = []
+        elif isinstance(transcript_path, str):
             transcript_path = [transcript_path]
             
         message = self.success_template.format(css_path=self.css_template_path, **format_options)

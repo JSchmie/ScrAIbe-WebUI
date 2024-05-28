@@ -1,5 +1,3 @@
-# Getting Started Using Docker
-
 # Getting Started Using Docker with ScrAIbe-WebUI
 
 Welcome to the Docker setup guide for ScrAIbe-WebUI! This guide will walk you through the steps to get started with setting up and running your WebUI using Docker. Follow these steps to quickly get up and running with a Dockerized environment.

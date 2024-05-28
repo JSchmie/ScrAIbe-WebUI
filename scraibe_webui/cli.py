@@ -31,8 +31,11 @@ def cli():
     arg_dict = vars(args)
     
     config = arg_dict.pop("config")
+    server_kwargs = arg_dict.pop("server_kwargs")
     
-    app(config, **arg_dict)
+    print(config)
+    print(arg_dict)
+    app(config, **server_kwargs)
     
     
 if __name__ == "__main__":

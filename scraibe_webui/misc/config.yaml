@@ -58,8 +58,8 @@ mail:
   error_template: scraibe_webui/misc/error_notification_template.html
   error_subject: An error occured during processing.
   error_format_options:
-    #exeption is mandatroy for your html  will be set to the related exepttion in the Code
-   contact_email: support@mail.com # set this to your mail if you are using a costume error_template you can add an any amount of format options here.
+    #exception is mandatroy for your html  will be set to the related exepttion in the Code
+   contact_email: support@mail.com # set this to your mail if you are using a custom error_template you can add an any amount of format options here.
   success_template: scraibe_webui/misc/success_template.html
   success_subject: "Your transcript is ready."
   success_format_options: 

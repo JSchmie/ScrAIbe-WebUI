@@ -1,7 +1,7 @@
 """ This file contains the interactions for the web app. Here we define the functions that will be called when the user interacts with the UI like pressing a button or uploading a file.
 These functions will be used by all interfaces that use the web app.
 """
-
+from time import sleep
 from typing import Union
 from pandas import DataFrame
 from gradio import Progress, update, Info, Warning, Error
@@ -213,9 +213,11 @@ def run_scraibe_async(task : str,
         upload_format_options["queue_position"] = gv.NUMBER_OF_QUEUE
     
     MailService.from_config(mail_service_params).send_upload_notification(mail, **upload_format_options)
-    
-    return update(value = show_notification(mail),visible = True)
 
+    yield update(value = show_notification(mail),visible = True)
+    sleep(5)
+    yield update(visible = False)
+    
 def apply_settings(model: str,
                    scraibe_params : dict,
                    keep_model_alive_checkbox : bool,
@@ -237,5 +239,3 @@ def apply_settings(model: str,
     Info(f"Model is set to {scraibe_params['whisper_model']} will be kept alive: {keep_model_alive}. " \
          "If you change the model, the new model will be loaded on the next task.")
     return  scraibe_params, keep_model_alive
-
-    

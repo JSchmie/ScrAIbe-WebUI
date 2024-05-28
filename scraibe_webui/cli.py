@@ -7,7 +7,7 @@ output formats, and other options necessary for transcription.
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 from .utils._parsekwargs import ParseKwargs
-from .app import app
+from .app import App
 from ._version import __version__
 
 def start_command(args):
@@ -16,7 +16,7 @@ def start_command(args):
     """
     config = args.config
     server_kwargs = args.server_kwargs
-    app(config, **server_kwargs)
+    App(config, **server_kwargs).launch()
 
 def version_command(args):
     """

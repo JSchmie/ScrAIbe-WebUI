@@ -37,9 +37,9 @@ queue:
   max_size : null
   default_concurrency_limit : not_set
 layout:
-  header:  scraibe_webui/misc/header.html
+  header: scraibe_webui/misc/header.html 
   footer: null
-  logo:  scraibe_webui/misc/logo.svg
+  logo: scraibe_webui/misc/logo.svg
   show_settings: true
   # themes: null # dict of themes from hugging face placeholder
 scraibe_params:

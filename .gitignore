@@ -212,6 +212,6 @@ pyrightconfig.json
 /build
 scraibe_webui.egg-info
 
-costume_config.yaml
+custom_config.yaml
 example.mp4
 api

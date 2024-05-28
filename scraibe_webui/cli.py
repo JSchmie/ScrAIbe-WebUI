@@ -4,13 +4,9 @@ allowing for user interaction to transcribe and diarize audio files.
 The function includes arguments for specifying the audio files, model paths,
 output formats, and other options necessary for transcription.
 """
-import os 
-import sys
-import subprocess
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 from .utils._parsekwargs import ParseKwargs
-from .global_var import ROOT_PATH
 from .app import app
 
 def cli():
@@ -33,8 +29,6 @@ def cli():
     config = arg_dict.pop("config")
     server_kwargs = arg_dict.pop("server_kwargs")
     
-    print(config)
-    print(arg_dict)
     app(config, **server_kwargs)
     
     

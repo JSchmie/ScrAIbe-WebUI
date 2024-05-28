@@ -76,8 +76,8 @@ def get_pipe(keep_model_alive : bool, scraibe_params : dict) -> ScraibeWrapper:
     model is not in use, thereby improving the overall performance and efficiency of the system.
     
     Args:
-        timer_interval (int): The interval (in seconds) at which the model should be kept alive in memory.
-        audio (str): The path to the audio file for which the prediction should be made.
+        keep_model_alive (bool): A boolean value that determines whether the model should be kept alive.
+        scraibe_params (dict): A dictionary containing the parameters required to load the model.
 
     Returns:
         model (Scraibe): The loaded Scraibe model.

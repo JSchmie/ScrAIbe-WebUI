@@ -1,0 +1,71 @@
+[build-system]
+requires = ["poetry-core>=1.8.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
+
+[tool.poetry]
+name = "scraibe-webui"
+version = "0.0.0"
+description = "A web interface for the ScAIbe speech-to-text transcription tool"
+authors = ["Schmieder, Jacob <jacob.schmieder@dbfz.de>"]
+license = "GPL-3.0-or-later"
+readme = ["README.md", "LICENSE"]
+repository = "https://github.com/JSchmie/ScrAIbe-WebUI"
+keywords = ["gradio","webui","whisper", "pyannote", "speech-to-text", "speech-recognition"]
+classifiers = [
+                'Development Status :: 4 - Beta',
+                'Intended Audience :: Developers',
+                'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+                'Programming Language :: Python :: 3.8',
+                'Programming Language :: Python :: 3.9',
+                'Programming Language :: Python :: 3.10',
+                'Programming Language :: Python :: 3.11',
+                'Environment :: GPU :: NVIDIA CUDA :: 12 :: 12.1',
+                'Topic :: Scientific/Engineering :: Artificial Intelligence',
+                'Framework :: FastAPI',
+
+                ]
+packages = [{include = "scraibe_webui"}]
+include = [{ path = "scraibe_webui/misc/*.yaml", format = ["sdist", "wheel"] },
+        { path = "scraibe_webui/misc/*.html", format = ["sdist", "wheel"] },
+        { path = "scraibe_webui/misc/*.css", format = ["sdist", "wheel"] },
+        { path = "scraibe_webui/misc/*.svg", format = ["sdist", "wheel"] },
+            ]
+exclude =[
+        "scraibe_webui/__pycache__",
+        "scraibe_webui/**/__pycache__",
+        "scraibe_webui/**/*.pyc",
+        "test"
+        ]
+[tool.poetry.dependencies]
+python = "^3.9"
+gradio = "^4.25.0"
+gradio-client = "^0.15.0"
+scraibe = "^0.2.0"
+pandas = "^2.2.1"
+tqdm = "^4.66.4"
+numpy = "^1.26.4"
+
+
+[tool.poetry.group.dev.dependencies]
+scraibe = { git = "https://github.com/JSchmie/ScrAIbe.git", branch = "develop" }
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+strict = true
+format-jinja = """
+    {%- if distance == 0 -%}
+        {{ serialize_pep440(base) }}
+    {%- elif branch == 'pyproject.toml' -%}
+        {{ serialize_pep440(bump_version(base), dev = distance) }}
+    {%- else -%}
+        {{ serialize_pep440(bump_version(base), dev=distance, metadata=[commit]) }}
+    {%- endif -%}
+"""
+
+[tool.poetry.scripts]
+scraibe-webui = "scraibe_webui.cli:cli"
+
+[tool.ruff.lint.extend-per-file-ignores]
+"__init__.py" = ["E402","F403",'F401']
+"scraibe/misc.py" = ["E722"]

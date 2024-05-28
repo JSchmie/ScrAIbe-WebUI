@@ -73,11 +73,12 @@ class BackgroundThread:
             _scraibe = ScraibeWrapper.load_from_dict(self.scraibe_kwargs)
             
             if isinstance(audio, str):
+                
                 temp_file_path_txt = join(audio.split('.')[0] + '.txt')
                 temp_file_path_json = join(audio.split('.')[0] + '.json')
 
                 if task == 'Auto Transcribe':
-                    print(audio)
+
                     _ , result_txt, result_json = _scraibe.autotranscribe(audio,
                                                         num_speakers = num_speakers,
                                                         translate = translate,

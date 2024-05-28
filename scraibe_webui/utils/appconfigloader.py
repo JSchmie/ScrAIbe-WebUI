@@ -1,13 +1,14 @@
 import os
 import warnings
 from typing import Any, Dict, Optional
-from abc import abstractmethod
 
 from .configloader import ConfigLoader
-from ._path import ROOT_PATH
+from ..global_var import ROOT_PATH
+import scraibe_webui.global_var as gv
 from torch import set_num_threads
 from torch import device as torch_device
 from torch.cuda import is_available
+
 
 class AppConfigLoader(ConfigLoader):
     """A class that extends ConfigLoader to manage application-specific configuration settings.
@@ -34,42 +35,35 @@ class AppConfigLoader(ConfigLoader):
         self.set_models_options()
         
         self.set_layout_options()
+
+        self.get_layout()
         
-        self.set_global_vars_from_config()
-        
+        self.interface_type = self.config.get("interface_type")
         self.launch = self.config.get("launch")
-        self.models = self.config.get("models")
+        self.scraibe_params = self.config.get("scraibe_params")
         self.advanced = self.config.get("advanced")
         self.queue = self.config.get("queue")
         self.layout = self.config.get("layout")
-    
-    @abstractmethod
-    def set_global_vars_from_config(self) -> None:
-        """Sets the global variables from a configuration dictionary.
-
-        Args:
-            config (dict): A dictionary containing the parameters for the models. Modify the default parameters in the config.yaml file.
-
-        Returns:
-            None
-        """
-        ...
-    
+        self.mail = self.config.get("mail")
+        
+        self.load_mail_templates()
+        self.set_advanced_options()
+        
     def set_models_options(self) -> None:
         """Sets the model options from a configuration dictionary.	
             Here provides the option to set the device for the models.
         """ 
                 
-        device = self.config.get("models").get('device')
+        device = self.config.get("scraibe_params").get('device')
         if device is None:
             device = torch_device('cuda' if is_available() else 'cpu')
         elif device is not None:
             device  = torch_device(device)
             
-        if device == 'cpu' and self.config.get("models").get('num_threads') is not None:
-            set_num_threads(self.config.get("models").get('num_threads')) # this is a global setting
+        if device == 'cpu' and self.config.get("scraibe_params").get('num_threads') is not None:
+            set_num_threads(self.config.get("scraibe_params").get('num_threads')) # this is a global setting
 
-        self.config['models']['device'] = device
+        self.config['scraibe_params']['device'] = device
     
     def set_layout_options(self) -> None:
         """Sets the layout options from a configuration dictionary.
@@ -136,9 +130,10 @@ class AppConfigLoader(ConfigLoader):
                 warnings.warn(f"Footer file not found: {self.config['layout']['footer']}")
         else:
             footer = None
+            
+        self.config['layout']['header'] = header
+        self.config['layout']['footer'] = footer
         
-        return {'header' : header ,
-                'footer' : footer} 
         
     def add_to_allowed_paths(self, path: str) -> None:
         """Adds a path to the list of allowed paths.
@@ -196,6 +191,35 @@ class AppConfigLoader(ConfigLoader):
             allowed_paths.remove(path)
             self.config['launch']['allowed_paths'] = allowed_paths
     
+    def load_mail_templates(self) -> Dict[str, str]:
+        """Load the mail templates from the configuration file.
+        
+        Args:
+            None
+            
+        Returns:
+            None
+        """
+        
+        self.check_and_set_path("error_template")
+        self.check_and_set_path("upload_notification_template")
+        self.check_and_set_path("success_template")
+        self.check_and_set_path("mail_css_path")
+        
+        with open(self.mail.get("error_template"), "r", encoding= 'utf-8') as f:
+            error_template = f.read()
+        
+        with open(self.mail.get("upload_notification_template"), "r", encoding= 'utf-8') as f:
+            upload_template = f.read()
+        
+        with open(self.mail.get("success_template"), "r", encoding= 'utf-8') as f:
+            success_template = f.read()
+        
+        self.mail['error_template'] = error_template
+        self.mail['upload_notification_template'] = upload_template
+        self.mail['success_template'] = success_template
+        
+    
     def check_and_set_path(self, key: list[str]) -> Optional[str]:
         # TODO: I think this is Bullshit and should be removed or refactored
         """Check if the file exists at the given path. If not, try with ROOT_PATH.
@@ -217,9 +241,31 @@ class AppConfigLoader(ConfigLoader):
         if not os.path.exists(_path):
             # Check if the file exists in the ROOT_PATH
             new_path = os.path.join(ROOT_PATH, _path)
+
             if not os.path.exists(new_path):
                 warnings.warn(f"{key.capitalize()} file not found: {_path} \n" \
                               "fall back to default.")
                 self.restore_defaults_for_keys(key)
             else:
                 self.update_nested_key(self.config, key, new_path)
+
+    def set_advanced_options(self) -> None:
+        """Sets the advanced options from a configuration dictionary.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
+        interface_type = self.interface_type
+        
+        advanced = self.advanced
+        
+        if interface_type == "async": 
+            gv.MAX_CONCURRENT_MODELS = advanced.get("concurrent_workers_async")
+            
+            if advanced.get("keep_model_alive") is True:
+                warnings.warn("The option 'keep_model_alive' is not supported in the async interface. Set to False.")
+                advanced["keep_model_alive"] = False
+                

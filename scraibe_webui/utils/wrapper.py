@@ -2,7 +2,7 @@
 stg - Scraibe to Gradio Interface
 
 This module provides an interface between the Scraibe transcription system and the Gradio user interface.
-It defines a class, GradioTranscriptionInterface, that wraps the Scraibe model and provides methods for performing transcription tasks through the Gradio UI.
+It defines a class, ScraibeWrapper, that wraps the Scraibe model and provides methods for performing transcription tasks through the Gradio UI.
 
 Modules:
     json: Used for encoding and decoding JSON data.
@@ -15,9 +15,9 @@ import gradio as gr
 from tqdm import tqdm
 from typing import Any, Dict, Union, Tuple, List
 
-from scraibe import Scraibe
+from scraibe import Scraibe, Transcriber
 
-class GradioTranscriptionInterface:
+class ScraibeWrapper:
     """
     A class that provides an interface between the Gradio UI and the Scraibe transcription system.
 
@@ -30,7 +30,7 @@ class GradioTranscriptionInterface:
 
     def __init__(self, model) -> None:
         """
-        Initializes the GradioTranscriptionInterface with a Scraibe model.
+        Initializes the ScraibeWrapper with a Scraibe model.
 
         Args:
             model (Scraibe): The Scraibe model for performing transcription tasks.
@@ -73,7 +73,7 @@ class GradioTranscriptionInterface:
                 raise gr.Error("Couldn't detect any speech in the provided audio. \
                         Please try again!")
                 
-            return str(result), result.get_json()
+            return result, str(result), result.get_json()
         
         elif isinstance(source, list):
             source_names = [s.split("/")[-1] for s in source]
@@ -224,16 +224,27 @@ class GradioTranscriptionInterface:
             return self.diarisation
         else:
             raise ValueError("Invalid task string.")
+    
+    def update_transcriber_model(self, model: str, **kwargs) -> None:
+        """
+        Load the selected model into memory.
+
+        Args:
+            model (str): The name of the model to load.
+            kwargs (Dict[str, Any]): Additional keyword arguments.
+        """
         
+        self.model.transcriber = Transcriber.load_model(model, **kwargs)
+    
     @classmethod
-    def load_from_dict(cls, config: Dict[str, Any]) -> 'GradioTranscriptionInterface':
-        """ Load the GradioTranscriptionInterface from a dictionary configuration.
+    def load_from_dict(cls, config: Dict[str, Any]) -> 'ScraibeWrapper':
+        """ Load the ScraibeWrapper from a dictionary configuration.
         
         Args:
             config (dict): A dictionary containing the configuration parameters.
             
         Returns:
-            GradioTranscriptionInterface: The GradioTranscriptionInterface object.
+            ScraibeWrapper: The ScraibeWrapper object.
         
         """
         model = Scraibe(**config)

@@ -180,7 +180,11 @@ def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
                                             error_format_options,
                                             success_format_options,
                                             upload_notification_format_options],
-                                outputs=[output], concurrency_limit = None)
+                                outputs=[output],
+                                show_progress=False,
+                                concurrency_limit = None)
+                
+    
             else:
                 # Define usage of components
             

@@ -44,7 +44,7 @@ layout:
   # themes: null # dict of themes from hugging face placeholder
 scraibe_params:
   whisper_model : null
-  whisper_type: null # whether use orginal whisper or whisperX backend
+  whisper_type: null # whether use orginal "whisper" or whisperx backend
   dia_model: null
   use_auth_token: null
   device: null # set your device

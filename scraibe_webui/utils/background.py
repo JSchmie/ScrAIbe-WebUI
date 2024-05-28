@@ -13,7 +13,7 @@ threadLimiter = BoundedSemaphore(MAX_CONCURRENT_MODELS)
 
 class BoundedThread(Thread):
     """
-    Cosutom Thread class that limits the number of threads that can run concurrently
+    Custom Thread class that limits the number of threads that can run concurrently
     """
     def run(self):
         threadLimiter.acquire() # Get Global Thread Limiter

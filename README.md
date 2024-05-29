@@ -3,13 +3,14 @@
 Welcome to ScrAIbe-WebUI, a user-friendly web service for automated transcriptions, built on top of our innovative backend framework,  [ScrAIbe](https://github.com/JSchmie/ScrAIbe). ScrAIbe-WebUI provides a no-code solution that allows users to deploy the service locally with ease using Docker.
 
 <div style="display: flex; justify-content: space-between;">
-  <img src="./img/simple_ui.png" style="width: 48%;" />
-  <img src="./img/async_ui.png" style="width: 48%;" />
+  <img src="./img/simple_ui.png" style="width: 49%;" />
+  <img src="./img/async_ui.png" style="width: 49%;" />
 </div>
 
 ## Features 🌟
 
 ### Gradio-Based Interface
+
 - **User-Friendly Interface**: Leveraging Gradio, ScrAIbe-WebUI provides an intuitive web interface that makes it easy for users to interact with the transcription services without any coding requirement.
 
 ### Real-Time and Asynchronous Transcription Modes

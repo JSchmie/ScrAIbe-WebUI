@@ -45,7 +45,7 @@ layout:
   footer: scraibe_webui/misc/footer.html
   footer_format_options : 
     footer_css_path: scraibe_webui/misc/footer_style.css
-    python_footer_build_version : "__import__('scraibe_webui').__version__"
+    footer_scraibe_webui_version : null
   show_settings : true
   
   # themes: null # dict of themes from hugging face placeholder

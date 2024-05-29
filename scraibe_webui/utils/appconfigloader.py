@@ -4,6 +4,7 @@ from typing import Any, Dict
 from .configloader import ConfigLoader
 from ..global_var import ROOT_PATH
 import scraibe_webui.global_var as gv
+from .._version import __version__ as scraibe_webui_version
 from torch import set_num_threads
 from torch import device as torch_device
 from torch.cuda import is_available
@@ -86,9 +87,11 @@ class AppConfigLoader(ConfigLoader):
             
             key_contains = ['scr', 'file', 'path']
             value_ends_with = ['.html', '.css', '.png', '.jpg', '.jpeg', '.svg']
-            
-            return (any(substring in key for substring in key_contains) or
-                    any(value.endswith(suffix) for suffix in value_ends_with))
+            if value is None:
+                return False
+            else:
+                return (any(substring in key for substring in key_contains) or
+                        any(value.endswith(suffix) for suffix in value_ends_with))
 
         _layout : dict = self.config.get("layout")
         
@@ -103,8 +106,8 @@ class AppConfigLoader(ConfigLoader):
                 self.check_and_set_path(key)
                 self.add_to_allowed_paths(value)
             
-            elif "python" in key:
-                _layout["header_format_options"][key] = eval(value)
+            if 'scraibe_webui_version' in key and value is None:   
+                _layout["header_format_options"][key] = scraibe_webui_version
 
         _header_format_options = _layout.get("header_format_options")
         
@@ -114,12 +117,13 @@ class AppConfigLoader(ConfigLoader):
         _footer_format_options : dict = _layout.get("footer_format_options")
         
         for key, value in _footer_format_options.items():
+                         
             if _check_potential_path(key, value):
                 self.check_and_set_path(key)
                 self.add_to_allowed_paths(value)
-                
-            elif "python" in key:
-                _layout["footer_format_options"][key] = eval(value)
+
+            elif 'scraibe_webui_version' in key and value is None:    
+                _layout["footer_format_options"][key] = scraibe_webui_version
 
         _footer_format_options = _layout.get("footer_format_options")
          

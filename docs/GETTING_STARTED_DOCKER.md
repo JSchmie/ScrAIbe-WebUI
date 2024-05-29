@@ -34,7 +34,7 @@ This command will build the Docker image and start the container using the confi
 
 Once the Docker container is running, you can access the WebUI in your web browser at:
 
-```bash 
+```bash
 http://localhost:7860
 ```
 
@@ -85,14 +85,13 @@ Docker will automatically pull the image from Docker Hub if it is not already pr
 
 Once the Docker container is running, you can access the WebUI in your web browser at:
 
-```bash 
+```bash
 http://localhost:7860
 ```
 
 ## Custom Configuration
 
 To use a custom configuration file, you can mount the configuration file as a volume in the docker-compose.yml file. For example:
-
 
 ```yaml
 volumes:

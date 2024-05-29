@@ -53,7 +53,7 @@ Use the `scraibe-webui start` command with `--server-kwargs` to specify the desi
 
 
 ```bash
-scraibe-webui start --server-kwargs server_port=8080 whisper_model=large-v3
+scraibe-webui start server_port=8080 whisper_model=large-v3
 ```
 
 
@@ -69,7 +69,7 @@ settings = {launch:{server_port: 8080},
             scraibe_params: { whisper_model : 'large-v3'}
             } 
 
-App(**settings).launch()
+App(**settings).start()
 ```
 
 Alternatively, pass the settings directly as keyword arguments when launching the application:
@@ -81,7 +81,7 @@ settings = {launch:{server_port: 8080},
             scraibe_params: { whisper_model : 'large-v3'}
             } 
 
-App(server_port = 8080 ,whisper_model = 'large-v3').launch()
+App(server_port = 8080 ,whisper_model = 'large-v3').start()
 ```
 
 By now, you should be able to run your custom WebUI. But you might ask: What are my options to customize my own instance?

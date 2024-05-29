@@ -265,6 +265,8 @@ scraibe_params:
 
 For more detailed information, refer to our default `config.yaml`.
 
+You can also include other keyword arguments that the `ScrAIbe` class supports, like'verbose.' However, in general, it is unlikely that you have a genuine need for it.
+
 ### 6. Setting Up the Email Backend for Async Interface
 
 To use the asynchronous interface type, where transcripts are sent via email, you need to configure the email backend properly. This involves setting up SMTP server details, email templates, and other related settings in the `config.yaml` file. **Note: These settings are only used when using the asynchronous backend.**

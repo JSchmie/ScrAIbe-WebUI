@@ -85,10 +85,10 @@ class AppConfigLoader(ConfigLoader):
             """
             
             key_contains = ['scr', 'file', 'path']
-            value_contains = ['.html', '.css', '.png', '.jpg', '.jpeg', '.svg']
+            value_ends_with = ['.html', '.css', '.png', '.jpg', '.jpeg', '.svg']
             
             return (any(substring in key for substring in key_contains) or
-                    any(substring in value for substring in value_contains))
+                    any(value.endswith(suffix) for suffix in value_ends_with))
 
         _layout : dict = self.config.get("layout")
         

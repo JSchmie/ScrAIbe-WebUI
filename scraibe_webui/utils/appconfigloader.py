@@ -1,7 +1,6 @@
 import os
 import warnings
-from typing import Any, Dict, Union
-
+from typing import Any, Dict
 from .configloader import ConfigLoader
 from ..global_var import ROOT_PATH
 import scraibe_webui.global_var as gv
@@ -103,6 +102,9 @@ class AppConfigLoader(ConfigLoader):
             if _check_potential_path(key, value):
                 self.check_and_set_path(key)
                 self.add_to_allowed_paths(value)
+            
+            elif "python" in key:
+                _layout["header_format_options"][key] = eval(value)
 
         _header_format_options = _layout.get("header_format_options")
         
@@ -113,10 +115,14 @@ class AppConfigLoader(ConfigLoader):
         
         for key, value in _footer_format_options.items():
             if _check_potential_path(key, value):
-                
                 self.check_and_set_path(key)
                 self.add_to_allowed_paths(value)
+                
+            elif "python" in key:
+                _layout["footer_format_options"][key] = eval(value)
 
+        _footer_format_options = _layout.get("footer_format_options")
+         
         if _header is not None: 
             
             with open(_header, "r", encoding= 'utf-8') as f:

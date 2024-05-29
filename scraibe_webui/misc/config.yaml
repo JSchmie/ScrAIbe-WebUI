@@ -37,10 +37,15 @@ queue:
   max_size : null
   default_concurrency_limit : not_set
 layout:
-  header: scraibe_webui/misc/header.html 
+  header: scraibe_webui/misc/header.html
+  header_format_options: 
+    header_css_path : scraibe_webui/misc/header_style.css
+    header_logo_url : https://www.kida-bmel.de/
+    header_logo_src : scraibe_webui/misc/logo.svg
   footer: null
-  logo: scraibe_webui/misc/logo.svg
-  show_settings: true
+  footer_format_options : {}
+  show_settings : true
+  
   # themes: null # dict of themes from hugging face placeholder
 scraibe_params:
   whisper_model : null

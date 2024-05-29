@@ -1,4 +1,3 @@
-
 from .utils.appconfigloader import AppConfigLoader
 from .ui import gradio_Interface
 

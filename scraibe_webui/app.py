@@ -1,8 +1,7 @@
-
 from .utils.appconfigloader import AppConfigLoader
 from .ui import gradio_Interface
 
-class App:
+class App(AppConfigLoader):
     def __init__(self, config: str = None, **kwargs):
         """
         Initializes the App class.
@@ -14,9 +13,9 @@ class App:
                       argument should be a dictionary reflecting the structure of its 
                       respective section in `config.yaml`.
         """
-        self.config = AppConfigLoader.load_config(config, **kwargs)
+        super(App, self).__init__(config, **kwargs)
 
-    def launch(self):
+    def start(self):
         """
         Launches the Gradio interface for audio transcription.
 
@@ -29,6 +28,8 @@ class App:
         """
         print("Starting Gradio Web Interface")
 
-        interface = gradio_Interface(self.config)
-        interface.queue(**self.config.queue)
-        interface.launch(**self.config.launch)
+        interface = gradio_Interface(self)
+        interface.queue(**self.queue)
+        interface.launch(**self.launch)
+    
+    

@@ -72,7 +72,7 @@ class ConfigLoader(metaclass = ABCMeta):
         self.apply_overrides(self.config, {key: value})
         
     @classmethod
-    def load_config(cls, yaml_path: Optional[str] = None, **kwargs: Any) -> 'ConfigLoader':
+    def load_config(cls, yaml_path: Optional[str] = None, **kwargs: Any):
         """Load the configuration file and apply overrides.
 
         Args:

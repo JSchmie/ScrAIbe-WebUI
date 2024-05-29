@@ -211,12 +211,7 @@ layout:
 
     This would be recognized as a file since it involves `.css` and `path` as part of its keyword.
 
-3. **Python Execution**: If a keyword under the format options includes "python", Python's built-in `eval` method is used to execute the provided code snippet. Users need to be **🔥extremely careful🔥** with this feature as it poses a potential security risk.
-
-    ```yaml
-    header_format_options:
-      python_version_finder: "__import__('scraibe_webui').__version__"
-    ```
+3. **Interactive WebUI Version**: If a keyword under the format options includes `scraibe_webui_version`, the current build version of ScrAIbe-WebUI will be automatically inserted during setup, ensuring your interface always reflects the latest version.
 
 4. **Unique Keys**: Every key in the configuration must be unique. This ensures that each setting is distinct and avoids conflicts.
 

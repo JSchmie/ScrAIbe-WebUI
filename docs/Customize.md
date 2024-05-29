@@ -50,17 +50,13 @@ Creating a YAML file makes sense when you need to change many parameters. But if
 
 Use the `scraibe-webui start` command with `--server-kwargs` to specify the desired settings directly in the command line:
 
-
-
 ```bash
 scraibe-webui start server_port=8080 whisper_model=large-v3
 ```
 
-
 #### Quick Python Version
 
 Import the `App` class from `scraibe_webui`, then define the settings in a dictionary and launch the application with these settings:
-
 
 ```python
 from scraibe_webui import App 
@@ -92,7 +88,7 @@ Until now we’ve covered both the CLI and Python interfaces for configuring you
 
 The `config.yaml` file is the heart of your `ScrAIbe-WebUI` customization. This file allows you to define various settings that control how your WebUI behaves and appears. Below, we will dive into the key sections of the `config.yaml` file and explain how to customize each part. You can find the original `config.yaml` file in the repository under [`scraibe_webui/misc/config.yaml`](../scraibe_webui/misc/config.yaml)
 
-#### Key Sections:
+### Key Sections
 
 1. Interface Type
 2. Gradio Launch Configuration
@@ -163,8 +159,6 @@ layout:
 ```
 
 - **header:** Path to an HTML file for the header. You can use your own custom HTML file if desired. Note that the header must be an HTML file.
-
-
 - **header_format_options:** Options to customize the header. These are arbitrary keyword arguments for the format function in Python, and they must be referenced in the HTML file using curly braces, like `{myarg}`.
 
   - **header_css_path:** Path to a CSS file for the header styling.
@@ -197,7 +191,6 @@ layout:
   ```
 
 - **footer:** Path to an HTML file for the footer. You can use your own custom HTML file if desired. **Note** that the footer must be an HTML file.
-
 - **footer_format_options:** Options to customize the footer. These are arbitrary keyword arguments for the format function in Python, and they must be referenced in the HTML file using curly braces, like `{myarg}`.
 - **show_settings:** Enables or disables the settings panel within the Gradio interface. This is a **beta feature** and should not be used in production settings as it may not be stable.
 
@@ -267,7 +260,7 @@ scraibe_params:
 
 - **whisper_type**: This setting allows you to choose between the original whisper backend and the whisperX backend. The original whisper backend is the standard processing method, while whisperX may offer different features or optimizations. Choose `whisper` for the standard whisper models method or `whisperx` for the alternative [whisperX](https://github.com/m-bain/whisperX) backend.
 
-- **dia_model**: This parameter allows you to specify the diarisation model that SCRAIBE will use. It is left as `null` by default, and you can set it to the specific [pyannote](https://github.com/pyannote/pyannote-audio) model you wish to use. The diarisation model we use is a wrapper for the pyannote audio model, which is renowned for its accurate speaker diarisation. 
+- **dia_model**: This parameter allows you to specify the diarisation model that SCRAIBE will use. It is left as `null` by default, and you can set it to the specific [pyannote](https://github.com/pyannote/pyannote-audio) model you wish to use. The diarisation model we use is a wrapper for the pyannote audio model, which is renowned for its accurate speaker diarisation.
 
 - **use_auth_token**: This parameter allows you to specify the Hugging Face authentication token needed for accessing certain models or services. Specifically, it is required if you wish to use one of the original pyannote models hosted on Hugging Face. By providing the Hugging Face authentication token here, you ensure access to these advanced and premium features, enabling SCRAIBE to utilize the full capabilities of the pyannote audio models.
 
@@ -362,7 +355,7 @@ The templates and the related CSS, as well as additional arguments (like the con
 </html>
 ```
 
-In this example, additional format options such as `user_name`, `download_link`, and `company_name` are used to personalize the success notification email. he related part in your YAML file would look like: 
+In this example, additional format options such as `user_name`, `download_link`, and `company_name` are used to personalize the success notification email. he related part in your YAML file would look like:
 
 ```yaml
 success_template: scraibe_webui/misc/success_template.html

@@ -148,24 +148,86 @@ queue:
 
 ### 4. Layout Configuration
 
-This section allows you to customize the visual elements of your WebUI. Here, you can specify custom HTML files for the header and footer, as well as a logo image. Additionally, you can enable or disable the settings panel within the Gradio interface.
+This section allows you to customize the visual elements of your WebUI. Here, you can specify custom HTML files for the header and footer, along with detailed format options, such as additional CSS files or logos. You can also enable or disable the settings panel within the Gradio interface.
 
 **Example `config.yaml` for Layout Configuration:**
 
 ```yaml
 layout:
-  header: path/to/my/custom_header.html
-  footer: null
-  logo: path/to/my/customlogo.svg
-  show_settings: false
+  header: path/to/my/header.html
+  header_format_options: {}
+  footer: path/to/my/footer.html
+  footer_format_options: {}
+  show_settings: true
+
 ```
 
-- **header**: Path to an HTML file for the header. You can use your own custom HTML file if desired.
-- **footer**: Path to an HTML file for the footer. Set to `null` if you don't want to include a footer. You can use your own custom HTML file if desired.
-- **logo**: Path to an image file for your logo. You can use your own custom logo file if desired.
-- **show_settings**: A beta feature that enables changing settings within the Gradio interface itself. It is not recommended for stable versions and inexperienced users yet.
+- **header:** Path to an HTML file for the header. You can use your own custom HTML file if desired. Note that the header must be an HTML file.
 
-For more detailed information, refer to our default `config.yaml`.
+
+- **header_format_options:** Options to customize the header. These are arbitrary keyword arguments for the format function in Python, and they must be referenced in the HTML file using curly braces, like `{myarg}`.
+
+  - **header_css_path:** Path to a CSS file for the header styling.
+  - **header_logo_url:** URL for the header logo link.
+  - **header_logo_src:** Path to an image file for the header logo.
+
+  Example of `header_format_options` in `config.yaml`:
+
+  ```yaml
+  header_format_options: 
+    header_css_path: /file=scraibe_webui/misc/header_style.css
+    header_logo_url: https://www.example.com/
+    header_logo_src: /file=scraibe_webui/misc/logo.svg
+  ```
+
+  Example of a custom HTML file (`header.html`):
+
+  ```html
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <link rel="stylesheet" href="/file={header_css_path}">
+  </head>
+  <body>
+      <a href="{header_logo_url}">
+          <img src="/file={header_logo_src}" alt="Logo">
+      </a>
+  </body>
+  </html>
+  ```
+
+- **footer:** Path to an HTML file for the footer. You can use your own custom HTML file if desired. **Note** that the footer must be an HTML file.
+
+- **footer_format_options:** Options to customize the footer. These are arbitrary keyword arguments for the format function in Python, and they must be referenced in the HTML file using curly braces, like `{myarg}`.
+- **show_settings:** Enables or disables the settings panel within the Gradio interface. This is a **beta feature** and should not be used in production settings as it may not be stable.
+
+#### Important Notes
+
+1. **File Imports**: If you want to use file imports such as an extra logo or a CSS file, it is important to prefix the file path with `/file=` in the HTML file. Otherwise, it will not work with Gradio.
+
+    ```html
+    <link rel="stylesheet" href="/file=path/to/your/file.css">
+    ```
+
+2. **File Detection**: Keys including 'scr', 'file', 'path', or values ending with `.html`, `.css`, `.png`, `.jpg`, `.jpeg`, `.svg` are treated as file paths
+  
+    ```yaml
+    header_format_options:
+      header_css_path : /my/path/to/style.css 
+    ```
+
+    This would be recognized as a file since it involves `.css` and `path` as part of its keyword.
+
+3. **Python Execution**: If a keyword under the format options includes "python", Python's built-in `eval` method is used to execute the provided code snippet. Users need to be **🔥extremely careful🔥** with this feature as it poses a potential security risk.
+
+    ```yaml
+    header_format_options:
+      python_version_finder: "__import__('scraibe_webui').__version__"
+    ```
+
+4. **Unique Keys**: Every key in the configuration must be unique. This ensures that each setting is distinct and avoids conflicts.
+
+This configuration approach, similar to the Mail interface, allows you to customize each section with specific format options using YAML syntax. You can include paths to additional resources and dynamically generate content, but it's crucial to follow the guidelines to ensure proper functionality and security.
 
 ### 5. SCRAIBE Parameters
 

@@ -42,8 +42,10 @@ layout:
     header_css_path : scraibe_webui/misc/header_style.css
     header_logo_url : https://www.kida-bmel.de/
     header_logo_src : scraibe_webui/misc/logo.svg
-  footer: null
-  footer_format_options : {}
+  footer: scraibe_webui/misc/footer.html
+  footer_format_options : 
+    footer_css_path: scraibe_webui/misc/footer_style.css
+    python_footer_build_version : "__import__('scraibe_webui').__version__"
   show_settings : true
   
   # themes: null # dict of themes from hugging face placeholder

@@ -16,7 +16,7 @@ def start_command(args):
     """
     config = args.config
     server_kwargs = args.server_kwargs
-    App(config, **server_kwargs).launch()
+    App(config, **server_kwargs).start()
 
 def version_command(args):
     """

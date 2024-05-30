@@ -37,14 +37,21 @@ queue:
   max_size : null
   default_concurrency_limit : not_set
 layout:
-  header: scraibe_webui/misc/header.html 
-  footer: null
-  logo: scraibe_webui/misc/logo.svg
-  show_settings: true
+  header: scraibe_webui/misc/header.html
+  header_format_options: 
+    header_css_path : scraibe_webui/misc/header_style.css
+    header_logo_url : https://www.kida-bmel.de/
+    header_logo_src : scraibe_webui/misc/logo.svg
+  footer: scraibe_webui/misc/footer.html
+  footer_format_options : 
+    footer_css_path: scraibe_webui/misc/footer_style.css
+    footer_scraibe_webui_version : null
+  show_settings : true
+  
   # themes: null # dict of themes from hugging face placeholder
 scraibe_params:
   whisper_model : null
-  whisper_type: whisper # whether use orginal "whisper" or whisperx backend
+  whisper_type: whisper # whether use orginal whisper or whisperX backend
   dia_model: null
   use_auth_token: null
   device: null # set your device

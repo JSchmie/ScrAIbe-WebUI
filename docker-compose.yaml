@@ -10,9 +10,7 @@ services:
       ports:
         - '80:7860'
       volumes: 
-        - type: bind
-          source: data/
-          target: /data/
+        - ./data:/data 
       deploy:
         resources:
           reservations:

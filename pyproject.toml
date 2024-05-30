@@ -68,4 +68,4 @@ scraibe-webui = "scraibe_webui.cli:cli"
 
 [tool.ruff.lint.extend-per-file-ignores]
 "__init__.py" = ["E402","F403",'F401']
-"scraibe/misc.py" = ["E722"]
+"scraibe_webui/utils/_parsekwargs.py" = ["E722"]

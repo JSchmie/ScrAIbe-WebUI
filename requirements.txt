@@ -1,4 +1,7 @@
 gradio>=4.25.0
 gradio-client>=0.15.0
 
-scraibe @ git+https://github.com/JSchmie/ScrAIbe.git@develop
+scraibe==0.2.0
+pandas>=2.2.1
+tqdm>=4.66.4
+numpy>=1.26.4

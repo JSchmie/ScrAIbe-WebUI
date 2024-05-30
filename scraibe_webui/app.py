@@ -1,32 +1,35 @@
+from .utils.appconfigloader import AppConfigLoader
+from .ui import gradio_Interface
 
-from .utils.configloader import ConfigLoader
+class App(AppConfigLoader):
+    def __init__(self, config: str = None, **kwargs):
+        """
+        Initializes the App class.
 
+        Args:
+            config (str): Path to the YAML configuration file. Default settings are used 
+                          if not provided.
+            **kwargs: Keyword arguments corresponding to the configuration sections. Each 
+                      argument should be a dictionary reflecting the structure of its 
+                      respective section in `config.yaml`.
+        """
+        super(App, self).__init__(config, **kwargs)
 
-def app(config : str = None, **kwargs):
-       # Load and override configuration from the YAML file with kwargs
+    def start(self):
+        """
+        Launches the Gradio interface for audio transcription.
+
+        Initializes the Gradio web interface with settings from a YAML configuration file
+        and/or keyword arguments. The function manages AI models, handling their loading 
+        into RAM and unloading after a session or specified timeout.
+
+        Returns:
+            None
+        """
+        print("Starting Gradio Web Interface")
+
+        interface = gradio_Interface(self)
+        interface.queue(**self.queue)
+        interface.launch(**self.launch)
     
-    interface_type = kwargs.get('interface_type', None)
     
-    if not interface_type:
-        _config = ConfigLoader.load_config(config, **kwargs)
-        
-        interface_type = _config.get('interface_type')
-        
-        if not interface_type:
-            raise ValueError("interface_type is not defined in the configuration file."\
-                " Please enshure default config.yaml is present or provide a valid configuration file.")
-            
-    if interface_type == "simple":
-        from .simple.app import simple_app
-        
-        simple_app(config, **kwargs)
-        
-    elif interface_type == "sync":
-        from .sync.app import sync_app
-        
-        sync_app(config, **kwargs)
-        
-    elif interface_type == "async":
-        from ._async.app import async_app
-        
-        async_app(config, **kwargs)

@@ -15,8 +15,7 @@ import os
 import yaml
 from abc import ABCMeta
 from typing import Any, Dict, Optional
-from ._path import ROOT_PATH
-
+from ..global_var import ROOT_PATH
 
 class ConfigLoader(metaclass = ABCMeta):
     """A class that extends ConfigLoader to manage application-specific configuration settings.
@@ -73,7 +72,7 @@ class ConfigLoader(metaclass = ABCMeta):
         self.apply_overrides(self.config, {key: value})
         
     @classmethod
-    def load_config(cls, yaml_path: Optional[str] = None, **kwargs: Any) -> 'ConfigLoader':
+    def load_config(cls, yaml_path: Optional[str] = None, **kwargs: Any):
         """Load the configuration file and apply overrides.
 
         Args:

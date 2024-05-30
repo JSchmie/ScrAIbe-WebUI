@@ -4,52 +4,62 @@ allowing for user interaction to transcribe and diarize audio files.
 The function includes arguments for specifying the audio files, model paths,
 output formats, and other options necessary for transcription.
 """
-import os 
-import sys
-import subprocess
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 from .utils._parsekwargs import ParseKwargs
-from .utils._path import ROOT_PATH
+from .app import App
+from ._version import __version__
+
+def start_command(args):
+    """
+    Function to start the Gradio Web Interface with the given configuration and server arguments.
+    """
+    config = args.config
+    server_kwargs = args.server_kwargs
+    App(config, **server_kwargs).start()
+
+def version_command(args):
+    """
+    Function to display the version of the CLI.
+    """
+    print(f"Scraibe WebUI CLI version {__version__}")
+
+def create_parser():
+    """
+    Create the top-level parser and subparsers.
+    """
+    parser = ArgumentParser(
+        description='Command-Line Interface (CLI) for the Scraibe class, allowing for user interaction to transcribe and diarize audio files.',
+        formatter_class=ArgumentDefaultsHelpFormatter
+    )
+    
+    subparsers = parser.add_subparsers(dest='command', help='Sub-commands')
+    
+    # Parser for the "start" command
+    parser_start = subparsers.add_parser('start', help='Start the Gradio Web Interface')
+    parser_start.add_argument("-c", "--config", type=str, default=None,
+                              help="Path to the customized config.yaml file.")
+    parser_start.add_argument('--server-kwargs', nargs='*', action=ParseKwargs, default={},
+                              help='Keyword arguments for the Gradio app. If you do not provide a config file, you can use this to set the server configuration.')
+    parser_start.set_defaults(func=start_command)
+    
+    # Parser for the "version" command
+    parser_version = subparsers.add_parser('version', help='Show the version of the CLI')
+    parser_version.set_defaults(func=version_command)
+    
+    return parser
 
 def cli():
     """
-    Command-Line Interface (CLI) for the Scraibe WebUI Interface.
+    Main entry point for the CLI.
     """
-
-    parser = ArgumentParser(formatter_class = ArgumentDefaultsHelpFormatter)
-
-    group = parser.add_mutually_exclusive_group()
-    
-    parser.add_argument("-c","--config", type=str, default= None,
-                        help="Path to the customized config.yaml file.")
-    
-    parser.add_argument('--server-kwargs', nargs='*', action=ParseKwargs, default={},
-                    help='Keyword arguments for the Gradio app. If you do not provide a config file, you can use this to set the server configuration.')
-    
-    group.add_argument('--start-server', action='store_true',
-                        help='Start the Gradio app.' \
-                        'If set, all other arguments are ignored' \
-                        'besides --server-config or --server-kwargs.')
-
+    parser = create_parser()
     args = parser.parse_args()
-    
-    arg_dict = vars(args)
-    
-    execute_path = os.path.join(ROOT_PATH, "scraibe_webui/app_starter.py")
-    
-    config = arg_dict.pop("config")
-    
-    server_kwargs = arg_dict.pop("server_kwargs")
-    
-    if not config and not server_kwargs:
-        subprocess.run([sys.executable, execute_path])
-    if not config and server_kwargs:
-        subprocess.run([sys.executable, execute_path, f"--server-kwargs={server_kwargs}"])
-    elif not server_kwargs and config:
-        subprocess.run([sys.executable, execute_path, f"--server-config={config}"])
+
+    if hasattr(args, 'func'):
+        args.func(args)
     else:
-        subprocess.run([sys.executable, execute_path, f"--server-config={config}", f"--server-kwargs={server_kwargs}"])
+        parser.print_help()
 
 if __name__ == "__main__":
     cli()

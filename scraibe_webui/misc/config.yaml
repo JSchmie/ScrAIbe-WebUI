@@ -1,4 +1,4 @@
-interface_type: simple # sync, aync or simple variant of the Interface (one does transcriptions does require Email setup)
+interface_type: simple # aync or simple variant of the Interface (one does transcriptions does require Email setup)
 launch:
   # The following are the default values for the launch configuration
   # for more informations look at https://www.gradio.app/docs/interface 
@@ -37,24 +37,47 @@ queue:
   max_size : null
   default_concurrency_limit : not_set
 layout:
-  header:  scraibe_webui/misc/header.html
-  footer: null
-  logo:  scraibe_webui/misc/logo.svg
+  header: scraibe_webui/misc/header.html
+  header_format_options: 
+    header_css_path : scraibe_webui/misc/header_style.css
+    header_logo_url : https://www.kida-bmel.de/
+    header_logo_src : scraibe_webui/misc/logo.svg
+  footer: scraibe_webui/misc/footer.html
+  footer_format_options : 
+    footer_css_path: scraibe_webui/misc/footer_style.css
+    footer_scraibe_webui_version : null
+  show_settings : true
+  
   # themes: null # dict of themes from hugging face placeholder
-models:
+scraibe_params:
   whisper_model : null
-  whisper_type: null
+  whisper_type: whisper # whether use orginal whisper or whisperX backend
   dia_model: null
   use_auth_token: null
   device: null # set your device
-  num_threads: null # If CPU is used set number of useable threads
+  num_threads: 0 # If CPU is used set number of useable threads
+mail:
+  sender_email : null 
+  smtp_server : null
+  smtp_port : 0
+  sender_password : null
+  context_kwargs : {}
+  default_subject: "SCRAIBE"
+  error_template: scraibe_webui/misc/error_notification_template.html
+  error_subject: An error occured during processing.
+  error_format_options:
+    #exception is mandatroy for your html  will be set to the related exepttion in the Code
+   contact_email: support@mail.com # set this to your mail if you are using a custom error_template you can add an any amount of format options here.
+  success_template: scraibe_webui/misc/success_template.html
+  success_subject: "Your transcript is ready."
+  success_format_options: 
+    contact_email: support@mail.com
+  upload_notification_template: scraibe_webui/misc/upload_notification_template.html
+  upload_subject: "Upload Successful"
+  upload_notification_format_options:
+    queue_position: null
+    contact_email: support@mail.com
+  mail_css_path: scraibe_webui/misc/mail_style.css
 advanced:
-  timeout: 300 #seconds e.g. 5 minutes
-  mail:
-    sender_email : null 
-    smtp_server : null
-    smtp_port : 0
-    sender_password : null
-    context_kwargs : null
-    default_subject: "SCRAIBE"
-
+  keep_model_alive: false # for sync interfac only keeps the model alvide during a session 
+  concurrent_workers_async: 1 # number of concurrent working threads in the async interface

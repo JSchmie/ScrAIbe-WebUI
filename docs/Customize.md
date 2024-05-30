@@ -265,7 +265,7 @@ scraibe_params:
 
 For more detailed information, refer to our default `config.yaml`.
 
-You can also include other keyword arguments that the `ScrAIbe` class supports, like'verbose.' However, in general, it is unlikely that you have a genuine need for it.
+You can also include other keyword arguments that the `ScrAIbe` class supports, like `verbose`.
 
 ### 6. Setting Up the Email Backend for Async Interface
 

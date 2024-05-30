@@ -1,10 +1,10 @@
 import os
 import warnings
-from typing import Any, Dict, Optional
-
+from typing import Any, Dict
 from .configloader import ConfigLoader
 from ..global_var import ROOT_PATH
 import scraibe_webui.global_var as gv
+from .._version import __version__ as scraibe_webui_version
 from torch import set_num_threads
 from torch import device as torch_device
 from torch.cuda import is_available
@@ -33,8 +33,6 @@ class AppConfigLoader(ConfigLoader):
         super(AppConfigLoader, self).__init__(config)
         
         self.set_models_options()
-        
-        self.set_layout_options()
 
         self.get_layout()
         
@@ -64,22 +62,6 @@ class AppConfigLoader(ConfigLoader):
             set_num_threads(self.config.get("scraibe_params").get('num_threads')) # this is a global setting
 
         self.config['scraibe_params']['device'] = device
-    
-    def set_layout_options(self) -> None:
-        """Sets the layout options from a configuration dictionary.
-
-        Args:
-            None
-
-        Returns:
-            None
-        """
-        
-        self.check_and_set_path('header')
-        self.check_and_set_path('footer')
-        self.check_and_set_path('logo')
-        
-        self.add_to_allowed_paths(self.config['layout']['logo'])
         
     def get_layout(self) -> Dict[str, str]:
         """Gets the layout options from a configuration dictionary.
@@ -90,50 +72,82 @@ class AppConfigLoader(ConfigLoader):
         Returns:
             dict: A dictionary containing the header and footer layout options.
         """
-        _header = self.config['layout']['header']
         
-        if _header == self.default_config['layout']['header']:
-            _header = os.path.join(ROOT_PATH, _header)
+        def _check_potential_path(key: str, value: str) -> bool:
+            """
+            Check if the given key or value contains any potential path-related substring or file extension.
+
+            Args:
+                key (str): The key to check.
+                value (str): The value to check.
+
+            Returns:
+                bool: True if the key contains path-related substrings or the value contains file extensions, otherwise False.
+            """
             
-            if os.path.exists(_header):
+            key_contains = ['scr', 'file', 'path']
+            value_ends_with = ['.html', '.css', '.png', '.jpg', '.jpeg', '.svg']
+            if value is None:
+                return False
+            else:
+                return (any(substring in key for substring in key_contains) or
+                        any(value.endswith(suffix) for suffix in value_ends_with))
+
+        _layout : dict = self.config.get("layout")
+        
+        self.check_and_set_path('header')
+        
+        _header = _layout.get("header")
+        
+        _header_format_options : dict = _layout.get("header_format_options")
+        
+        for key, value in _header_format_options.items():
+            if _check_potential_path(key, value):
+                self.check_and_set_path(key)
+                self.add_to_allowed_paths(value)
+            
+            if 'scraibe_webui_version' in key and value is None:   
+                _layout["header_format_options"][key] = scraibe_webui_version
+
+        _header_format_options = _layout.get("header_format_options")
+        
+        self.check_and_set_path("footer")
+        
+        _footer = _layout.get("footer")
+        _footer_format_options : dict = _layout.get("footer_format_options")
+        
+        for key, value in _footer_format_options.items():
+                         
+            if _check_potential_path(key, value):
+                self.check_and_set_path(key)
+                self.add_to_allowed_paths(value)
+
+            elif 'scraibe_webui_version' in key and value is None:    
+                _layout["footer_format_options"][key] = scraibe_webui_version
+
+        _footer_format_options = _layout.get("footer_format_options")
+         
+        if _header is not None: 
+            
+            with open(_header, "r", encoding= 'utf-8') as f:
+                header = f.read()
                 
-                header = open(_header).read()
-            else:
-                raise FileNotFoundError(f"Header file not found: {_header}")     
+            header = header.format(**_header_format_options)
+
+            _layout['header'] = header
             
-        elif os.path.exists(_header):
-            header = open(_header).read()    
-        else:
-            warnings.warn(f"Header file not found: {self.config['layout']['header']}")
-            header = None
-            
-              
-        if header is not None: 
-            _logo = self.config['layout']['logo']
-            if _logo == self.default_config['layout']['logo']:
-                _logo = os.path.join(ROOT_PATH, _logo)
-                if os.path.exists(_logo):
-                    header = header.replace("/file=logo.svg", f"/file={_logo}")
-                else:
-                    warnings.warn(f"Logo file not found: {_logo}")
-            elif os.path.exists(_logo):
-                header = header.replace("/file=logo.svg", f"/file={_logo}")
-            else:
-                warnings.warn(f"Logo file not found: {self.config['layout']['logo']}")
-        _footer = self.config['layout']['footer']
-        
         if _footer is not None:
-            # TODO: ADD a footer file as default
-            if os.path.exists(_footer):
-                footer = open(_footer).read()
-            else:    
-                warnings.warn(f"Footer file not found: {self.config['layout']['footer']}")
-        else:
-            footer = None
             
-        self.config['layout']['header'] = header
-        self.config['layout']['footer'] = footer
+            with open(_footer, "r", encoding= 'utf-8') as f:
+                footer = f.read()
+            
+            
+            footer = footer.format(**_footer_format_options)
+            
+            
+            _layout['footer'] = footer
         
+        self.config['layout'] = _layout
         
     def add_to_allowed_paths(self, path: str) -> None:
         """Adds a path to the list of allowed paths.
@@ -152,7 +166,7 @@ class AppConfigLoader(ConfigLoader):
         elif path in allowed_paths:
             return
     
-         # Check if path exists otherwise try with CURRENT_PATH
+         # Check if path exists otherwise try with ROOT_PATH
         if os.path.exists(path):
             
             if not os.path.isabs(path):
@@ -220,7 +234,7 @@ class AppConfigLoader(ConfigLoader):
         self.mail['success_template'] = success_template
         
     
-    def check_and_set_path(self, key: list[str]) -> Optional[str]:
+    def check_and_set_path(self, key: list[str]) -> str:
         # TODO: I think this is Bullshit and should be removed or refactored
         """Check if the file exists at the given path. If not, try with ROOT_PATH.
         Raise FileNotFoundError if the file still doesn't exist.
@@ -234,7 +248,7 @@ class AppConfigLoader(ConfigLoader):
         """
 
         _path = self.get_nested_key(self.config, key)
-        
+
         if _path is None:
             return self.restore_defaults_for_keys(key)
         

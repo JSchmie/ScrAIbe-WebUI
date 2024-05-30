@@ -159,8 +159,8 @@ def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
                             outputs=[out_txt, out_json])   
             
             
-            if layout.get('footer') is not None:            
-                gr.HTML(layout.get('footer'), visible= True, show_label=False)
+        if layout.get('footer') is not None:            
+            gr.HTML(layout.get('footer'), visible= True, show_label=False)
                 
             
             # Define interaction for the async components

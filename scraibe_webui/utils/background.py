@@ -1,6 +1,5 @@
 from os.path import join
 from os import remove
-import tempfile
 
 from threading import Thread, BoundedSemaphore, active_count
 from torch import set_num_threads

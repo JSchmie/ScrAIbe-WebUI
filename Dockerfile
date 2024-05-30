@@ -19,7 +19,8 @@ WORKDIR /app
 COPY requirements.txt /app/requirements.txt
 COPY README.md /app/README.md
 COPY scraibe_webui /app/scraibe_webui
-COPY setup.py /app/setup.py
+COPY pyproject.toml /app/pyproject.toml
+COPY LICENSE /app/LICENSE
 # header, footer mount in data
 COPY run_docker.sh /app/run_docker.sh
 RUN chmod +x /app/run_docker.sh

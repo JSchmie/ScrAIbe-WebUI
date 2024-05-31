@@ -5,7 +5,7 @@ services:
       build: .
       container_name: scraibe_large
       ports:
-        - '80:7860'
+        - '7860:7860'
       volumes: 
         - ./data:/data 
       deploy:

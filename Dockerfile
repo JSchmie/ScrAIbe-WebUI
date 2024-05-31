@@ -42,4 +42,4 @@ RUN pip install markupsafe==2.0.1 --force-reinstall
 EXPOSE 7860
 # Run the application
 
-ENTRYPOINT ["python3", "-m",  "scraibe_webui.cli"]
+ENTRYPOINT ["./run_docker.sh"]

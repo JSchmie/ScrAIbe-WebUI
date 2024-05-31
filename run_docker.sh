@@ -13,4 +13,4 @@ if [ ! -e "$dest" ]; then
     sed -i -e '1i\
 ## In this config file you can set your custom configuration. To use a configuration, uncomment the line and change the value.\n## Lines that start with ## are comment lines.' -e '1i\'$'\n' $dest
 fi
-python3 -m scraibe_webui.cli --start-server
+python3 -m scraibe_webui.cli start -c $dest

@@ -91,6 +91,8 @@ class ConfigLoader(metaclass = ABCMeta):
         if yaml_path:
             with open(yaml_path, 'r') as file:
                 override_config = yaml.safe_load(file)
+                if override_config is None:
+                    override_config = {}
                 cls.apply_overrides(config, override_config)
 
         # Apply overrides from kwargs

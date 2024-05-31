@@ -1,8 +1,7 @@
-from .multi import *
-from .interface import *
-from .stg import *
-from .interactions import *
-from .global_var import *
 from .utils import *
+from .cli import *
 from .app import *
-from .version import *
+from .utils.background import *
+from .global_var import *
+
+from ._version import __version__

@@ -1,0 +1,58 @@
+/* header_style.css */
+
+/* Importing Cormorant Garamond font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap');
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding-top: 30px;
+}
+
+.logo-container {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 300px;
+}
+
+.logo {
+    width: 100%;
+    height: auto;
+}
+
+h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 50px !important; /* Increased font size */
+    font-weight: bold;
+    color: #50AF31;
+    margin: 0;
+    position: relative;
+    padding: 0.5em 0;
+}
+
+h1::before, h1::after {
+    content: "";
+    position: absolute;
+    height: 2px;
+    width: 80%;
+    background-color: #50AF31;
+    left: 10%;
+}
+
+h1::before {
+    top: 0.5em;
+}
+
+h1::after {
+    bottom: 0.5em;
+}
+
+p, h2 {
+    font-size: 16px;
+    margin: 10px 0;
+    line-height: 1.4;
+}

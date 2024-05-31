@@ -43,7 +43,6 @@ class AppConfigLoader(ConfigLoader):
         self.queue = self.config.get("queue")
         self.layout = self.config.get("layout")
         self.mail = self.config.get("mail")
-        
         self.load_mail_templates()
         self.set_advanced_options()
         
@@ -147,6 +146,7 @@ class AppConfigLoader(ConfigLoader):
             
             _layout['footer'] = footer
         
+        
         self.config['layout'] = _layout
         
     def add_to_allowed_paths(self, path: str) -> None:
@@ -166,7 +166,8 @@ class AppConfigLoader(ConfigLoader):
         elif path in allowed_paths:
             return
     
-         # Check if path exists otherwise try with ROOT_PATH
+        # Check if path exists otherwise try with ROOT_PATH
+        
         if os.path.exists(path):
             
             if not os.path.isabs(path):
@@ -176,11 +177,16 @@ class AppConfigLoader(ConfigLoader):
                     return
                 
         if not os.path.exists(path):
-            filename = os.path.basename(path)
-            path = os.path.join(ROOT_PATH, filename)
             
+            path = os.path.join(ROOT_PATH, path)
+            
+            if not os.path.exists(path):
+                warnings.warn(f"Path not found: {path}")
+                print("Path not found: {path} \n" \
+                      "Can not add to allowed paths.")
+                return
             if path in allowed_paths:
-                return    
+                return 
         
         if path not in allowed_paths:
             allowed_paths.append(path)
@@ -248,14 +254,14 @@ class AppConfigLoader(ConfigLoader):
         """
 
         _path = self.get_nested_key(self.config, key)
-
+        
         if _path is None:
             return self.restore_defaults_for_keys(key)
         
         if not os.path.exists(_path):
             # Check if the file exists in the ROOT_PATH
             new_path = os.path.join(ROOT_PATH, _path)
-
+            
             if not os.path.exists(new_path):
                 warnings.warn(f"{key.capitalize()} file not found: {_path} \n" \
                               "fall back to default.")

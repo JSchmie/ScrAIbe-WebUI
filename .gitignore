@@ -215,3 +215,5 @@ scraibe_webui.egg-info
 custom_config.yaml
 example.mp4
 api
+
+data/

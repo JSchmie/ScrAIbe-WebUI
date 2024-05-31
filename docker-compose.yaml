@@ -1,11 +1,8 @@
 services:
     scraibe:
       # you can set a UID/GID in an .env file
-      user: "${UID}:${GID}"
-      entrypoint: ./run_docker.sh
+      # user: "${UID}:${GID}"
       build: .
-      environment: 
-        - AUTOT_CACHE=/data/models/
       container_name: scraibe_large
       ports:
         - '80:7860'

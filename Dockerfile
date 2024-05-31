@@ -1,5 +1,5 @@
 #pytorch Image
-FROM pytorch/pytorch:2.2.2-cuda12.1-cudnn8-runtime
+FROM pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime
 
 # Labels
 
@@ -15,6 +15,7 @@ LABEL url="https://github.com/JSchmie/ScrAIbe-WebUI"
 
 # Install dependencies
 WORKDIR /app
+ENV AUTOT_CACHE=/data/models/
 #Copy all necessary files 
 COPY requirements.txt /app/requirements.txt
 COPY README.md /app/README.md
@@ -31,7 +32,7 @@ RUN apt update && apt-get install -y libsm6 libxrender1 libfontconfig1 git
 RUN conda update --all
 
 RUN conda install pip
-RUN pip install /app/
+# RUN pip install /app/
 RUN conda install -y ffmpeg 
 RUN conda install -c conda-forge libsndfile
 RUN pip install -r requirements.txt

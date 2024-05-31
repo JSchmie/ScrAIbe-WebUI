@@ -45,10 +45,6 @@ pandas = "^2.2.1"
 tqdm = "^4.66.4"
 numpy = "^1.26.4"
 
-
-[tool.poetry.group.dev.dependencies]
-scraibe = { git = "https://github.com/JSchmie/ScrAIbe.git", branch = "develop" }
-
 [tool.poetry-dynamic-versioning]
 enable = true
 vcs = "git"

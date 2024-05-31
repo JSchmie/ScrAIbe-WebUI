@@ -1,12 +1,11 @@
 name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
 
 on:
-  push:
-    tags:
-      - v* # Push tags to trigger the workflow
   pull_request:
+    types: [closed]
     branches:
       - develop
+      - main
   workflow_dispatch:
     inputs:
       test:
@@ -56,7 +55,7 @@ jobs:
     steps: 
       - name: Checkout Repository Tags
         uses: actions/checkout@v4
-        if: github.ref == 'refs/tags/v*'
+        if: github.ref == 'refs/heads/main'
         with:
           fetch-depth: '0'
           branch: 'main'

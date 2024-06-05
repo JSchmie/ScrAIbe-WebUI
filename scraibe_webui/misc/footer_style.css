@@ -76,3 +76,24 @@ body {
     color: white; /* Adjust text color as needed */
     font-size: 12px; /* Adjust font size as needed */
 }
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #121212;
+        color: #FFFFFF;
+    }
+    .footer {
+        background-color: transparent; /* Make footer background transparent */
+        color: #FFFFFF;
+    }
+    .footer a {
+        color: #FFFFFF;
+    }
+    .footer a:hover {
+        color: #50AF31;
+    }
+    .build-version {
+        color: #CCCCCC; /* Adjust text color for better contrast in dark mode */
+    }
+}

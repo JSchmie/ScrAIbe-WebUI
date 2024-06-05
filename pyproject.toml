@@ -45,10 +45,6 @@ pandas = "^2.2.1"
 tqdm = "^4.66.4"
 numpy = "^1.26.4"
 
-
-[tool.poetry.group.dev.dependencies]
-scraibe = { git = "https://github.com/JSchmie/ScrAIbe.git", branch = "develop" }
-
 [tool.poetry-dynamic-versioning]
 enable = true
 vcs = "git"
@@ -68,4 +64,4 @@ scraibe-webui = "scraibe_webui.cli:cli"
 
 [tool.ruff.lint.extend-per-file-ignores]
 "__init__.py" = ["E402","F403",'F401']
-"scraibe/misc.py" = ["E722"]
+"scraibe_webui/utils/_parsekwargs.py" = ["E722"]

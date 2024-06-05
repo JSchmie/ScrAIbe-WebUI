@@ -26,7 +26,7 @@ cd ScrAIbe-WebUI
 To build and run the Docker container, use the following commands:
 
 ```bash
-docker-compose up --build
+docker compose up
 ```
 
 This command will build the Docker image and start the container using the configuration specified in the `docker-compose.yml` file.
@@ -52,7 +52,7 @@ services:
     build: .
     environment: 
       - AUTOT_CACHE=/data/models/
-    container_name: scraibe-WebUI
+    container_name: scraibe_large
     ports:
       - '7860:7860'
     volumes: 
@@ -77,7 +77,7 @@ If you prefer to use the pre-built image available on Docker Hub, you can pull a
 Run the Docker container using the pre-built image:
 
 ```bash
-docker run -d --name scraibe-webui -p 7860:7860 -v $(pwd)/data:/data hadr0n/scraibe-webui:latest
+docker run -d --name scraibe-webui -p 7860:7860 --gpus 'all' -v $(pwd)/data:/data hadr0n/scraibe-webui:latest_webui
 ```
 
 Docker will automatically pull the image from Docker Hub if it is not already present on your system.
@@ -92,12 +92,8 @@ http://localhost:7860
 
 ## Custom Configuration
 
-To use a custom configuration file, you can mount the configuration file as a volume in the docker-compose.yml file. For example:
-
-```yaml
-volumes:
-  - ./config/custom.yaml:/app/config/config.yaml
-```
+To use a custom configuration, you can use the `config.yaml` file in the `./data` folder of your mounted volume.  
+(Currently, this file is created as root user of dckre is run as root. We are working on solving this.)
 
 ## Summary
 

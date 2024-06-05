@@ -52,7 +52,7 @@ services:
     build: .
     environment: 
       - AUTOT_CACHE=/data/models/
-    container_name: scraibe_large
+    container_name: scraibe-WebUI
     ports:
       - '7860:7860'
     volumes: 
@@ -77,7 +77,7 @@ If you prefer to use the pre-built image available on Docker Hub, you can pull a
 Run the Docker container using the pre-built image:
 
 ```bash
-docker run -d --name scraibe_webui -p 7860:7860 -v $(pwd)/data:/data hadr0n/scraibe
+docker run -d --name scraibe-webui -p 7860:7860 -v $(pwd)/data:/data hadr0n/scraibe-webui:latest
 ```
 
 Docker will automatically pull the image from Docker Hub if it is not already present on your system.

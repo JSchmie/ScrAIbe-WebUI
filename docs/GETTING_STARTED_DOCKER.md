@@ -45,27 +45,22 @@ Here is an example of what your docker-compose.yml file might look like:
 
 ```yaml
 services:
-  scraibe:
-    # you can set a UID/GID in an .env file
-    user: "${UID}:${GID}"
-    entrypoint: ./run_docker.sh
-    build: .
-    environment: 
-      - AUTOT_CACHE=/data/models/
-    container_name: scraibe_large
-    ports:
-      - '7860:7860'
-    volumes: 
-      - type: bind
-        source: data/
-        target: /data/
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+    scraibe:
+      # you can set a UID/GID in an .env file
+      # user: "${UID}:${GID}"
+      build: .
+      container_name: scraibe-webui
+      ports:
+        - '7860:7860'
+      volumes: 
+        - ./data:/data 
+      deploy:
+        resources:
+          reservations:
+            devices:
+              - driver: nvidia
+                count: 1
+                capabilities: [gpu]
 ```
 
 ## Using the Pre-built Image from Docker Hub
@@ -77,7 +72,7 @@ If you prefer to use the pre-built image available on Docker Hub, you can pull a
 Run the Docker container using the pre-built image:
 
 ```bash
-docker run -d --name scraibe-webui -p 7860:7860 --gpus 'all' -v $(pwd)/data:/data hadr0n/scraibe-webui:latest_webui
+docker run -d --name scraibe-webui -p 7860:7860 --gpus 'all' -v $(pwd)/data:/data hadr0n/scraibe-webui
 ```
 
 Docker will automatically pull the image from Docker Hub if it is not already present on your system.

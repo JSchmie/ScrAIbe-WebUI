@@ -8,6 +8,7 @@ Before setting up ScrAIbe-WebUI with Docker, ensure you have the following prere
 
 - **Docker**: Installed and running on your machine. You can download Docker from the official [Docker website](https://www.docker.com/get-started).
 - **Docker Compose**: Installed and running on your machine. You can download Docker Compose from the official [Docker Compose website](https://docs.docker.com/compose/install/).
+- **Nvidia GPU Support (Optional)**: If you want to use GPU, ensure you have the Nvidia Container Toolkit installed and configured on your machine. You can find installation instructions on the [Nvidia Container Toolkit website](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html).
 
 ## Install ScrAIbe-WebUI Using Docker
 
@@ -48,7 +49,7 @@ services:
       # you can set a UID/GID in an .env file
       # user: "${UID}:${GID}"
       build: .
-      container_name: scraibe_webui
+      container_name: scraibe-webui
       ports:
         - '7860:7860'
       volumes: 
@@ -71,7 +72,7 @@ If you prefer to use the pre-built image available on Docker Hub, you can pull a
 Run the Docker container using the pre-built image:
 
 ```bash
-docker run -d --name scraibe_webui -p 7860:7860 --gpus 'all' -v $(pwd)/data:/data hadr0n/scraibe_webui
+docker run -d --name scraibe-webui -p 7860:7860 --gpus 'all' -v $(pwd)/data:/data hadr0n/scraibe-webui
 ```
 
 Docker will automatically pull the image from Docker Hub if it is not already present on your system.

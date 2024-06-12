@@ -2,8 +2,8 @@ services:
     scraibe:
       # you can set a UID/GID in an .env file
       # user: "${UID}:${GID}"
-      build: .
-      container_name: scraibe_large
+      build: hadr0n/scraibe-webui
+      container_name: scraibe-webui
       ports:
         - '7860:7860'
       volumes: 

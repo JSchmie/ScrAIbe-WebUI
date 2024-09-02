@@ -1,5 +1,8 @@
 name: Ruff
-on: [ push]
+on:
+  push: 
+    paths: 
+      - '**.py'
 jobs:
   ruff:
     runs-on: ubuntu-latest

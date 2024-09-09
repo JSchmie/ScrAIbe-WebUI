@@ -29,6 +29,8 @@ launch:
   state_session_capacity : 10000
   share_server_address : null
   share_server_protocol : null
+  max_file_size: null
+  enable_monitoring: null
 queue:
   # The following are the default values for the queue configuration
   # for more informations look at https://www.gradio.app/docs/interface

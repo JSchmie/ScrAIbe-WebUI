@@ -3,7 +3,7 @@ launch:
   # The following are the default values for the launch configuration
   # for more informations look at https://www.gradio.app/docs/interface 
   server_port: null
-  server_name: null
+  server_name: 0.0.0.0
   inline: false
   inbrowser: false
   share : false

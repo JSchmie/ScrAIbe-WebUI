@@ -79,7 +79,7 @@ def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
                             checkbox_model_alive = gr.Checkbox(label="Keep model alive?", info = "Keep the model loaded in memory for faster processing.",
                                                                 value= keep_model_alive.value)
                             
-                        load_model_button = gr.Button("Aplly Settings")
+                        load_model_button = gr.Button("Apply Settings")
                         
                         if not async_ui:
                             load_model_button.click(fn = apply_settings,

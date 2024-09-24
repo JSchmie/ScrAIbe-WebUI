@@ -1,6 +1,6 @@
 import ssl
 import smtplib
-from typing import Union
+from typing import Union, Optional
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
@@ -13,7 +13,7 @@ class MailService:
                  smtp_server: str,
                  smtp_port: int = None,
                  sender_password: str = None,
-                 context_kwargs: dict = {},
+                 context: Union[None, str, dict, ssl.SSLContext] = 'default',
                  default_subject: str = "SCRAIBE",
                  connection_type: str = 'TLS',  # 'SSL', 'TLS', or 'NONE'
                  upload_notification_template: str = None,
@@ -31,7 +31,11 @@ class MailService:
             smtp_server (str): The SMTP server to use for sending emails.
             smtp_port (int, optional): The port to use for the SMTP server.
             sender_password (str, optional): The password for the sender's email account.
-            context_kwargs (dict, optional): Keyword arguments for ssl.create_default_context.
+            context (Union[None, str, dict, ssl.SSLContext], optional): SSL context or parameters.
+                - None: No SSL context.
+                - 'default': Use default SSL context.
+                - dict: Keyword arguments for ssl.create_default_context.
+                - ssl.SSLContext: An existing SSL context.
             default_subject (str, optional): The default subject line for emails.
             connection_type (str, optional): Connection type: 'SSL', 'TLS', or 'NONE'.
             upload_notification_template (str, optional): HTML template for upload notifications.
@@ -49,7 +53,6 @@ class MailService:
         self.sender_email = sender_email
         self.password = sender_password
         self.default_subject = default_subject
-        self.context = ssl.create_default_context(**context_kwargs)
         self.smtp_server = smtp_server
         self.smtp_port = smtp_port
         self.connection_type = connection_type.upper()
@@ -65,34 +68,59 @@ class MailService:
 
         self.css_template_path = css_template_path
 
+        # Store the context parameter for later use
+        self.context_param = context
+
         # Delay mail server setup until needed
         self.mailserver = None
 
-        # Test the connection and login during initialization
-        self.test_login()
+    def setup_context(self, context: Union[None, str, dict, ssl.SSLContext]) -> Optional[ssl.SSLContext]:
+        """
+        Setup the SSL context based on the provided context parameter.
 
-    def setup_mailserver(self) -> smtplib.SMTP:
+        Args:
+            context (Union[None, str, dict, ssl.SSLContext]): SSL context or parameters.
+                - None: No SSL context.
+                - 'default': Use default SSL context.
+                - dict: Keyword arguments for ssl.create_default_context.
+                - ssl.SSLContext: An existing SSL context.
+
+        Returns:
+            Optional[ssl.SSLContext]: The SSL context to be used, or None if not applicable.
+        """
+        if context is None:
+            return None
+        elif context == 'default':
+            return ssl.create_default_context()
+        elif isinstance(context, ssl.SSLContext):
+            return context
+        elif isinstance(context, dict):
+            return ssl.create_default_context(**context)
+        else:
+            raise ValueError("Invalid context parameter. Must be None, 'default', a dict, or an SSLContext instance.")
+
+    def setup_mailserver(self) -> Optional[smtplib.SMTP]:
         """Setup the mail server based on the connection type.
 
         Returns:
-            smtplib.SMTP: The configured mail server.
+            smtplib.SMTP: The configured mail server, or None if setup fails.
         """
         try:
+            # Setup the context here
+            context = self.setup_context(self.context_param)
+
             if self.connection_type == 'SSL':
-                server = smtplib.SMTP_SSL(self.smtp_server, self.smtp_port, context=self.context)
-                if self.password:
-                    server.login(self.sender_email, self.password)
+                server = smtplib.SMTP_SSL(self.smtp_server, self.smtp_port, context=context)
             elif self.connection_type == 'TLS':
                 server = smtplib.SMTP(self.smtp_server, self.smtp_port)
-                server.starttls(context=self.context)
-                if self.password:
-                    server.login(self.sender_email, self.password)
+                server.starttls(context=context)
             elif self.connection_type == 'NONE':
                 server = smtplib.SMTP(self.smtp_server, self.smtp_port)
-                if self.password:
-                    server.login(self.sender_email, self.password)
             else:
                 raise ValueError(f"Invalid connection_type: {self.connection_type}. Must be 'SSL', 'TLS', or 'NONE'.")
+
+            if self.password:
+                server.login(self.sender_email, self.password)
 
             return server
         except smtplib.SMTPAuthenticationError as e:
@@ -114,7 +142,13 @@ class MailService:
         _message = self.setup_message(subject, receiver_email, message, attachments)
         if not self.mailserver:
             self.mailserver = self.setup_mailserver()
-        self.mailserver.sendmail(self.sender_email, receiver_email, _message.as_string())
+            if not self.mailserver:
+                warnings.warn("Failed to connect to the mail server. Email not sent.")
+                return
+        try:
+            self.mailserver.sendmail(self.sender_email, receiver_email, _message.as_string())
+        except Exception as e:
+            warnings.warn(f"Failed to send email: {e}")
 
     def setup_message(self, subject: str, receiver_email: str, message: str, attachments: list = None) -> MIMEMultipart:
         """Prepare the email message.
@@ -203,7 +237,7 @@ class MailService:
             smtp_server=config.get('smtp_server'),
             smtp_port=config.get('smtp_port'),
             sender_password=config.get('sender_password'),
-            context_kwargs=config.get('context_kwargs', {}),
+            context=config.get('context', 'default'),
             default_subject=config.get('default_subject', "SCRAIBE"),
             connection_type=config.get('connection_type', 'TLS'),
             upload_notification_template=config.get('upload_notification_template'),

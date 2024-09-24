@@ -3,7 +3,7 @@ launch:
   # The following are the default values for the launch configuration
   # for more informations look at https://www.gradio.app/docs/interface 
   server_port: null
-  server_name: 0.0.0.0
+  server_name: null
   inline: false
   inbrowser: false
   share : false
@@ -43,7 +43,7 @@ layout:
   header_format_options: 
     header_css_path : scraibe_webui/misc/header_style.css
     header_logo_url : https://www.kida-bmel.de/
-    header_logo_src : scraibe_webui/misc/logo.png
+    header_logo_src : scraibe_webui/misc/logo.svg
   footer: scraibe_webui/misc/footer.html
   footer_format_options : 
     footer_css_path: scraibe_webui/misc/footer_style.css

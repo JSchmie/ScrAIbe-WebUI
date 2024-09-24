@@ -16,6 +16,7 @@ LABEL url="https://github.com/JSchmie/ScrAIbe-WebUI"
 # Install dependencies
 WORKDIR /app
 ENV AUTOT_CACHE=/data/models/
+ENV GRADIO_SERVER_NAME=0.0.0.0
 #Copy all necessary files
 COPY requirements.txt /app/requirements.txt
 COPY README.md /app/README.md

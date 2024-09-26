@@ -78,8 +78,6 @@ class BackgroundThread:
                 
                 _out_base_filename = normalize_filename(audio.split('.')[0])
                 
-                print(f"!!!!!!!!!!!!!!!!\n\t {_out_base_filename}\n!!!!!!!!!!!!!!!!")
-                
                 temp_file_path_txt = join(f'{_out_base_filename}.txt')
                 temp_file_path_json = join(f'{_out_base_filename}.json')
                 

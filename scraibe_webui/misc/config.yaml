@@ -63,7 +63,7 @@ mail:
   smtp_server : null
   smtp_port : 0
   sender_password : null
-  connection_type: TLS   # 'SSL', 'TLS', or 'NONE'
+  connection_type: TLS   # 'SSL', 'TLS', or 'PLAIN'
   context: default # Union[None, str, dict, ssl.SSLContext]
   default_subject: "SCRAIBE"
   error_template: scraibe_webui/misc/error_notification_template.html

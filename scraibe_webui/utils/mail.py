@@ -37,7 +37,7 @@ class MailService:
                 - dict: Keyword arguments for ssl.create_default_context.
                 - ssl.SSLContext: An existing SSL context.
             default_subject (str, optional): The default subject line for emails.
-            connection_type (str, optional): Connection type: 'SSL', 'TLS', or 'NONE'.
+            connection_type (str, optional): Connection type: 'SSL', 'TLS', or "PLAIN'.
             upload_notification_template (str, optional): HTML template for upload notifications.
             upload_subject (str, optional): Subject line for upload notifications.
             error_template (str, optional): HTML template for error notifications.
@@ -55,6 +55,7 @@ class MailService:
         self.default_subject = default_subject
         self.smtp_server = smtp_server
         self.smtp_port = smtp_port
+        
         self.connection_type = connection_type.upper()
 
         self.upload_notification_template = upload_notification_template
@@ -114,7 +115,7 @@ class MailService:
             elif self.connection_type == 'TLS':
                 server = smtplib.SMTP(self.smtp_server, self.smtp_port)
                 server.starttls(context=context)
-            elif self.connection_type == 'NONE':
+            elif self.connection_type == 'PLAIN':
                 server = smtplib.SMTP(self.smtp_server, self.smtp_port)
             else:
                 raise ValueError(f"Invalid connection_type: {self.connection_type}. Must be 'SSL', 'TLS', or 'NONE'.")

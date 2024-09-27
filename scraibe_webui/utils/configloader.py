@@ -36,7 +36,8 @@ class ConfigLoader(metaclass = ABCMeta):
         Args:
             config (dict): The configuration dictionary.
         """
-        self.config = config 
+        
+        self.config = config or self.get_default_config()
         
         self.default_config = self.get_default_config()
 

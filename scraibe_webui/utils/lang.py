@@ -1,4 +1,4 @@
-LANGUAGES = [
+LANGUAGES = ["Unspecified", 
     "Afrikaans", "Arabic", "Armenian", "Azerbaijani", "Belarusian",
     "Bosnian", "Bulgarian", "Catalan", "Chinese", "Croatian",
     "Czech", "Danish", "Dutch", "English", "Estonian",

@@ -36,9 +36,11 @@ class ConfigLoader(metaclass = ABCMeta):
         Args:
             config (dict): The configuration dictionary.
         """
-        self.config = config
+        self.config = config 
         
         self.default_config = self.get_default_config()
+
+        
         
     def restore_defaults_for_keys(self, *args: str):
         """Restores specified keys to their default values, including nested keys.

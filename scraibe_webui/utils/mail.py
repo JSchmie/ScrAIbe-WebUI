@@ -13,9 +13,9 @@ class MailService:
                  smtp_server: str,
                  smtp_port: int = None,
                  sender_password: str = None,
+                 connection_type: str = 'TLS',  # 'SSL', 'TLS', or 'NONE'
                  context: Union[None, str, dict, ssl.SSLContext] = 'default',
                  default_subject: str = "SCRAIBE",
-                 connection_type: str = 'TLS',  # 'SSL', 'TLS', or 'NONE'
                  upload_notification_template: str = None,
                  upload_subject: str = "Upload Successful",
                  error_template: str = None,

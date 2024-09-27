@@ -40,6 +40,8 @@ class ConfigLoader(metaclass = ABCMeta):
         self.config = config or self.get_default_config()
         
         self.default_config = self.get_default_config()
+
+        
         
     def restore_defaults_for_keys(self, *args: str):
         """Restores specified keys to their default values, including nested keys.

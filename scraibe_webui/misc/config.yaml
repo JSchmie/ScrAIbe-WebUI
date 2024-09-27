@@ -2,8 +2,8 @@ interface_type: simple # aync or simple variant of the Interface (one does trans
 launch:
   # The following are the default values for the launch configuration
   # for more informations look at https://www.gradio.app/docs/interface 
-  server_port: 7860
-  server_name: 0.0.0.0
+  server_port: null
+  server_name: null
   inline: false
   inbrowser: false
   share : false
@@ -29,6 +29,8 @@ launch:
   state_session_capacity : 10000
   share_server_address : null
   share_server_protocol : null
+  max_file_size: null
+  enable_monitoring: null
 queue:
   # The following are the default values for the queue configuration
   # for more informations look at https://www.gradio.app/docs/interface
@@ -51,7 +53,7 @@ layout:
   # themes: null # dict of themes from hugging face placeholder
 scraibe_params:
   whisper_model : null
-  whisper_type: whisper # whether use orginal whisper or whisperX backend
+  whisper_type: whisper # whether use orginal whisper or faster-whisper backend
   dia_model: null
   use_auth_token: null
   device: null # set your device

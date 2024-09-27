@@ -21,6 +21,16 @@ from .utils.lang import LANGUAGES
 from .utils.themes import theme
 from .utils.appconfigloader import AppConfigLoader
 
+
+def check_file(file):
+    if file is None:
+        return gr.update(interactive=False)
+    else:
+        return gr.update(interactive=True)
+
+
+
+
 # TODO: Make a prper interface for the follwing bool values 
 
 def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
@@ -79,7 +89,7 @@ def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
                             checkbox_model_alive = gr.Checkbox(label="Keep model alive?", info = "Keep the model loaded in memory for faster processing.",
                                                                 value= keep_model_alive.value)
                             
-                        load_model_button = gr.Button("Aplly Settings")
+                        load_model_button = gr.Button("Apply Settings")
                         
                         if not async_ui:
                             load_model_button.click(fn = apply_settings,
@@ -132,11 +142,17 @@ def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
 
                     output = gr.HTML(visible= False)
                     
-                    submit_async = gr.Button(variant="primary", value="Add files to queue")
+                    submit_async = gr.Button(variant="primary", value="Add files to queue", interactive=False)
+                    audio.change(fn=check_file, inputs=[audio], outputs=submit_async)
+                    video.change(fn=check_file, inputs=[video], outputs=submit_async)
+                    file_in.change(fn=check_file, inputs=[file_in], outputs=submit_async)
                     
                 else:
                     # creates the sync components for the interface which can be used to get the transcript on the interface
-                    submit_sync = gr.Button(variant="primary", value="Transcribe")
+                    submit_sync = gr.Button(variant="primary", value="Transcribe",  interactive= False)
+                    audio.change(fn=check_file, inputs=[audio], outputs=submit_sync)
+                    video.change(fn=check_file, inputs=[video], outputs=submit_sync)
+                    file_in.change(fn=check_file, inputs=[file_in], outputs=submit_sync)
                 
             if not async_ui:
 

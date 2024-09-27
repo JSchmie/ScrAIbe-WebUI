@@ -83,7 +83,7 @@ def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
                         whisper_model = gr.Dropdown(label= "Select Whisper Model",
                                                 choices= ['tiny', 'base', 'small' ,
                                                             'medium', 'large-v3' ],
-                                                value= 'medium')
+                                                value= config.scraibe_params.get("whisper_model"))
                         
                         if not async_ui:
                             checkbox_model_alive = gr.Checkbox(label="Keep model alive?", info = "Keep the model loaded in memory for faster processing.",

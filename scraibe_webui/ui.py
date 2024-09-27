@@ -149,7 +149,10 @@ def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
                     
                 else:
                     # creates the sync components for the interface which can be used to get the transcript on the interface
-                    submit_sync = gr.Button(variant="primary", value="Transcribe")
+                    submit_sync = gr.Button(variant="primary", value="Transcribe",  interactive= False)
+                    audio.change(fn=check_file, inputs=[audio], outputs=submit_sync)
+                    video.change(fn=check_file, inputs=[video], outputs=submit_sync)
+                    file_in.change(fn=check_file, inputs=[file_in], outputs=submit_sync)
                 
             if not async_ui:
 

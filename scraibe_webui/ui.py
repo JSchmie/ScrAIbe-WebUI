@@ -88,18 +88,15 @@ def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
                         if not async_ui:
                             checkbox_model_alive = gr.Checkbox(label="Keep model alive?", info = "Keep the model loaded in memory for faster processing.",
                                                                 value= keep_model_alive.value)
+                        else: 
+                            checkbox_model_alive = gr.State(False)
                             
                         load_model_button = gr.Button("Apply Settings")
                         
-                        if not async_ui:
-                            load_model_button.click(fn = apply_settings,
-                                                    inputs=[whisper_model, scraibe_params, checkbox_model_alive, keep_model_alive],
-                                                    outputs=[scraibe_params, keep_model_alive])
-                        else:
-                            load_model_button.click(fn = apply_settings,
-                                                    inputs=[whisper_model, scraibe_params, keep_model_alive],
-                                                    outputs=[scraibe_params, keep_model_alive])
-                        
+                       
+                        load_model_button.click(fn = apply_settings,
+                                                inputs=[whisper_model, scraibe_params, checkbox_model_alive, keep_model_alive],
+                                                outputs=[scraibe_params, keep_model_alive])
                         
                 task = gr.Radio(["Auto Transcribe", "Transcribe", "Diarisation"], label="Task",
                                 value= 'Auto Transcribe')
@@ -113,9 +110,9 @@ def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
                                 visible= True)
                 
                 language = gr.Dropdown(LANGUAGES,
-                                label="Language (optional)", value = "None",
+                                label="Language (optional)", value = "Unspecified",
                                 info="Language of the audio file. If you don't know,\
-                                    leave it at None.", visible= True)
+                                    leave it at Unspecified.", visible= True)
                 
                 input = gr.Radio(["Audio", "Video" 
                                     ,"File or Files"], label="Input Type", value="Audio")

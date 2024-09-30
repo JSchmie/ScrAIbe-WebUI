@@ -233,8 +233,8 @@ scraibe_params:
   num_threads: 0
 ```
 
-- **whisper_model**: Specifies the whisper model to use. Available models include `tiny`, `base`, `small`, `medium`, and `large-v3`.
-- **whisper_type**: Determines whether to use the original whisper or the whisperX backend. Options are `original` or `whisperX`.
+- **whisper_model**: Specifies the whisper model to use. Available models include `tiny`, `base`, `small`, `medium`, and `large-v*`.
+- **whisper_type**: Determines whether to use the original whisper or the faster-whisper backend. Options are `whisper` or `faster-whisper`.
 - **dia_model**: Specifies the dialogue model to use.
 - **use_auth_token**: Authentication token for accessing specific models or services.
 - **device**: Set the device on which to run the models. Options include `cpu` or `cuda`.
@@ -253,7 +253,7 @@ scraibe_params:
 
   Each model varies in terms of size and accuracy, with `tiny` being the smallest and fastest, and `large-v3` being the most accurate but requiring more resources.
 
-- **whisper_type**: This setting allows you to choose between the original whisper backend and the whisperX backend. The original whisper backend is the standard processing method, while whisperX may offer different features or optimizations. Choose `whisper` for the standard whisper models method or `whisperx` for the alternative [whisperX](https://github.com/m-bain/whisperX) backend.
+- **whisper_type**: This setting allows you to choose between the original whisper backend and the faster-whisper backend. The original whisper backend is the standard processing method, while faster-whisper may offer different features or optimizations. Choose `whisper` for the standard whisper models method or `faster-whisper` for the alternative [faster-whisper](https://github.com/SYSTRAN/faster-whisper) backend.
 
 - **dia_model**: This parameter allows you to specify the diarisation model that SCRAIBE will use. It is left as `null` by default, and you can set it to the specific [pyannote](https://github.com/pyannote/pyannote-audio) model you wish to use. The diarisation model we use is a wrapper for the pyannote audio model, which is renowned for its accurate speaker diarisation.
 

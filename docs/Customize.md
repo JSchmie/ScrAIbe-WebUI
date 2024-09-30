@@ -363,7 +363,7 @@ success_format_options:
 
 ### 7. Advanced Configuration
 
-The advanced settings allow for fine-tuning the performance and behavior of your ScAIbe WebUI. These settings are particularly useful for optimizing resource usage and managing how jobs are processed.
+The advanced settings allow for fine-tuning the performance and behavior of your ScrAIbe WebUI. These settings are particularly useful for optimizing resource usage and managing how jobs are processed.
 
 **Example `config.yaml` for Advanced Settings:**
 

@@ -38,8 +38,9 @@ Import the `App` class from `scraibe_webui`, then launch the application using y
 ```python
 from scraibe_webui import App 
 
-App("./custom.yaml").launch()
+app = App.load_config("custom_config.yaml")
 
+app.start()
 ```
 
 ### Quick Configuration Without YAML
@@ -279,7 +280,8 @@ mail:
   smtp_server: null
   smtp_port: 0
   sender_password: null
-  context_kwargs: {}
+  connection_type: TLS   # 'SSL', 'TLS', or 'PLAIN'
+  context: default # Union[None, str, dict, ssl.SSLContext]
   default_subject: "SCRAIBE"
   error_template: scraibe_webui/misc/error_notification_template.html
   error_subject: An error occurred during processing.
@@ -303,13 +305,11 @@ mail:
 - **smtp_server**: The SMTP server address that will handle the sending of emails. For example, `smtp.gmail.com` for Gmail.
 - **smtp_port**: The port used by the SMTP server. Common ports are `587` for TLS and `465` for SSL.
 - **sender_password**: The password or app-specific password for the sender email. Ensure this is kept secure and not exposed publicly.
-- **context_kwargs**: Additional keyword arguments for the email context, typically used for advanced configurations. Here you can parse any keyword argument for:
-
-  ```python
-  import ssl
-  self.context = ssl.create_default_context(**context_kwargs)
-  ```
-
+- **connection_type**: Different SMTP servers use various encryption methods. The available options are:
+  - `SSL`: Starts the connection to the SMTP client using SSL for all communication (e.g., Gmail).
+  - `TLS`: Uses TLS for encryption and authentication.
+  - `PLAIN`: Does not use any form of encryption or authentication.
+- **context**: Sets the context information for Python's `smtplib.SMTP` or `smtplib.SMTP_SSL` connections. If set to `default`, `ssl.create_default_context()` will be used. If you provide a `dict`, you are passing keyword arguments for the default context. Alternatively, you can pass an `ssl.SSLContext` using the Python API.
 - **default_subject**: The default subject line for emails sent by the application.
 - **error_template**: Path to the HTML template used for error notification emails. Customize this template as needed.
 - **error_subject**: Subject line for error notification emails.

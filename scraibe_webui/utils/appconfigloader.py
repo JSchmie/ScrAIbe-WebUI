@@ -9,6 +9,9 @@ from torch import set_num_threads
 from torch import device as torch_device
 from torch.cuda import is_available
 
+class InterfaceTypeWarning(UserWarning):
+    """Custom warning class for invalid interface type."""
+    pass
 
 class AppConfigLoader(ConfigLoader):
     """A class that extends ConfigLoader to manage application-specific configuration settings.
@@ -36,7 +39,7 @@ class AppConfigLoader(ConfigLoader):
 
         self.get_layout()
         
-        self.interface_type = self.config.get("interface_type")
+        self.interface_type = self.set_interface_type()
         self.launch = self.config.get("launch")
         self.scraibe_params = self.config.get("scraibe_params")
         self.advanced = self.config.get("advanced")
@@ -45,6 +48,7 @@ class AppConfigLoader(ConfigLoader):
         self.mail = self.config.get("mail")
         self.load_mail_templates()
         self.set_advanced_options()
+        
         
     def set_models_options(self) -> None:
         """Sets the model options from a configuration dictionary.	
@@ -181,9 +185,9 @@ class AppConfigLoader(ConfigLoader):
             path = os.path.join(ROOT_PATH, path)
             
             if not os.path.exists(path):
-                warnings.warn(f"Path not found: {path}")
-                print("Path not found: {path} \n" \
-                      "Can not add to allowed paths.")
+                warnings.simplefilter("always", InterfaceTypeWarning)
+                warnings.warn(f"Path not found: {path}. Can not add {path} to allowed_paths.",
+                              InterfaceTypeWarning, stacklevel=2)
                 return
             if path in allowed_paths:
                 return 
@@ -263,8 +267,9 @@ class AppConfigLoader(ConfigLoader):
             new_path = os.path.join(ROOT_PATH, _path)
             
             if not os.path.exists(new_path):
+                warnings.simplefilter("always", InterfaceTypeWarning)
                 warnings.warn(f"{key.capitalize()} file not found: {_path} \n" \
-                              "fall back to default.")
+                              "fall back to default.", InterfaceTypeWarning, stacklevel=2)
                 self.restore_defaults_for_keys(key)
             else:
                 self.update_nested_key(self.config, key, new_path)
@@ -286,6 +291,47 @@ class AppConfigLoader(ConfigLoader):
             gv.MAX_CONCURRENT_MODELS = advanced.get("concurrent_workers_async")
             
             if advanced.get("keep_model_alive") is True:
-                warnings.warn("The option 'keep_model_alive' is not supported in the async interface. Set to False.")
+                warnings.simplefilter("always", InterfaceTypeWarning)
+                warnings.warn("The option 'keep_model_alive' is not supported in the async interface. Set to False.",
+                              InterfaceTypeWarning, stacklevel=2)
                 advanced["keep_model_alive"] = False
+    
+    def set_interface_type(self, inplace=True):
+        """
+        Sets or returns the interface type based on the 'interface_type' value from the configuration.
+
+        Retrieves the interface type from the configuration dictionary. If the value is not 
+        "simple" or "async", a warning is always raised, and the interface type defaults to "simple".
+        The valid options are:
+        - "simple": A basic, synchronous interface
+        - "async": An asynchronous interface
+
+        Args:
+            inplace (bool): If True, sets the interface type as an attribute of the class. 
+                            If False, returns the interface type without setting it.
+
+        Returns:
+            str: The interface type, if inplace=False.
+
+        Raises:
+            Warning: If an invalid interface type is provided.
+        """
+         # Add a custom filter to force this specific warning to always print
+        warnings.simplefilter("always", InterfaceTypeWarning)
+        
+        # Get the value from the config dictionary
+        _ui = self.config.get("interface_type", "simple")
+        
+        # Check if the value is valid
+        if _ui not in ["simple", "async"]:
+            # Raise the custom warning
+            warnings.warn(f"IMPORTANT: Invalid interface type '{_ui}' provided. You can choose between 'simple' and 'async'. Falling back to 'simple'.", 
+                          InterfaceTypeWarning, stacklevel=2)
+            _ui = "simple"
+        
+        # Set or return the interface type based on 'inplace' argument
+        if inplace:
+            self.interface_type = _ui
+        else:
+            return _ui
                 

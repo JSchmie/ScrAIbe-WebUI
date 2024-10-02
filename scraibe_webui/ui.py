@@ -29,13 +29,6 @@ def check_file(file):
         return gr.update(interactive=True)
 
 
-def validate_emails(email1, email2):
-    if email2 == "":
-        return "" ""  # Don't show any icon if the second field is empty
-    elif email1 == email2:
-        return "" "<span style='color:green'>✔️ Emails match</span>"
-    else:
-        return "" "<span style='color:red'>❌ Emails do not match</span>"
 
 
 # TODO: Make a prper interface for the follwing bool values 
@@ -143,9 +136,6 @@ def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
                     # creates the async components for the interface which can be used to send you a transcript via email
                     mail = gr.Textbox(type= 'email', label="Email address for transcription delivery", placeholder= "Enter your email",
                         visible= True)
-                    mail2 = gr.Textbox(type= 'email', label="Confirm Email address", placeholder= "Do it again",
-                        visible= True)
-                    error_message = gr.HTML(visible=True)
 
                     output = gr.HTML(visible= False)
                     
@@ -153,12 +143,8 @@ def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
                     audio.change(fn=check_file, inputs=[audio], outputs=submit_async)
                     video.change(fn=check_file, inputs=[video], outputs=submit_async)
                     file_in.change(fn=check_file, inputs=[file_in], outputs=submit_async)
-                    mail.change(fn=validate_emails, inputs=[mail, mail2], outputs=error_message)
-                    mail2.change(fn=validate_emails, inputs=[mail, mail2], outputs=error_message)
                     
                 else:
-                    
-                    print("Starting normal")
                     # creates the sync components for the interface which can be used to get the transcript on the interface
                     submit_sync = gr.Button(variant="primary", value="Transcribe",  interactive= False)
                     audio.change(fn=check_file, inputs=[audio], outputs=submit_sync)

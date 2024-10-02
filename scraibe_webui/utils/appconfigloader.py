@@ -39,7 +39,7 @@ class AppConfigLoader(ConfigLoader):
 
         self.get_layout()
         
-        self.interface_type = self.set_interface_type(inplace=False)
+        self.interface_type = self.set_interface_type()
         self.launch = self.config.get("launch")
         self.scraibe_params = self.config.get("scraibe_params")
         self.advanced = self.config.get("advanced")

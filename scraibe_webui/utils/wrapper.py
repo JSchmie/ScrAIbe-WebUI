@@ -64,7 +64,7 @@ class ScraibeWrapper:
         _kwargs = {
             "num_speakers": num_speakers if num_speakers != 0 else None,
             "language": language if language != "Unspecified" else None,
-            "task": 'translate' if translate else None
+            "task": 'translate' if translate else 'transcribe'
         }
         if isinstance(source, str):
             try:

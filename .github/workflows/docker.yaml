@@ -40,6 +40,9 @@ jobs:
         run: |
           echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
           
+      - name: Overwrite label tag
+        run: sed -i 's/LABEL version=".*"/LABEL version="'${{ steps.version.outputs.tag }}'"/' Dockerfile
+          
       - name: Test name and tag
         run: | 
           echo "${{ env.image }}:latest,${{ env.image }}:${{ steps.version.outputs.tag }}"

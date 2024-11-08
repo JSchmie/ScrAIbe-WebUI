@@ -43,7 +43,7 @@ class ConfigLoader(metaclass = ABCMeta):
 
         
         
-    def restore_defaults_for_keys(self, *args: str):
+    def restore_defaults_for_keys(self, *args: str) :
         """Restores specified keys to their default values, including nested keys.
 
         Args:
@@ -175,7 +175,7 @@ class ConfigLoader(metaclass = ABCMeta):
         return None
     
     @staticmethod
-    def check_key_in_dict(d, key):
+    def check_key_in_dict(d, key) -> bool :
         """Recursively search for the key in the dictionary.
 
         Args:
@@ -193,7 +193,7 @@ class ConfigLoader(metaclass = ABCMeta):
         return False
     
     @staticmethod
-    def get_default_config():
+    def get_default_config() -> dict:
         """Return the default configuration.
 
         Returns:

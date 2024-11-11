@@ -35,6 +35,7 @@ class AppConfigLoader(ConfigLoader):
         
         super(AppConfigLoader, self).__init__(config)
         
+        
         self.set_models_options()
 
         self.get_layout()
@@ -296,7 +297,7 @@ class AppConfigLoader(ConfigLoader):
                               InterfaceTypeWarning, stacklevel=2)
                 advanced["keep_model_alive"] = False
     
-    def set_interface_type(self, inplace=True):
+    def set_interface_type(self):
         """
         Sets or returns the interface type based on the 'interface_type' value from the configuration.
 
@@ -316,6 +317,7 @@ class AppConfigLoader(ConfigLoader):
         Raises:
             Warning: If an invalid interface type is provided.
         """
+        
          # Add a custom filter to force this specific warning to always print
         warnings.simplefilter("always", InterfaceTypeWarning)
         
@@ -329,9 +331,5 @@ class AppConfigLoader(ConfigLoader):
                           InterfaceTypeWarning, stacklevel=2)
             _ui = "simple"
         
-        # Set or return the interface type based on 'inplace' argument
-        if inplace:
-            self.interface_type = _ui
-        else:
-            return _ui
+        return _ui
                 

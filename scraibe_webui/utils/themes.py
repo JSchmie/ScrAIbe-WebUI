@@ -45,32 +45,45 @@ class ForestOceanTheme(gr.themes.Ocean):
         )
 
         # Name the theme for identification
-        self.name = "forest_ocean"
+        self.name = "forest_ocean_radial_gradient"
 
-        # Set primary button to a vibrant green gradient in light mode
+        # Set parameters for a radial gradient in light mode and fancy blocks
         super().set(
-            button_primary_background_fill="linear-gradient(120deg, *primary_300 0%, *primary_400 50%, *primary_500 100%)",  # Green gradient
-            button_primary_text_color="*neutral_50",  # White text for contrast
-            button_border_width="0px",
-            checkbox_label_border_width="1px",
-            button_transform_hover="scale(1.02)",
-            button_transition="all 0.1s ease-in-out",
-            slider_color="*primary_400",
-            button_primary_background_fill_hover="linear-gradient(120deg, *primary_400 0%, *primary_500 60%, *primary_600 100%)",  # Darker gradient on hover
-            button_secondary_background_fill="linear-gradient(120deg, *neutral_300 0%, *neutral_100 60%, *neutral_200 100%)",
-            button_secondary_background_fill_hover="linear-gradient(120deg, *neutral_200 0%, *neutral_100 60%, *neutral_100 100%)",
-            checkbox_label_background_fill_selected="linear-gradient(120deg, *primary_400 0%, *primary_300 60%, *primary_400 100%)",
-            checkbox_label_border_color_selected="*primary_400",
-            checkbox_background_color_selected="*primary_400",
-            checkbox_label_text_color_selected="*button_secondary_text_color",
-            slider_color_dark="*primary_500",
-            button_secondary_background_fill_dark="linear-gradient(120deg, *neutral_700 0%, *neutral_600 60%, *neutral_700 100%)",
-            button_secondary_background_fill_hover_dark="linear-gradient(120deg, *neutral_600 0%, *neutral_600 60%, *neutral_700 100%)",
-            checkbox_label_background_fill_selected_dark="linear-gradient(120deg, *primary_600 0%, *primary_500 60%, *primary_600 100%)",
-            checkbox_label_border_color_selected_dark="*primary_600",
-            checkbox_background_color_selected_dark="*primary_600",
-            checkbox_label_text_color_selected_dark="*button_secondary_text_color",
-            block_shadow="*shadow_drop_lg",
+            # Radial gradient background for light mode
+            background_fill_primary="radial-gradient(circle at center, #DADADA 20%, #E0E0E0 50%, #CFEFCF 100%)",
+
+            # Component box styles
+            block_background_fill="linear-gradient(120deg, #FFFFFF 0%, #F4F4F4 100%)",  # Light gradient for component boxes
+            block_border_color="#CCCCCC",  # Light gray for box border
+            block_border_width="1px",
+            block_radius="15px",  # Rounded corners for a softer look
+            block_shadow="0 4px 8px rgba(0, 0, 0, 0.1)",  # Subtle shadow for depth
+
+            # High contrast for main text and labels
+            body_text_color="#1A1A1A",  # Very dark gray for primary text
+            body_text_color_subdued="#333333",  # Darker gray for subdued text
+
+            # Label (title) text for components
+            block_title_text_color="#000000",  # Black for labels to improve contrast
+            block_title_text_color_dark="#FFFFFF",  # White for labels in dark mode
+
+            # Input fields
+            input_background_fill="#FFFFFF",  # Pure white for inputs
+            input_border_color="#666666",  # Darker gray border around input fields
+            input_border_width="1px",
+
+            # Primary button styling for light mode
+            button_primary_background_fill="linear-gradient(120deg, *primary_300 0%, *primary_400 50%, *primary_500 100%)",
+            button_primary_text_color="*neutral_50",
+            button_primary_background_fill_hover="linear-gradient(120deg, *primary_400 0%, *primary_500 60%, *primary_600 100%)",
+
+            # Dark mode settings with a subtle glow effect
+            background_fill_primary_dark="radial-gradient(circle at center, #020924 10%, #01071A 50%, #000615 100%)",
+            background_fill_secondary_dark="#01030D",
+            button_primary_background_fill_dark="linear-gradient(120deg, *secondary_600 0%, *primary_500 60%, *primary_600 100%)",
+            button_primary_background_fill_hover_dark="linear-gradient(120deg, *secondary_500 0%, *primary_500 60%, *primary_500 100%)",
+            button_primary_text_color_dark="*neutral_50",
+            block_shadow_dark="0 1px 3px rgba(255, 255, 255, 0.1)",
             button_secondary_shadow_hover="*shadow_drop_lg",
             button_primary_shadow_hover="0 1px 3px 0 *primary_200, 0 1px 2px -1px *primary_200",
             button_secondary_shadow_dark="none",

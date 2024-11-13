@@ -18,7 +18,7 @@ from .utils.interactions import select_task, select_origin, annotate_output \
     , apply_settings, run_scraibe, run_scraibe_async
 
 from .utils.lang import LANGUAGES
-from .utils.themes import theme
+from .utils.themes import ForestOceanTheme
 from .utils.appconfigloader import AppConfigLoader
 
 
@@ -55,7 +55,7 @@ def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
     layout = config.layout  
         
     
-    with gr.Blocks(theme=theme,title='ScrAIbe: Automatic Audio Transcription') as demo:
+    with gr.Blocks(theme=ForestOceanTheme(),title='ScrAIbe: Automatic Audio Transcription') as demo:
         
         keep_model_alive = gr.State(config.advanced.get('keep_model_alive'))
     

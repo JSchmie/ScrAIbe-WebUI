@@ -37,7 +37,7 @@ exclude =[
         "test"
         ]
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 gradio = "~5.5"
 scraibe = "^0.3.0"
 pandas = "^2.2.2"

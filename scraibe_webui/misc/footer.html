@@ -25,8 +25,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px; /* Adjusted for demonstration */
-            background-color: #F9FAFB; /* Fixed background color */
+            padding: 20px;
+            /* Removed background-color to inherit from parent */
             font-size: 16px;
             color: #333;
             width: 100%; /* Ensure footer is full width */
@@ -34,7 +34,7 @@
         }}
         .footer > div:first-child {{
             margin-left: -20px;
-            padding-left: 0; /* Reducing or eliminating left padding if it's causing the shift */
+            padding-left: 0; /* Adjust if necessary */
         }}
         .footer div, .footer a {{
             margin: 0 5px;
@@ -63,8 +63,8 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background-color: none;
-            text-decoration: none !important; /* Removes underline */
+            background-color: transparent; /* Ensure transparency */
+            text-decoration: none !important;
             color: white;
             transition: background-color 0.3s ease, transform 0.3s ease;
         }}
@@ -74,37 +74,17 @@
         .github-icon a:hover, .github-icon a:focus {{
             background-color: #50AF31;
             transform: scale(1.1);
-            text-decoration: none; /* Removes underline */
+            text-decoration: none;
         }}
         .github-icon a, .github-icon a:hover, .github-icon a:active, .github-icon a:visited {{
             text-decoration: none;
         }}
         .build-version {{
-            margin-top: 8px; /* Adjust spacing between the icon and the text as needed */
-            color: white; /* Adjust text color as needed */
-            font-size: 12px; /* Adjust font size as needed */
+            margin-top: 8px;
+            color: white; /* Adjust as needed */
+            font-size: 12px;
         }}
-
-        /* Dark mode styles */
-        @media (prefers-color-scheme: dark) {{
-            body {{
-                background-color: #121212;
-                color: #FFFFFF;
-            }}
-            .footer {{
-                background-color: transparent; /* Make footer background transparent */
-                color: #FFFFFF;
-            }}
-            .footer a {{
-                color: #FFFFFF;
-            }}
-            .footer a:hover {{
-                color: #50AF31;
-            }}
-            .build-version {{
-                color: #CCCCCC; /* Adjust text color for better contrast in dark mode */
-            }}
-        }}
+        /* Removed dark mode media query to let Gradio handle theming */
     </style>
 </head>
 <body>

@@ -89,8 +89,9 @@ class AppConfigLoader(ConfigLoader):
                 bool: True if the key contains path-related substrings or the value contains file extensions, otherwise False.
             """
             
-            key_contains = ['scr', 'file', 'path']
+            key_contains = ['src', 'file', 'path']
             value_ends_with = ['.html', '.css', '.png', '.jpg', '.jpeg', '.svg']
+    
             if value is None:
                 return False
             else:
@@ -121,7 +122,7 @@ class AppConfigLoader(ConfigLoader):
         _footer_format_options : dict = _layout.get("footer_format_options")
         
         for key, value in _footer_format_options.items():
-                         
+            print(key, value)
             if _check_potential_path(key, value):
                 self.check_and_set_path(key)
                 self.add_to_allowed_paths(value)

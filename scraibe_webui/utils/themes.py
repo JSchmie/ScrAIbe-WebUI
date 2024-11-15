@@ -1,5 +1,4 @@
 import gradio as gr
-
 from gradio.themes import colors, sizes, Font, GoogleFont
 
 class ForestOceanTheme(gr.themes.Ocean):
@@ -45,19 +44,19 @@ class ForestOceanTheme(gr.themes.Ocean):
         )
 
         # Name the theme for identification
-        self.name = "forest_ocean_radial_gradient"
+        self.name = "forest_ocean_homogeneous_green"
 
-        # Set parameters for a radial gradient in light mode and fancy blocks
+        # Set parameters for a subtle green gradient in light mode
         super().set(
-            # Radial gradient background for light mode
-            background_fill_primary="radial-gradient(circle at center, #DADADA 20%, #E0E0E0 50%, #CFEFCF 100%)",
+            # More homogeneous background in light mode with subtle green
+            background_fill_primary="radial-gradient(circle at center, #E0F8E0 10%, #CFEFCF 40%, #D5EDD5 100%)",
 
-            # Component box styles
-            block_background_fill="linear-gradient(120deg, #FFFFFF 0%, #F4F4F4 100%)",  # Light gradient for component boxes
-            block_border_color="#CCCCCC",  # Light gray for box border
+            # Component box styles with higher contrast and transparency in light mode
+            background_fill_secondary="rgba(255, 255, 255, 0.95)",  # Slightly more opaque for better readability
+            block_border_color="#888888",  # Darker gray for box border
             block_border_width="1px",
             block_radius="15px",  # Rounded corners for a softer look
-            block_shadow="0 4px 8px rgba(0, 0, 0, 0.1)",  # Subtle shadow for depth
+            block_shadow="0 4px 10px rgba(0, 0, 0, 0.15)",  # Enhanced shadow for depth
 
             # High contrast for main text and labels
             body_text_color="#1A1A1A",  # Very dark gray for primary text
@@ -69,7 +68,7 @@ class ForestOceanTheme(gr.themes.Ocean):
 
             # Input fields
             input_background_fill="#FFFFFF",  # Pure white for inputs
-            input_border_color="#666666",  # Darker gray border around input fields
+            input_border_color="#555555",  # Even darker gray border around input fields
             input_border_width="1px",
 
             # Primary button styling for light mode
@@ -77,15 +76,20 @@ class ForestOceanTheme(gr.themes.Ocean):
             button_primary_text_color="*neutral_50",
             button_primary_background_fill_hover="linear-gradient(120deg, *primary_400 0%, *primary_500 60%, *primary_600 100%)",
 
-            # Dark mode settings with a subtle glow effect
+            # Dark mode settings with improved transparency and no green hue
             background_fill_primary_dark="radial-gradient(circle at center, #020924 10%, #01071A 50%, #000615 100%)",
-            background_fill_secondary_dark="#01030D",
+            background_fill_secondary_dark="rgba(30, 30, 30, 0.85)",  # Semi-transparent background for components
+            block_background_fill_dark="rgba(45, 45, 45, 0.85)",  # Darker, more uniform transparent background
+            panel_background_fill_dark="rgba(45, 45, 55, 0.8)",  # Additional transparency for panel-like elements
+            block_border_color_dark="#666666",  # Darker gray border to ensure contrast
+            block_shadow_dark="0 4px 10px rgba(255, 255, 255, 0.1)",  # Softer shadow for dark mode
+
+            # Text and label settings for dark mode
+            body_text_color_dark="#E0E0E0",  # Light gray for body text in dark mode
+            body_text_color_subdued_dark="#B0B0B0",  # Subdued gray for secondary text in dark mode
+
+            # Primary button styling for dark mode
             button_primary_background_fill_dark="linear-gradient(120deg, *secondary_600 0%, *primary_500 60%, *primary_600 100%)",
             button_primary_background_fill_hover_dark="linear-gradient(120deg, *secondary_500 0%, *primary_500 60%, *primary_500 100%)",
             button_primary_text_color_dark="*neutral_50",
-            block_shadow_dark="0 1px 3px rgba(255, 255, 255, 0.1)",
-            button_secondary_shadow_hover="*shadow_drop_lg",
-            button_primary_shadow_hover="0 1px 3px 0 *primary_200, 0 1px 2px -1px *primary_200",
-            button_secondary_shadow_dark="none",
-            button_primary_shadow_dark="none",
         )

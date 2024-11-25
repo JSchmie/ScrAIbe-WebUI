@@ -55,12 +55,12 @@ class AppConfigLoader(ConfigLoader):
         """ 
                 
         device = self.config.get("scraibe_params").get('device')
-        
+        _num_threads = self.config.get("scraibe_params").pop('num_threads') # TODO: find a better approach here since this is hard to debug
         if device is None:
             device = SCRAIBE_TORCH_DEVICE
             
-        if device == 'cpu' and self.config.get("scraibe_params").get('num_threads') is not None:
-            set_threads(yaml_threads = self.config.get("scraibe_params").get('num_threads')) # this is a global setting
+        if device == 'cpu' and _num_threads  is not None:
+            set_threads(yaml_threads = _num_threads) # this is a global setting
 
         self.config['scraibe_params']['device'] = device
         

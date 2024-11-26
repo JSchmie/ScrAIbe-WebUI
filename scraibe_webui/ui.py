@@ -12,7 +12,7 @@ Variables:
     theme (gr.themes.Soft): The theme for the gradio interface.
     LANGUAGES (list of str): A list of languages supported by the application.
 """
-
+from functools import partial
 import gradio as gr
 from .utils.interactions import select_task, select_origin, annotate_output \
     , apply_settings, run_scraibe, run_scraibe_async
@@ -199,11 +199,16 @@ def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
                 
     
             else:
-                # Define usage of components
-            
+                # TODO [FixProgressBarIssue]: Remove this fix in future versions.
+                # This fix is currently required because faster-whisper uses floating-point numbers in their tqdm progress bar,
+                # which gradio.Progress does not support.
+                if config.scraibe_params.get("whisper_type") == 'faster-whisper':
+                    _run_scraibe = partial(run_scraibe, progress=gr.Progress(track_tqdm=False))
+                else: 
+                    _run_scraibe = run_scraibe
                 # Define interaction for the sync components
                 
-                submit_sync.click(fn = run_scraibe, 
+                submit_sync.click(fn = _run_scraibe, 
                                 inputs= [task,
                                         num_speakers,
                                         translate,
@@ -217,7 +222,8 @@ def gradio_Interface(config : AppConfigLoader) -> gr.Blocks:
                                         out_json,
                                         json_accordion,
                                         annoation,
-                                        annotate], concurrency_limit = None)
+                                        annotate],
+                                concurrency_limit = None)
             
                             
     return demo

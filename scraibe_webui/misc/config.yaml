@@ -57,7 +57,7 @@ scraibe_params:
   dia_model: null
   use_auth_token: null
   device: null # set your device
-  num_threads: 0 # If CPU is used set number of useable threads
+  num_threads: null # If CPU is used set number of useable threads
 mail:
   sender_email : null 
   smtp_server : null

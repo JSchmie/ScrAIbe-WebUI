@@ -5,9 +5,7 @@ from .configloader import ConfigLoader
 from ..global_var import ROOT_PATH
 import scraibe_webui.global_var as gv
 from .._version import __version__ as scraibe_webui_version
-from torch import set_num_threads
-from torch import device as torch_device
-from torch.cuda import is_available
+from scraibe.misc import SCRAIBE_TORCH_DEVICE, set_threads
 
 class InterfaceTypeWarning(UserWarning):
     """Custom warning class for invalid interface type."""
@@ -57,13 +55,12 @@ class AppConfigLoader(ConfigLoader):
         """ 
                 
         device = self.config.get("scraibe_params").get('device')
+        _num_threads = self.config.get("scraibe_params").pop('num_threads') # TODO: find a better approach here since this is hard to debug
         if device is None:
-            device = torch_device('cuda' if is_available() else 'cpu')
-        elif device is not None:
-            device  = torch_device(device)
+            device = SCRAIBE_TORCH_DEVICE
             
-        if device == 'cpu' and self.config.get("scraibe_params").get('num_threads') is not None:
-            set_num_threads(self.config.get("scraibe_params").get('num_threads')) # this is a global setting
+        if device == 'cpu' and _num_threads  is not None:
+            set_threads(yaml_threads = _num_threads) # this is a global setting
 
         self.config['scraibe_params']['device'] = device
         

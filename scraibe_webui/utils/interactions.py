@@ -97,6 +97,7 @@ def get_pipe(keep_model_alive : bool, scraibe_params : dict) -> ScraibeWrapper:
 
     return pipe
 
+
 def run_scraibe(task : str,
                num_speakers : int,
                translate : bool,
@@ -107,13 +108,23 @@ def run_scraibe(task : str,
                keep_model_alive : bool,
                scraibe_params : dict,
                progress = Progress(track_tqdm= True)):
-    
+
+        
+        if not progress.track_tqdm: # TODO [FixProgressBarIssue]
+            Warning("Progress tracking is disabled because Faster-Whisper models use floating-point increments"
+                    " in their tqdm progress bar, which Gradio.Progress does not support." 
+                    " As a result, progress will not be tracked.")
+            
         # load model or use the existing one
 
         _pipe = get_pipe(keep_model_alive, scraibe_params)
     
         # get *args which are not None
-        progress(0, desc='Starting task...')
+        
+        
+        if progress.track_tqdm: # TODO [FixProgressBarIssue]
+            progress(0, desc='Starting task...')
+        
         source = audio or video or file_in
         
         if isinstance(source, list):

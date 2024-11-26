@@ -1,0 +1,15 @@
+#.git
+.gitignore
+.dockerignore
+.vscode
+.venv
+**/__pycache__
+*.pyc
+*.pyo
+*.log
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+*.env    

@@ -111,7 +111,9 @@ def run_scraibe(task : str,
 
         
         if not progress.track_tqdm: # TODO [FixProgressBarIssue]
-            Warning("You are using Faster-Whipser Models progress will not be tracked!")
+            Warning("Progress tracking is disabled because Faster-Whisper models use floating-point increments"
+                    " in their tqdm progress bar, which Gradio.Progress does not support." 
+                    " As a result, progress will not be tracked.")
             
         # load model or use the existing one
 

@@ -37,13 +37,11 @@ exclude =[
         "test"
         ]
 [tool.poetry.dependencies]
-python = "^3.9"
-gradio = "^4.25.0"
-gradio-client = "^0.15.0"
-scraibe = "^0.2.0"
-pandas = "^2.2.1"
-tqdm = "^4.66.4"
-numpy = "^1.26.4"
+python = "^3.10"
+gradio = "~5.5"
+scraibe = "^0.3.0"
+pandas = "^2.2.2"
+tqdm = "^4.66.5"
 
 [tool.poetry-dynamic-versioning]
 enable = true
@@ -52,7 +50,7 @@ strict = true
 format-jinja = """
     {%- if distance == 0 -%}
         {{ serialize_pep440(base) }}
-    {%- elif branch == 'pyproject.toml' -%}
+    {%- elif branch == 'develop' -%}
         {{ serialize_pep440(bump_version(base), dev = distance) }}
     {%- else -%}
         {{ serialize_pep440(bump_version(base), dev=distance, metadata=[commit]) }}

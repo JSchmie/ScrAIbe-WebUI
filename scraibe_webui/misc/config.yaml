@@ -41,12 +41,12 @@ queue:
 layout:
   header: scraibe_webui/misc/header.html
   header_format_options: 
-    header_css_path : scraibe_webui/misc/header_style.css
+    #header_css_path : scraibe_webui/misc/header_style.css
     header_logo_url : https://www.kida-bmel.de/
-    header_logo_src : scraibe_webui/misc/logo.svg
+    header_logo_src : scraibe_webui/misc/logo.png
   footer: scraibe_webui/misc/footer.html
   footer_format_options : 
-    footer_css_path: scraibe_webui/misc/footer_style.css
+    #footer_css_path: scraibe_webui/misc/footer_style.css
     footer_scraibe_webui_version : null
   show_settings : true
   
@@ -57,7 +57,7 @@ scraibe_params:
   dia_model: null
   use_auth_token: null
   device: null # set your device
-  num_threads: 0 # If CPU is used set number of useable threads
+  num_threads: null # If CPU is used set number of useable threads
 mail:
   sender_email : null 
   smtp_server : null

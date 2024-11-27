@@ -1,5 +1,5 @@
 #pytorch Image
-FROM pytorch/pytorch:2.3.1-cuda12.1-cudnn8-runtime
+FROM pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
 
 # Labels
 LABEL maintainer="Jacob Schmieder"
@@ -17,28 +17,26 @@ WORKDIR /app
 ENV AUTOT_CACHE=/data/models/
 ENV GRADIO_SERVER_NAME=0.0.0.0
 #Copy all necessary files
-COPY requirements.txt /app/requirements.txt
-COPY README.md /app/README.md
-COPY scraibe_webui /app/scraibe_webui
-COPY pyproject.toml /app/pyproject.toml
-COPY LICENSE /app/LICENSE
-# header, footer mount in data
+COPY README.md /app/src/README.md
+COPY scraibe_webui /app/src/scraibe_webui
+COPY pyproject.toml /app/src/pyproject.toml
+COPY LICENSE /app/src/LICENSE
 COPY run_docker.sh /app/run_docker.sh
-RUN chmod +x /app/run_docker.sh
-RUN mkdir /data
+RUN chmod +x /app/run_docker.sh && \
+    mkdir /data
 
 #Installing all necessary Dependencies and Running the Application with a personalised Hugging-Face-Token
 RUN apt update -y && apt upgrade -y && \
-    apt install -y libsm6 libxrender1 libfontconfig1 git && \
+    apt install -y libsm6 libxrender1 libfontconfig1 git ffmpeg && \
     apt clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-RUN conda update --all && conda install -c conda-forge libsndfile && \ 
+RUN conda update --all -y && conda install -y -c conda-forge libsndfile && \ 
     conda clean --all -y
 
-# RUN pip install /app/
-RUN pip install --no-cache-dir -r requirements.txt
+RUN --mount=source=.git,target=.git,type=bind \
+#    --mount=source=scraibe_webui,target=scraibe_webui,type=bind \
+    pip install --no-cache-dir ./src
 
-# RUN python3 -m 'scraibe_webui.cli'
 # Expose port
 EXPOSE 7860
 # Run the application

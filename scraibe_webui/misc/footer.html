@@ -4,7 +4,88 @@
     <meta charset="UTF-8">
     <title>Footer Beispiel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="./file={footer_css_path}">
+    
+    <style>
+        /* Styles from footer_style.css */
+
+        /* Resetting margins and paddings */
+        html, body {{
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }}
+        body {{
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Ensures footer stays at the bottom */
+        }}
+        .footer {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            /* Removed background-color to inherit from parent */
+            font-size: 16px;
+            color: #333;
+            width: 100%; /* Ensure footer is full width */
+            box-sizing: border-box; /* Padding is included in the width */
+        }}
+        .footer > div:first-child {{
+            margin-left: -20px;
+            padding-left: 0; /* Adjust if necessary */
+        }}
+        .footer div, .footer a {{
+            margin: 0 5px;
+        }}
+        .footer div {{
+            text-align: left;
+        }}
+        .footer a {{
+            color: #333;
+            transition: color 0.3s ease;
+        }}
+        .footer a:hover {{
+            color: #50AF31;
+        }}
+        .github-section {{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }}
+        .github-icon a {{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: transparent; /* Ensure transparency */
+            text-decoration: none !important;
+            color: white;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }}
+        .github-icon i {{
+            font-size: 24px;
+        }}
+        .github-icon a:hover, .github-icon a:focus {{
+            background-color: #50AF31;
+            transform: scale(1.1);
+            text-decoration: none;
+        }}
+        .github-icon a, .github-icon a:hover, .github-icon a:active, .github-icon a:visited {{
+            text-decoration: none;
+        }}
+        .build-version {{
+            margin-top: 8px;
+            color: white; /* Adjust as needed */
+            font-size: 12px;
+        }}
+        /* Removed dark mode media query to let Gradio handle theming */
+    </style>
 </head>
 <body>
 

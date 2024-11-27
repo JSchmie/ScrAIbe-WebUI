@@ -5,8 +5,7 @@ from .configloader import ConfigLoader
 from ..global_var import ROOT_PATH
 import scraibe_webui.global_var as gv
 from .._version import __version__ as scraibe_webui_version
-from torch import set_num_threads
-from scraibe.misc import SCRAIBE_TORCH_DEVICE
+from scraibe.misc import SCRAIBE_TORCH_DEVICE, set_threads
 
 class InterfaceTypeWarning(UserWarning):
     """Custom warning class for invalid interface type."""
@@ -34,6 +33,7 @@ class AppConfigLoader(ConfigLoader):
         
         super(AppConfigLoader, self).__init__(config)
         
+        
         self.set_models_options()
 
         self.get_layout()
@@ -55,12 +55,12 @@ class AppConfigLoader(ConfigLoader):
         """ 
                 
         device = self.config.get("scraibe_params").get('device')
-        
+        _num_threads = self.config.get("scraibe_params").pop('num_threads') # TODO: find a better approach here since this is hard to debug
         if device is None:
             device = SCRAIBE_TORCH_DEVICE
             
-        if device == 'cpu' and self.config.get("scraibe_params").get('num_threads') is not None:
-            set_num_threads(self.config.get("scraibe_params").get('num_threads')) # this is a global setting
+        if device == 'cpu' and _num_threads  is not None:
+            set_threads(yaml_threads = _num_threads) # this is a global setting
 
         self.config['scraibe_params']['device'] = device
         
@@ -86,8 +86,9 @@ class AppConfigLoader(ConfigLoader):
                 bool: True if the key contains path-related substrings or the value contains file extensions, otherwise False.
             """
             
-            key_contains = ['scr', 'file', 'path']
+            key_contains = ['src', 'file', 'path']
             value_ends_with = ['.html', '.css', '.png', '.jpg', '.jpeg', '.svg']
+    
             if value is None:
                 return False
             else:
@@ -118,7 +119,7 @@ class AppConfigLoader(ConfigLoader):
         _footer_format_options : dict = _layout.get("footer_format_options")
         
         for key, value in _footer_format_options.items():
-                         
+            print(key, value)
             if _check_potential_path(key, value):
                 self.check_and_set_path(key)
                 self.add_to_allowed_paths(value)
@@ -294,7 +295,7 @@ class AppConfigLoader(ConfigLoader):
                               InterfaceTypeWarning, stacklevel=2)
                 advanced["keep_model_alive"] = False
     
-    def set_interface_type(self, inplace=True):
+    def set_interface_type(self):
         """
         Sets or returns the interface type based on the 'interface_type' value from the configuration.
 
@@ -314,6 +315,7 @@ class AppConfigLoader(ConfigLoader):
         Raises:
             Warning: If an invalid interface type is provided.
         """
+        
          # Add a custom filter to force this specific warning to always print
         warnings.simplefilter("always", InterfaceTypeWarning)
         
@@ -327,9 +329,5 @@ class AppConfigLoader(ConfigLoader):
                           InterfaceTypeWarning, stacklevel=2)
             _ui = "simple"
         
-        # Set or return the interface type based on 'inplace' argument
-        if inplace:
-            self.interface_type = _ui
-        else:
-            return _ui
+        return _ui
                 

@@ -217,7 +217,6 @@ class MailService:
             transcript_paths = []
         elif isinstance(transcript_paths, str):
             transcript_paths = [transcript_paths]
-
         _message = (self.success_template or "Your transcript is ready.").format(
             css_path=self.css_template_path, **format_options
         )

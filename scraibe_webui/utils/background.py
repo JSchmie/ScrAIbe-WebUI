@@ -5,7 +5,8 @@ from os import remove
 from os.path import join, split
 
 from threading import Thread, BoundedSemaphore, active_count
-from torch import set_num_threads
+from scraibe.misc import set_threads
+
 from scraibe_webui.global_var import MAX_CONCURRENT_MODELS
 import scraibe_webui.global_var as gv
 from .mail import MailService
@@ -63,8 +64,8 @@ class BackgroundThread:
         
         """ Background task that runs in a separate thread """
         
-        if self.threads_per_model != 0:
-            set_num_threads(self.threads_per_model)
+        if self.threads_per_model  is not None:
+            set_threads(yaml_threads = self.threads_per_model) 
         
         # List to store temporary files
         temp_files = []
@@ -156,8 +157,8 @@ class BackgroundThread:
                             temp_file.write(result)
                     
                         temp_files.append(temp_file_path_json)
-            
-            MailService.from_config(self.mail_service_params).send_transcript(receiver_email=reciever, transcript_path = temp_files, **success_format_option)
+
+            MailService.from_config(self.mail_service_params).send_transcript(receiver_email=reciever, transcript_paths = temp_files, **success_format_option)
         
         except Exception as exeption:
             

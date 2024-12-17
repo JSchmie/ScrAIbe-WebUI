@@ -1,20 +1,83 @@
-<!-- header.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScrAIbe</title>
 
-<!-- Importing Cormorant Garamond font from Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/file={header_css_path}">
+    <!-- Importing Cormorant Garamond font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .header-container {{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding-top: 30px;
+        }}
 
-<div class="header-container">
-    <h1>ScrAIbe</h1>
-    <div class="logo-container">
-        <a href="{header_logo_url}"> <!-- Replace with your actual URL -->
-            <img src="/file={header_logo_src}" alt="KIDA Logo" class="logo">
-        </a>
+        .logo-container {{
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 300px;
+        }}
+
+        .logo {{
+            width: 100%;
+            height: auto;
+        }}
+
+        .header-title {{
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 50px !important;
+            font-weight: bold;
+            color: #50AF31;
+            margin: 0;
+            position: relative;
+            padding: 0.5em 0;
+        }}
+
+        .header-title::before, .header-title::after {{
+            content: "";
+            position: absolute;
+            height: 2px;
+            width: 80%;
+            background-color: #50AF31;
+            left: 10%;
+        }}
+
+        .header-title::before {{
+            top: 0.5em;
+        }}
+
+        .header-title::after {{
+            bottom: 0.5em;
+        }}
+
+        p, h2 {{
+            font-size: 16px;
+            margin: 10px 0;
+            line-height: 1.4;
+        }}
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <h1 class="header-title">ScrAIbe</h1>
+        <div class="logo-container">
+            <a href="{header_logo_url}">
+                <img src="./gradio_api/file={header_logo_src}" alt="KIDA Logo" class="logo">
+            </a>
+        </div>
     </div>
-</div>
-<div style="text-align: center; padding: 20px 10%;">
-    <p>
-        Upload, record, or provide a video with audio for transcription. Our toolkit is designed to transcribe content from multiple languages accurately. The integrated speaker diarisation feature identifies different speakers, ensuring a smooth transcription experience. For optimal results, indicate the number of speakers and the original language of the content.
-    </p>
-    <h2 style="font-weight: bold; color: #50AF31;">What would you like to do next?</h2>
-</div>
+    <div style="text-align: center; padding: 20px 10%;">
+        <p>
+            Upload, record, or provide a video with audio for transcription. Our toolkit is designed to transcribe content from multiple languages accurately. The integrated speaker diarisation feature identifies different speakers, ensuring a smooth transcription experience. For optimal results, indicate the number of speakers and the original language of the content.
+        </p>
+        <h2 style="font-weight: bold; color: #50AF31;">What would you like to do next?</h2>
+    </div>
+</body>
+</html>

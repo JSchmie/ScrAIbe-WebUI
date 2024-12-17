@@ -1,8 +1,12 @@
-from os.path import join
+import re
+from unicodedata import normalize
+
 from os import remove
+from os.path import join, split
 
 from threading import Thread, BoundedSemaphore, active_count
-from torch import set_num_threads
+from scraibe.misc import set_threads
+
 from scraibe_webui.global_var import MAX_CONCURRENT_MODELS
 import scraibe_webui.global_var as gv
 from .mail import MailService
@@ -60,8 +64,8 @@ class BackgroundThread:
         
         """ Background task that runs in a separate thread """
         
-        if self.threads_per_model != 0:
-            set_num_threads(self.threads_per_model)
+        if self.threads_per_model  is not None:
+            set_threads(yaml_threads = self.threads_per_model) 
         
         # List to store temporary files
         temp_files = []
@@ -73,9 +77,12 @@ class BackgroundThread:
             
             if isinstance(audio, str):
                 
-                temp_file_path_txt = join(audio.split('.')[0] + '.txt')
-                temp_file_path_json = join(audio.split('.')[0] + '.json')
-
+                _out_base_filename = normalize_filename(audio.split('.')[0])
+                
+                temp_file_path_txt = join(f'{_out_base_filename}.txt')
+                temp_file_path_json = join(f'{_out_base_filename}.json')
+                
+                
                 if task == 'Auto Transcribe':
 
                     _ , result_txt, result_json = _scraibe.autotranscribe(audio,
@@ -150,8 +157,8 @@ class BackgroundThread:
                             temp_file.write(result)
                     
                         temp_files.append(temp_file_path_json)
-            
-            MailService.from_config(self.mail_service_params).send_transcript(receiver_email=reciever, transcript_path = temp_files, **success_format_option)
+
+            MailService.from_config(self.mail_service_params).send_transcript(receiver_email=reciever, transcript_paths = temp_files, **success_format_option)
         
         except Exception as exeption:
             
@@ -190,3 +197,45 @@ class BackgroundThread:
         """ Get the number of active threads """
         return active_count()
     
+
+
+
+def normalize_filename(path):
+    """
+    Sanitizes a filename within a Gradio-based automated transcription framework before 
+    sending the file via SMTP. This utility function ensures filenames conform to SMTP-safe 
+    standards by removing or replacing special characters and spaces that may cause issues 
+    during email transmission.
+
+    Background:
+        Filenames may contain special characters or spaces (e.g., accented letters, non-ASCII symbols) which can lead to 
+        problems with email clients or servers. This function is used to standardize 
+        filenames before sending them through SMTP.
+
+    Args:
+        path (str): The original filename of the media file generated during transcription, 
+                        which may contain special characters, spaces, or accents.
+
+    Returns:
+        str: A sanitized filename that is safe to use with SMTP and email clients, ensuring 
+             proper file transmission.
+
+    Example:
+        >>> normalize_filename("/path/to/Reunión 24 de agosto.mp4")
+        '/path/to/Reunion_24_de_agosto.mp4'
+    """
+    
+    # Split the path into directory and file components
+    directory, filename = split(path)
+    # Normalize Unicode characters to their closest ASCII equivalent
+    nfkd_form = normalize('NFKD', filename)
+    ascii_filename = nfkd_form.encode('ASCII', 'ignore').decode('ASCII')
+    
+    # Replace spaces with underscores
+    ascii_filename = ascii_filename.replace(" ", "_")
+    
+    # Remove any characters that aren't alphanumeric, underscores, hyphens, or dots
+    ascii_filename = re.sub(r'[^a-zA-Z0-9._-]', '', ascii_filename)
+    
+    # Rejoin the directory and the sanitized filename
+    return join(directory, ascii_filename)

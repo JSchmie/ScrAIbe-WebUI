@@ -143,80 +143,129 @@ queue:
   max_size: 10
 ```
 
-### 4. Layout Configuration
+### 4. Layout Configuration (Updated)
 
-This section allows you to customize the visual elements of your WebUI. Here, you can specify custom HTML files for the header and footer, along with detailed format options, such as additional CSS files or logos. You can also enable or disable the settings panel within the Gradio interface.
+This section details how to configure and customize the layout of your WebUI. It covers specifying custom HTML files for the header and footer, using inline CSS for styling, and adjusting layout behavior for your project. Recent updates have introduced significant changes, including the deprecation of `header_css_path` and `footer_css_path`. Now, all CSS must be defined inline within the HTML file, and the API path has changed to `/gradio_api`.
 
-**Example `config.yaml` for Layout Configuration:**
+---
+
+Example `config.yaml` for Layout Configuration:
 
 ```yaml
 layout:
   header: path/to/my/header.html
-  header_format_options: {}
+  header_format_options:
+    header_logo_url: https://www.example.com/
+    header_logo_src: path/to/my/logo/logo.png
   footer: path/to/my/footer.html
   footer_format_options: {}
   show_settings: true
-
 ```
 
-- **header:** Path to an HTML file for the header. You can use your own custom HTML file if desired. Note that the header must be an HTML file.
-- **header_format_options:** Options to customize the header. These are arbitrary keyword arguments for the format function in Python, and they must be referenced in the HTML file using curly braces, like `{myarg}`.
+---
 
-  - **header_css_path:** Path to a CSS file for the header styling.
-  - **header_logo_url:** URL for the header logo link.
-  - **header_logo_src:** Path to an image file for the header logo.
+### Configuration Options
 
-  Example of `header_format_options` in `config.yaml`:
+- **header:**  
+  Path to an HTML file for the header. Ensure the file is valid HTML and includes any required inline CSS.
 
-  ```yaml
-  header_format_options: 
-    header_css_path: /file=scraibe_webui/misc/header_style.css
-    header_logo_url: https://www.example.com/
-    header_logo_src: /file=scraibe_webui/misc/logo.svg
-  ```
+- **header_format_options:**  
+  Customization options for the header, such as logos or URLs, referenced using `{}` in the HTML.
 
-  Example of a custom HTML file (`header.html`):
+  Example `header.html`:
 
-  ```html
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-      <link rel="stylesheet" href="/file={header_css_path}">
-  </head>
-  <body>
-      <a href="{header_logo_url}">
-          <img src="/file={header_logo_src}" alt="Logo">
-      </a>
-  </body>
-  </html>
-  ```
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScrAIbe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+        .logo-container {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 150px;
+        }
+        .logo {
+            width: 100%;
+            height: auto;
+        }
+        .header-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 40px;
+            font-weight: bold;
+            color: #50AF31;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <h1 class="header-title">ScrAIbe</h1>
+        <div class="logo-container">
+            <a href="{header_logo_url}">
+                <img src="/gradio_api/file={header_logo_src}" alt="Logo" class="logo">
+            </a>
+        </div>
+    </div>
+</body>
+</html>
+```
 
-- **footer:** Path to an HTML file for the footer. You can use your own custom HTML file if desired. **Note** that the footer must be an HTML file.
-- **footer_format_options:** Options to customize the footer. These are arbitrary keyword arguments for the format function in Python, and they must be referenced in the HTML file using curly braces, like `{myarg}`.
-- **show_settings:** Enables or disables the settings panel within the Gradio interface. This is a **beta feature** and should not be used in production settings as it may not be stable.
+- **footer:**  
+  Path to an HTML file for the footer. Like the header, it should include inline CSS.
 
-#### Important Notes
+- **footer_format_options:**  
+  Customization options for the footer, similar to `header_format_options`.
 
-1. **File Imports**: If you want to use file imports such as an extra logo or a CSS file, it is important to prefix the file path with `/file=` in the HTML file. Otherwise, it will not work with Gradio.
+- **show_settings:**  
+  Boolean to enable/disable the settings panel in the Gradio interface. This feature is experimental.
 
+---
+
+### Updated Important Notes
+
+1. **File Imports**:  
+   When importing files such as logos, CSS, or other assets, it is critical to prefix the file path with `/gradio_api/file=` in the HTML file. Otherwise, these imports will not work correctly in Gradio.
+
+    Example:
     ```html
-    <link rel="stylesheet" href="/file=path/to/your/file.css">
+    <link rel="stylesheet" href="/gradio_api/file=path/to/your/style.css">
     ```
 
-2. **File Detection**: Keys including 'scr', 'file', 'path', or values ending with `.html`, `.css`, `.png`, `.jpg`, `.jpeg`, `.svg` are treated as file paths
-  
+2. **File Detection**:  
+   Gradio automatically detects file paths based on specific keywords or extensions. These include keys like `src`, `file`, or `path`, and values ending with `.html`, `.css`, `.png`, `.jpg`, `.jpeg`. Note that `.svg` is no longer supported as a file format.
+
+    Example:
     ```yaml
     header_format_options:
-      header_css_path : /my/path/to/style.css 
+      header_logo_src: /gradio_api/file=path/to/logo.png
     ```
 
-    This would be recognized as a file since it involves `.css` and `path` as part of its keyword.
+    This path will be correctly detected and processed by Gradio.
 
-3. **Interactive WebUI Version**: If a keyword under the format options includes `scraibe_webui_version`, the current build version of ScrAIbe-WebUI will be automatically inserted during setup, ensuring your interface always reflects the latest version.
+3. **SVG File Format Deprecated**:  
+   SVG files are no longer supported in Gradio. Use other common formats like `.png`, `.jpg`, or `.jpeg`. Ensure images are appropriately sized and optimized for the web to avoid performance issues.
 
-4. **Unique Keys**: Every key in the configuration must be unique. This ensures that each setting is distinct and avoids conflicts.
+---
 
-This configuration approach, similar to the Mail interface, allows you to customize each section with specific format options using YAML syntax. You can include paths to additional resources and dynamically generate content, but it's crucial to follow the guidelines to ensure proper functionality and security.
+#### Best Practices
+
+- Ensure all HTML files are self-contained without reliance on external CSS files.  
+- Use clear, descriptive variable names in `header_format_options` for better maintainability.  
+- Validate your HTML to prevent layout issues in Gradio.  
+- Test file imports thoroughly to ensure paths are recognized correctly by Gradio.
+
+---
 
 ### 5. SCRAIBE Parameters
 
@@ -251,6 +300,7 @@ scraibe_params:
   - `large`
   - `large-v2`
   - `large-v3`
+  - `large-v3-turbo`
 
   Each model varies in terms of size and accuracy, with `tiny` being the smallest and fastest, and `large-v3` being the most accurate but requiring more resources.
 

@@ -101,15 +101,75 @@ The `config.yaml` file is the heart of your `ScrAIbe-WebUI` customization. This 
 
 ### Interface Type
 
-This is by far the most important setting for you. As we already know, there are two types of `ScrAIbe-WebUI` out there: the first one uses a synchronous (live and simple) approach, and the second one uses an asynchronous approach where you get your transcripts sent via email. You can select the type of the interface like so:
+The interface type determines how ScrAIbe-WebUI processes your transcription tasks. There are two interface types available: `simple` and `async`. Each serves different use cases depending on your needs, resources, and preferences. You can configure the interface type in your `config.yaml` like this:
 
 ```yaml
 interface_type: simple
 ```
 
-- `interface_type`: Choose between `simple` or `async`.
+- **`interface_type`**: Choose between `simple` or `async`.
 
-The `simple` type doesn’t require email setup, while async handles transcriptions. The setup of the email configuration will be covered later in this tutorial.
+---
+
+### Detailed Explanation
+
+#### **Simple Interface**
+The `simple` interface is ideal for real-time transcription or smaller tasks. This option allows you to upload your file, process it on the page, and get the results with a short waiting time. 
+
+- **Best For**:  
+  - Live transcriptions.  
+  - Users with a GPU setup to speed up processing.  
+  - Smaller audio/video files.  
+
+- **Advantages**:  
+  - Quick and straightforward.  
+  - Doesn’t require additional configurations like email setup.  
+  - More robust for immediate use cases.  
+
+- **Example UI**:  
+  Below is a screenshot of the simple interface layout:  
+  ![Simple Interface](img/simple_ui.png)
+
+---
+
+#### **Async Interface**
+The `async` interface is designed for scenarios where you do not want to keep the browser open while the transcription is being processed. Files are added to a queue and processed asynchronously, with the results delivered to your email once ready.
+
+- **Best For**:  
+  - Saving resources like CPU usage.  
+  - Transcribing larger or longer files.  
+  - Users who prefer not to wait actively for the transcription to complete.  
+
+- **How It Works**:  
+  - You upload your files to the system.  
+  - The files are queued for processing.  
+  - Once processing is complete, the transcript is sent to your email.  
+
+- **Requirements**:  
+  - You must configure the email settings in the `config.yaml` file to enable this feature. (Covered in the Email Backend section.)
+
+- **Advantages**:  
+  - Allows background processing without requiring the browser to remain open.  
+  - Ideal for larger tasks where immediate results are not necessary.  
+
+- **Example UI**:  
+  Below is a screenshot of the async interface layout:  
+  ![Async Interface](/img/async_ui.png)
+
+---
+
+### Choosing the Right Interface Type
+
+| **Feature**              | **Simple**                   | **Async**                    |
+|---------------------------|------------------------------|------------------------------|
+| **Setup Complexity**      | Minimal                     | Requires email configuration |
+| **Use Case**              | Live transcription, small files | Asynchronous processing, large files |
+| **Speed**                 | Faster results              | Background processing        |
+| **Resource Efficiency**   | More demanding (CPU/GPU)    | Saves resources              |
+| **Robustness**            | More reliable               | Depends on email setup       |
+
+By understanding your specific use case, you can select the interface type that best suits your needs. For example, if you’re working on smaller files with GPU acceleration, the `simple` type is the way to go. On the other hand, if you have longer recordings or prefer to process files without waiting actively, the `async` type is more appropriate.
+
 
 ### 2. Gradio Launch Configuration
 
@@ -322,6 +382,8 @@ You can also include other keyword arguments that the `ScrAIbe` class supports, 
 
 To use the asynchronous interface type, where transcripts are sent via email, you need to configure the email backend properly. This involves setting up SMTP server details, email templates, and other related settings in the `config.yaml` file. **Note: These settings are only used when using the asynchronous backend.**
 
+---
+
 **Example `config.yaml` for Email Backend Configuration:**
 
 ```yaml
@@ -334,12 +396,13 @@ mail:
   context: default # Union[None, str, dict, ssl.SSLContext]
   default_subject: "SCRAIBE"
   error_template: scraibe_webui/misc/error_notification_template.html
-  error_subject: An error occurred during processing.
+  error_subject: "An error occurred during processing."
   error_format_options:
-    contact_email: support@mail.com 
+    # The 'exception' key is mandatory for your error_template and will be set to the relevant exception in the code.
+    contact_email: support@mail.com # You can add any additional format options if using a custom error_template.
   success_template: scraibe_webui/misc/success_template.html
   success_subject: "Your transcript is ready."
-  success_format_options:
+  success_format_options: 
     contact_email: support@mail.com
   upload_notification_template: scraibe_webui/misc/upload_notification_template.html
   upload_subject: "Upload Successful"
@@ -349,7 +412,9 @@ mail:
   mail_css_path: scraibe_webui/misc/mail_style.css
 ```
 
-**Detailed Description:**
+---
+
+### Detailed Description
 
 - **sender_email**: The email address that will be used to send out emails. This should be a valid email address from which you have permission to send emails.
 - **smtp_server**: The SMTP server address that will handle the sending of emails. For example, `smtp.gmail.com` for Gmail.
@@ -364,6 +429,7 @@ mail:
 - **error_template**: Path to the HTML template used for error notification emails. Customize this template as needed.
 - **error_subject**: Subject line for error notification emails.
 - **error_format_options**: Format options for error emails. This typically includes the contact email or any other relevant information.
+  - **exception**: Automatically populated with the exception details during error handling. Ensure your template includes this placeholder.
   - **contact_email**: Your contact email address. This can be customized or additional options can be added as necessary.
 - **success_template**: Path to the HTML template used for success notification emails. Customize this template as needed.
 - **success_subject**: Subject line for success notification emails.
@@ -378,9 +444,9 @@ mail:
 
 The templates and the related CSS, as well as additional arguments (like the contact email), can be configured to your own needs. You can add additional formatting parameters as required.
 
-**Demo Template Example with More Format Options:**
+---
 
-**success_template.html:**
+**Demo Template Example with More Format Options:**
 
 ```html
 <!DOCTYPE html>
@@ -402,14 +468,16 @@ The templates and the related CSS, as well as additional arguments (like the con
 </html>
 ```
 
-In this example, additional format options such as `user_name`, `download_link`, and `company_name` are used to personalize the success notification email. he related part in your YAML file would look like:
+In this example, additional format options such as `user_name`, `download_link`, and `company_name` are used to personalize the success notification email. The related part in your YAML file would look like:
 
 ```yaml
 success_template: scraibe_webui/misc/success_template.html
 success_format_options:
-    company_name: company_name
+    company_name: "My Awesome Company"
     contact_email: support@mail.com
 ```
+
+---
 
 ### 7. Advanced Configuration
 

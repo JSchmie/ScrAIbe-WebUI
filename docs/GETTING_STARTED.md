@@ -6,7 +6,7 @@ Welcome to the ScrAIbe-WebUI! This guide will walk you through the steps to get 
 
 Before installing ScrAIbe-WebUI, ensure you have the following prerequisites:
 
-- **Python**: Version 3.9 or later.
+- **Python**: Version 3.11 or later.
 - **PyTorch**: Version 2.0 or later.
 - **CUDA**: A compatible version with your PyTorch Version if you want to use GPU acceleration.
 

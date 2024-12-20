@@ -10,50 +10,61 @@ Before setting up ScrAIbe-WebUI with Docker, ensure you have the following prere
 - **Docker Compose**: Installed and running on your machine. You can download Docker Compose from the official [Docker Compose website](https://docs.docker.com/compose/install/).
 - **Nvidia GPU Support (Optional)**: If you want to use GPU, ensure you have the Nvidia Container Toolkit installed and configured on your machine. You can find installation instructions on the [Nvidia Container Toolkit website](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html).
 
+---
+
 ## Install ScrAIbe-WebUI Using Docker
 
-### Step 1: Clone the Repository
+### Step 1: Clone the Repository (Optional)
 
-First, clone the ScrAIbe-WebUI repository from GitHub.
+First, clone the ScrAIbe-WebUI repository from GitHub:
 
 ```bash
 git clone https://github.com/JSchmie/ScrAIbe-WebUI.git
 cd ScrAIbe-WebUI
 ```
 
-### Step 2: Build and Run the Docker Container
+---
 
-To build and run the Docker container, use the following commands:
+### Step 2: Deployment Options
 
-```bash
-docker compose up
-```
+#### CPU Deployment
 
-This command will build the Docker image and start the container using the configuration specified in the `docker-compose.yml` file.
-
-### Step 3: Access the WebUI
-
-Once the Docker container is running, you can access the WebUI in your web browser at:
-
-```bash
-http://localhost:7860
-```
-
-## Example `docker-compose.yml`
-
-Here is an example of what your docker-compose.yml file might look like:
+To run ScrAIbe-WebUI without GPU support, use the following `docker-compose.yml` file:
 
 ```yaml
 services:
     scraibe:
-      # you can set a UID/GID in an .env file
-      # user: "${UID}:${GID}"
       build: .
       container_name: scraibe-webui
       ports:
         - '7860:7860'
       volumes: 
-        - ./data:/data 
+        - ./data:/data
+```
+
+Deploy the container with:
+
+```bash
+docker compose up
+```
+
+This setup is ideal for environments without Nvidia GPUs or for basic transcription tasks that do not require GPU acceleration.
+
+---
+
+#### GPU Deployment
+
+To enable GPU support, update your `docker-compose.yml` file to include GPU configuration:
+
+```yaml
+services:
+    scraibe:
+      build: .
+      container_name: scraibe-webui
+      ports:
+        - '7860:7860'
+      volumes: 
+        - ./data:/data
       deploy:
         resources:
           reservations:
@@ -63,33 +74,62 @@ services:
                 capabilities: [gpu]
 ```
 
-## Using the Pre-built Image from Docker Hub
-
-If you prefer to use the pre-built image available on Docker Hub, you can pull and run it with a single command.
-
-### Step 1: Run the Container
-
-Run the Docker container using the pre-built image:
+Ensure you have installed the Nvidia Container Toolkit and configured it properly. Then deploy the container with:
 
 ```bash
-docker run -d --name scraibe-webui -p 7860:7860 --gpus 'all' -v $(pwd)/data:/data hadr0n/scraibe-webui
+docker compose up
 ```
 
-Docker will automatically pull the image from Docker Hub if it is not already present on your system.
+This setup is optimized for faster transcription tasks using GPU acceleration.
 
-### Step 2: Access the WebUI
+---
 
-Once the Docker container is running, you can access the WebUI in your web browser at:
+### Step 3: Access the WebUI
+
+Once the Docker container is running, access the WebUI in your web browser at:
 
 ```bash
 http://localhost:7860
 ```
 
+---
+
+## Using the Pre-Built Image from Docker Hub
+
+If you prefer not to build the image manually, you can use the pre-built image available on Docker Hub.
+
+### Step 1: CPU Deployment
+
+Run the container using the pre-built image:
+
+```bash
+docker run -d --name scraibe-webui -p 7860:7860 -v $(pwd)/data:/data hadr0n/scraibe-webui
+```
+
+### Step 2: GPU Deployment
+
+For GPU support, include the `--gpus 'all'` flag:
+
+```bash
+docker run -d --name scraibe-webui -p 7860:7860 --gpus 'all' -v $(pwd)/data:/data hadr0n/scraibe-webui
+```
+
+Access the WebUI in your web browser at:
+
+```bash
+http://localhost:7860
+```
+
+---
+
 ## Custom Configuration
 
-To use a custom configuration, you can use the `config.yaml` file in the `./data` folder of your mounted volume.  
-(Currently, this file is created as root user of dckre is run as root. We are working on solving this.)
+To use a custom configuration, you can place a `config.yaml` file in the `./data` folder of your mounted volume.
+
+> **Note**: Currently, this file is created as the root user if Docker is run as root. We are working on resolving this issue.
+
+---
 
 ## Summary
 
-By following this guide, you should be able to install, run, and customize your ScrAIbe-WebUI effectively using Docker. This setup provides a robust and production-ready environment, ensuring a consistent and easy-to-manage installation. For more details on customization options, refer to our [Customize your WebUI](Customize.md) guide.
+By following this guide, you should be able to install, run, and customize your ScrAIbe-WebUI effectively using Docker. Whether deploying on a CPU or GPU, this setup provides a robust and production-ready environment. For more details on customization options, refer to our [Customize your WebUI](Customize.md) guide.

@@ -50,7 +50,8 @@ ScrAIbe-WebUI makes it easy to start transcribing with multiple installation met
 
 - **Docker** 🐳: The simplest and most efficient way to deploy ScrAIbe-WebUI. Containerize the application to ensure a consistent environment across different systems. [Get Started with Docker](./docs/GETTING_STARTED_DOCKER.md)
 - **PyPI Package** 📦: Install ScrAIbe-WebUI via pip for seamless integration with your Python environment. [Learn How to Install via PyPI](./docs/GETTING_STARTED.md#pypi-package)
-- **Build from Scratch** 🔧: For those who like to get their hands dirty, build ScrAIbe-WebUI from the ground up. [See the Step-by-Step Guide](./docs/GETTING_STARTED.md#build-from-scratch)
+- **Build from Scratch** 🔧: For the hands-on enthusiast, clone the repository and build ScrAIbe-WebUI step-by-step. [Follow the Guide](./docs/GETTING_STARTED.md#setting-up-from-scratch)
+
 
 ### Detailed Guides
 

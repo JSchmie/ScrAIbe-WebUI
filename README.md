@@ -25,7 +25,7 @@ Welcome to ScrAIbe-WebUI, a user-friendly web service for automated transcriptio
 
 ### Advanced Model Integration
 
-- **Multiple Transcription Models** 🌍: Users can select from all available [Whisper](https://github.com/openai/whisper) models, accommodating multiple languages to suit global needs. Additionally, [WhisperX](https://github.com/m-bain/whisperX) is included, providing quantized models that deliver much faster performance on CPU, making transcription more efficient and accessible.
+- **Multiple Transcription Models** 🌍: Users can select from all available [Whisper](https://github.com/openai/whisper) models, accommodating multiple languages to suit global needs. Additionally, [faster-whisper](https://github.com/SYSTRAN/faster-whisper) is included, providing quantized models that deliver much faster performance on CPU, making transcription more efficient and accessible.
 - **Speaker Diarization** 🗣: Integrates with [Pyannote](https://github.com/pyannote/pyannote-audio), an advanced tool for speaker diarization. This feature identifies and separates different speakers in the transcription process, ensuring accurate and clear attribution of speech to individual speakers.
 
 ### Configurable and Extensible
@@ -50,7 +50,8 @@ ScrAIbe-WebUI makes it easy to start transcribing with multiple installation met
 
 - **Docker** 🐳: The simplest and most efficient way to deploy ScrAIbe-WebUI. Containerize the application to ensure a consistent environment across different systems. [Get Started with Docker](./docs/GETTING_STARTED_DOCKER.md)
 - **PyPI Package** 📦: Install ScrAIbe-WebUI via pip for seamless integration with your Python environment. [Learn How to Install via PyPI](./docs/GETTING_STARTED.md#pypi-package)
-- **Build from Scratch** 🔧: For those who like to get their hands dirty, build ScrAIbe-WebUI from the ground up. [See the Step-by-Step Guide](./docs/GETTING_STARTED.md#build-from-scratch)
+- **Build from Scratch** 🔧: For the hands-on enthusiast, clone the repository and build ScrAIbe-WebUI step-by-step. [Follow the Guide](./docs/GETTING_STARTED.md#setting-up-from-scratch)
+
 
 ### Detailed Guides
 

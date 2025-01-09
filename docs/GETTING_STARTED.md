@@ -65,7 +65,7 @@ cd ScrAIbe-WebUI
 Install the required dependencies in editable mode:
 
 ```bash
-pip install .
+pip install -e .
 ```
 
 This command ensures that any changes made to the local source code will be immediately reflected without reinstalling the package.

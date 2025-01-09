@@ -5,7 +5,6 @@ Welcome to this comprehensive guide on customizing your ScrAIbe-WebUI! Whether y
 ## Table of Contents
 
 - [Customize Your WebUI](#customize-your-webui)
-  - [Table of Contents](#table-of-contents)
   - [How to Use Custom Settings](#how-to-use-custom-settings)
     - [Step 1: Preparation](#step-1-preparation)
     - [Step 2: Choose Your Configuration Method](#step-2-choose-your-configuration-method)
@@ -56,8 +55,8 @@ Within these approaches, you can provide configuration values in various formats
 - **Structured Dictionaries**: Useful for Python-based configuration in code.
 - **Direct Keyword Arguments**: Perfect for quick tests or small tweaks.
 
-**Tip:**  
-- If you’re using `docker`, the CLI approach is typically more convenient.  
+**Tipp:**  
+- If you’re using `docker`, the CLI approach is typically more convenient for quick tests or small tweaks. However, for long-term configurations and easier retrieval of changes, using the `config.yaml` file is recommended. The `config.yaml` file is the heart of your `ScrAIbe-WebUI` customization and should be preferred throughout the guide.  
 - If you’re using `docker-compose`, or prefer a more programmatic setup, consider using the Python interface. For more details on Docker-specific usage, see our [Getting Started with Docker](./GETTING_STARTED_DOCKER.md) guide.
 
 ### Using the CLI
@@ -125,7 +124,7 @@ With these methods, you have flexibility and control over how you configure your
 
 At this point, you’ve learned the fundamentals of customizing your ScrAIbe-WebUI using different configuration methods. Next, we’ll explore how to dive deeper into customizing your `config.yaml` file for a more structured and comprehensive setup.
 
-## Customizing Your `config.yaml`
+## Customizing Your WebUI using the `config.yaml` File
 
 The `config.yaml` file is the heart of your `ScrAIbe-WebUI` customization. This file allows you to define various settings that control how your WebUI behaves and appears. Below, we will dive into the key sections of the `config.yaml` file and explain how to customize each part. You can find the original `config.yaml` file in the repository under [`scraibe_webui/misc/config.yaml`](../scraibe_webui/misc/config.yaml)
 
@@ -166,7 +165,7 @@ The `simple` interface is ideal for real-time transcription or smaller tasks. Th
 The `async` interface is designed for scenarios where you do not want to keep the browser open while the transcription is being processed. Files are added to a queue and processed asynchronously, with the results delivered to your email once ready.
 
 - **Best For**:
-  - Saving resources like CPU usage.
+  - Saving resources like GPU usage since you are no longer dependent on fast processing. You can run tasks on the CPU and receive the results via email.
   - Transcribing larger or longer files.
   - Users who prefer not to wait actively for the transcription to complete.
 
@@ -214,7 +213,6 @@ The `launch` configuration section in `config.yaml` determines how your ScrAIbe-
 - Consult the default [`config.yaml`](../scraibe_webui/misc/config.yaml) for examples.
 - Detailed parameter explanations are available in the [Gradio Launch Documentation](https://www.gradio.app/docs/gradio/blocks#blocks-launch).
 - Always verify that the Gradio documentation matches the version you’ve installed.
-- Check the [`requirements.txt`](../requirements.txt) to ensure all necessary dependencies are met.
 
 **Example `config.yaml` Snippet:**
 ```yaml
@@ -417,7 +415,7 @@ scraibe_params:
 In this example:
 - The `medium` Whisper model is selected, striking a balance between speed and accuracy.
 - The standard `whisper` backend is chosen.
-- No diarization model is set (`dia_model: null`).
+- The default diarization model is set (`dia_model: null`).
 - `use_auth_token: null` means no special authentication is currently required.
 - `device: null` and `num_threads: 0` let ScrAIbe-WebUI auto-select the best available resources.
 
@@ -427,20 +425,37 @@ In this example:
 
 - **whisper_model**:  
   Defines the exact Whisper model used. Options include:
+  
   - `tiny`, `base`, `small`, `medium`, `large`, `large-v2`, `large-v3`, `large-v3-turbo`
+  
+  Another option is a compatible Hugging Face model specified as `repo/model`. This allows you to leverage models hosted on Hugging Face's platform, providing flexibility and access to a wide range of pre-trained models.
+
+  **Example `config.yaml` Snippet:**
+  ```yaml
+  scraibe_params:
+    whisper_model: repo/model
+  ```
+
+  In this example:
+  - Replace `repo/model` with the actual repository and model name from Hugging Face, such as `openai/whisper-large`.
+  - Ensure you have the necessary authentication token if the model requires it.
+
+  This approach enables you to utilize the latest models available on Hugging Face, potentially improving transcription accuracy and performance.
   
   **Trade-Offs:**  
   - Smaller models (`tiny`, `base`) process audio more quickly but may yield less accurate results.
-  - Larger models (`large-v3`, `large-v3-turbo`) achieve higher accuracy, especially for complex or noisy audio, but require more memory and GPU/CPU resources.
+  - **whisper_type**:  
+    Choose `whisper` for the original backend or `faster-whisper` for a potentially more efficient implementation. The `faster-whisper` backend, found at [faster-whisper](https://github.com/SYSTRAN/faster-whisper), may offer speed or optimization benefits, but always test to ensure it meets your quality and performance needs.
 
-- **whisper_type**:  
+  - **num_threads**:  
+    This parameter controls how many CPU threads are allocated to transcription when running on `cpu`. Increasing the number of threads can improve performance on multi-core systems. However, avoid setting it too high, as excessive parallelization can lead to diminishing returns or increased contention for system resources. Only values greater than 0 are allowed, and it's capped at the number of CPU cores. A value of 4 or 8 is generally a good starting point.  
   Choose `whisper` for the original backend or `faster-whisper` for a potentially more efficient implementation. The `faster-whisper` backend, found at [faster-whisper](https://github.com/SYSTRAN/faster-whisper), may offer speed or optimization benefits, but always test to ensure it meets your quality and performance needs.
 
 - **dia_model**:  
-  When set, this parameter enables speaker diarization using a pyannote-based model. By default, it’s `null`, meaning no diarization is performed. If you require identifying and separating different speakers within an audio track, specify a pyannote model path or name. This is a powerful feature for transcribing interviews, meetings, or multi-speaker podcasts.
+  When set, this parameter enables speaker diarization using a pyannote-based model. By default, it’s `null`, meaning performed using the default `pyannote/speaker-diarization-3.1` model. If you require identifying and separating different speakers within an audio track, specify a pyannote model path or name. This is a powerful feature for transcribing interviews, meetings, or multi-speaker podcasts.
 
 - **use_auth_token**:  
-  Some advanced models, particularly those hosted on Hugging Face, require authentication. If you need access to original pyannote models or other restricted resources, provide your Hugging Face token here. Doing so unlocks the full potential of premium features and ensures compliance with model usage policies.
+  Some advanced models, particularly those hosted on Hugging Face, require authentication. If you need access to original pyannote models or other restricted resources, provide your Hugging Face token here.
 
 - **device**:  
   - `cpu`: Ideal for systems without GPUs or when GPU resources are limited.
@@ -459,8 +474,6 @@ In this example:
 - For questions on Hugging Face authentication tokens or model access, visit the Hugging Face documentation and platform guidelines.
 
 ---
-
-By fine-tuning the `scraibe_params` settings, you can customize the transcription experience to suit your workflow. Whether you need lightning-fast results for simple tasks or highly accurate, speaker-differentiated transcripts for complex projects, these parameters give you the flexibility and control to meet your goals.
 
 ### 6. Setting Up the Email Backend for Async Interface
 

@@ -1,0 +1,9 @@
+version: '2.2'
+services:
+  scraibe:
+    image: hadr0n/scraibe-webui:latest
+    container_name: scraibe-webui
+    ports:
+      - '7860:7860' # change the port on the left to the port you want to use
+    volumes: 
+      - ../data:/data # replace ../data with the path but keep /data

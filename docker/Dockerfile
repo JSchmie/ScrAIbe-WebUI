@@ -12,6 +12,7 @@ LABEL url="https://github.com/JSchmie/ScrAIbe-WebUI"
 
 # Install dependencies
 WORKDIR /app
+
 ENV AUTOT_CACHE=/data/models/
 ENV GRADIO_SERVER_NAME=0.0.0.0
 
@@ -22,20 +23,19 @@ COPY ../pyproject.toml /app/src/pyproject.toml
 COPY ../LICENSE /app/src/LICENSE
 COPY ../scraibe_webui/misc/config.yaml /app/scraibe_webui/misc/config.yaml
 
-RUN mkdir /data
+# Copy the entrypoint script
+COPY ../docker/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # Copy and modify config.yaml during build
-RUN cp /app/scraibe_webui/misc/config.yaml /data/config.yaml && \
-    sed -i 's/^\([[:space:]]*\)\([^#]\)/\1# \2/' /data/config.yaml && \
-    sed -i 's/#[[:space:]]\{1,3\}#/##/' /data/config.yaml && \
-    sed -i '1i\
-## In this config file you can set your custom configuration. To use a configuration, uncomment the line and change the value.\n## Lines that start with ## are comment lines.\n' /data/config.yaml
+RUN mkdir -p /data
 
 # Installing all necessary Dependencies and Running the Application with a personalised Hugging-Face-Token
 RUN apt update -y && apt upgrade -y && \
     apt install -y libsm6 libxrender1 libfontconfig1 git ffmpeg && \
     apt clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 RUN conda update --all -y && conda install -y -c conda-forge libsndfile && \ 
     conda clean --all -y
 
@@ -44,6 +44,9 @@ RUN --mount=source=../.git,target=.git,type=bind \
 
 # Expose port
 EXPOSE 7860
+
+# Set the entry point
+ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Run the application
 CMD ["python3", "-m", "scraibe_webui.cli", "start", "-c", "/data/config.yaml"]

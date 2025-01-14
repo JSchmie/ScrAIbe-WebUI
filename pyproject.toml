@@ -38,7 +38,7 @@ exclude =[
         ]
 [tool.poetry.dependencies]
 python = "^3.10"
-gradio = "~5.5"
+gradio = ">=5.5,<5.13"
 scraibe = "^0.3.0"
 pandas = "^2.2.2"
 tqdm = "^4.66.5"

@@ -1,4 +1,3 @@
-version: '2.2'
 services:
   scraibe:
     image: hadr0n/scraibe-webui:latest

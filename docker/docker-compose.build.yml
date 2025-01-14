@@ -1,7 +1,0 @@
-version: '2.2'
-services:
-  scraibe:
-    build:
-      context: ..  # Build context is the parent directory
-      dockerfile: docker/Dockerfile  # Path to the Dockerfile
-    image: hadr0n/scraibe-webui:latest  # Tag the built image

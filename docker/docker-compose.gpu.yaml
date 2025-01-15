@@ -1,0 +1,12 @@
+services:
+  scraibe:
+    extends: 
+      file: docker-compose.yaml
+      service: scraibe
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

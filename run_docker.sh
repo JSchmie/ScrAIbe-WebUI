@@ -1,6 +1,6 @@
 #!/bin/bash
 
-file=/app/scraibe_webui/misc/config.yaml
+file=/app/src/scraibe_webui/misc/config.yaml
 dest=/data/config.yaml
 # copy only if target file is not present
 if [ ! -e "$dest" ]; then

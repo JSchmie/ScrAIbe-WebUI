@@ -81,6 +81,8 @@ mail:
     queue_position: null
     contact_email: support@mail.com
   mail_css_path: scraibe_webui/misc/mail_style.css
+  use_receiver_whitelist: False
+  receiver_whitelist: "@mail.com"
 advanced:
   keep_model_alive: false # for sync interfac only keeps the model alvide during a session 
   concurrent_workers_async: 1 # number of concurrent working threads in the async interface

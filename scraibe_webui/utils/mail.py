@@ -22,7 +22,9 @@ class MailService:
                  error_subject: str = "An error occurred during processing.",
                  success_template: str = None,
                  success_subject: str = "Your transcript is ready.",
-                 css_template_path: str = None) -> None:
+                 css_template_path: str = None,
+                 use_receiver_whitelist: bool = False,
+                 receiver_whitelist: str = None) -> None:
         """
         Initializes the Mail Service class.
 
@@ -45,6 +47,8 @@ class MailService:
             success_template (str, optional): HTML template for success notifications.
             success_subject (str, optional): Subject line for success notifications.
             css_template_path (str, optional): Path to a CSS file for email styling.
+            use_receiver_whitelist (bool): Restrict sending of emails to whitelisted domains
+            receiver_whitelist (str, optional): unseparated list of domains
 
         Returns:
             None
@@ -74,6 +78,10 @@ class MailService:
 
         # Delay mail server setup until needed
         self.mailserver = None
+
+        # Implement recipient whitelist
+        self.use_receiver_whitelist = use_receiver_whitelist
+        self.receiver_whitelist = receiver_whitelist
 
     def setup_context(self, context: Union[None, str, dict, ssl.SSLContext]) -> Optional[ssl.SSLContext]:
         """
@@ -140,16 +148,22 @@ class MailService:
             message (str): The email body.
             attachments (list, optional): List of file paths to attach.
         """
-        _message = self.setup_message(subject, receiver_email, message, attachments)
-        if not self.mailserver:
-            self.mailserver = self.setup_mailserver()
+
+        receiver_domain = receiver_email.strip().split('@')[-1]
+        if ((self.use_receiver_whitelist) and
+            not (receiver_domain.lower() in self.receiver_whitelist.lower())):
+            raise ValueError(f"Email domain not in whitelist")
+        else:
+            _message = self.setup_message(subject, receiver_email, message, attachments)
             if not self.mailserver:
-                warnings.warn("Failed to connect to the mail server. Email not sent.")
-                return
-        try:
-            self.mailserver.sendmail(self.sender_email, receiver_email, _message.as_string())
-        except Exception as e:
-            warnings.warn(f"Failed to send email: {e}")
+                self.mailserver = self.setup_mailserver()
+                if not self.mailserver:
+                    warnings.warn("Failed to connect to the mail server. Email not sent.")
+                    return
+            try:
+                self.mailserver.sendmail(self.sender_email, receiver_email, _message.as_string())
+            except Exception as e:
+                warnings.warn(f"Failed to send email: {e}")
 
     def setup_message(self, subject: str, receiver_email: str, message: str, attachments: list = None) -> MIMEMultipart:
         """Prepare the email message.
@@ -247,6 +261,8 @@ class MailService:
             success_template=config.get('success_template'),
             success_subject=config.get('success_subject', "Your transcript is ready."),
             css_template_path=config.get('css_template_path'),
+            use_receiver_whitelist=config.get('use_receiver_whitelist'),
+            receiver_whitelist=config.get('receiver_whitelist'),
         )
 
     def __repr__(self) -> str:

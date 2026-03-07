@@ -1,4 +1,4 @@
-interface_type: simple # aync or simple variant of the Interface (one does transcriptions does require Email setup)
+interface_type: simple # async or simple variant of the Interface (one does transcriptions does require Email setup)
 launch:
   # The following are the default values for the launch configuration
   # for more informations look at https://www.gradio.app/docs/interface 
@@ -53,7 +53,7 @@ layout:
   # themes: null # dict of themes from hugging face placeholder
 scraibe_params:
   whisper_model : null
-  whisper_type: whisper # whether use orginal whisper or faster-whisper backend
+  whisper_type: whisper # whether use original whisper or faster-whisper backend
   dia_model: null
   use_auth_token: null
   device: null # set your device
@@ -67,9 +67,9 @@ mail:
   context: default # Union[None, str, dict, ssl.SSLContext]
   default_subject: "SCRAIBE"
   error_template: scraibe_webui/misc/error_notification_template.html
-  error_subject: An error occured during processing.
+  error_subject: An error occurred during processing.
   error_format_options:
-    #exception is mandatroy for your html  will be set to the related exepttion in the Code
+    #exception is mandatory for your html  will be set to the related exception in the Code
    contact_email: support@mail.com # set this to your mail if you are using a custom error_template you can add an any amount of format options here.
   success_template: scraibe_webui/misc/success_template.html
   success_subject: "Your transcript is ready."
@@ -82,5 +82,5 @@ mail:
     contact_email: support@mail.com
   mail_css_path: scraibe_webui/misc/mail_style.css
 advanced:
-  keep_model_alive: false # for sync interfac only keeps the model alvide during a session 
+  keep_model_alive: false # for sync interface only keeps the model alive during a session 
   concurrent_workers_async: 1 # number of concurrent working threads in the async interface
